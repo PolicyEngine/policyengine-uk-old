@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+div {
+  font-family: 'Merriweather', serif;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -35,4 +39,14 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.parameterHolder {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.parameterHolder:hover {
+  background-color: #EEE;
+  color: #333;
 }
