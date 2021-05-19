@@ -1,184 +1,270 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Nav, Form} from 'react-bootstrap';
+import {Row, Col} from 'react-bootstrap';
 import React from 'react';
-import { TextInput, Button, Spinner } from 'grommet';
 import Plot from 'react-plotly.js';
+import { Menu } from 'antd';
+import "antd/dist/antd.css";
+import { InputNumber, PageHeader, Divider, Button, Empty, Spin, Steps, Statistic, Card } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
-function App() {
-  return (
-    <div style={{color: "#DDD", height: "100vh", width: "90vw"}}>
-      <NavBar />
-      <UI />
-    </div>
-  );
-}
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+const { SubMenu } = Menu;
+const { Step } = Steps;
 
-class UI extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {parameters: {}, ready: false, reform: {}};
-    this.toggleParameterEdit = this.toggleParameterEdit.bind(this);
-  }
-
-  toggleParameterEdit(name, desc, value) {
-    console.log(this.state.parameters, name)
-    if(Object.keys(this.state.parameters).includes(name)) {
-      let newParams = Object.assign({}, this.state.parameters);
-      delete newParams[name];
-      this.setState({parameters: newParams});
-    } else {
-      let newParams = Object.assign({}, this.state.parameters);
-      newParams[name] = {name: name, description: desc, value: value};
-      this.setState({parameters: newParams});
-    }
+    this.state = {selected: null, plan: {}};
   }
 
   render() {
     return (
-      <Row style={{padding: 25}}>
-        <Col md={4}>
-          <h2>Parameters</h2>
-          <p>Select parameters of the existing system</p>
-          <div style={{backgroundColor: "#333", padding: 10, maxHeight: "75vh"}} className="overflow-auto">
-            <Parameters choose={this.toggleParameterEdit}/>
-          </div>
-        </Col>
-        <Col md={4}>
-          <h2>Changes</h2>
-          <p>Change the values for the current tax year</p>
-          <div style={{maxHeight: "75vh"}} className="overflow-auto">
-            <Editor parameters={this.state.parameters} onSubmit={reform => {this.setState({reform: reform, ready: true})}}/>
-          </div>
-        </Col>
-        <Col md={4}>
-          <h2>Results</h2>
-          <p>See the results on the UK population</p>
-          <Results ready={this.state.ready} reform={this.state.reform}/>
-        </Col>
-      </Row>
+      <>
+        <PageHeader
+          title="openfisca-uk"
+        />
+        <Row style={{height: "100%", width: "100%"}}>
+          <Col md={2}>
+            <ControlTab onClick={name => {this.setState({selected: name.key})}}/>
+          </Col>
+          <Col md={2}>
+            <Controls selected={this.state.selected} onChange={(name, val) => {let plan = this.state.plan; plan[name] = val; this.setState({plan: plan})}}/>
+          </Col>
+          <Col md={2}>
+            <PlanSummary plan={this.state.plan}/>
+          </Col>
+          <Col md={6}>
+            <Results plan={this.state.plan}/>
+          </Col>
+        </Row>
+      </>
     )
   }
-}
-
-function NavBar() {
-  return <Nav>
-    <Nav.Item>
-      <Nav.Link href="/" style={{fontSize: 30, color: "#DDD", paddingLeft: 25}}>openfisca-uk</Nav.Link>
-    </Nav.Item>
-  </Nav>
 }
 
 class Results extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {net_cost: null, net_cost_str: null, decile_plot: null, calculated: false}
+    this.state = {results: null, waiting: false}
+    this.simulate = this.simulate.bind(this);
   }
 
-  componentDidUpdate() {
-    if (this.props.ready & !this.state.calculated) {
+  simulate() {
+    this.setState({waiting: true}, () => {
       fetch("http://localhost:5000/reform", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({parameters: this.props.reform})
-      }).then(res => res.json()).then(json => {this.setState({calculated: true, lastReform: Object.assign({}, this.props.reform), decile_plot: JSON.parse(json.decile_plot), net_cost: json.net_cost, net_cost_str: json.net_cost_str})})
-    }
+        body: JSON.stringify(this.props.plan)
+      }).then(res => res.json()).then(json => {this.setState({results: json, waiting: false});})
+    })
   }
 
   render() {
-    return this.props.ready ? 
-    (this.state.calculated ? 
-      <div>
-      <h4>Net cost: {this.state.net_cost_str}</h4>
-      {this.state.decile_plot ? <Plot data={this.state.decile_plot.data} layout={this.state.decile_plot.layout} /> : null}
-    </div> :
-    <Spinner/>
-    ) :
-    <div>No changes applied.</div>
-  }
-}
-
-class Editor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.change = this.change.bind(this);
-    this.state = {parameters: {}};
-  }
-
-  change(parameter, value) {
-    let newParams = this.state.parameters;
-    if(!Object.keys(this.state.parameters).includes(parameter)) {
-      newParams[parameter] = {};
-      newParams[parameter].name = this.props.parameters[parameter].name;
-      newParams[parameter].value = this.props.parameters[parameter].value;
-    }
-    newParams[parameter].newValue = +value;
-    this.setState({parameters: newParams});
-  }
-
-  render() {
-    if (!this.props.parameters) {
-      return <div></div>
-    }
+    console.log(this.state)
     return (
-      <div>
-        {Object.keys(this.props.parameters).map(name => <ParameterEditor change={this.change} key={name} name={this.props.parameters[name].name} desc={this.props.parameters[name].description} value={this.props.parameters[name].value}/>)}
-        <Button label="Simulate" onClick={() => {this.props.onSubmit(this.state.parameters)}} style={{color: "#EEE"}}/>
-      </div>    
+      <>
+      <Divider>Results</Divider>
+      {this.state.results ? 
+      <>
+        <Row>
+          <Col>
+            <Card>
+              <Statistic title="Net cost" value={this.state.results.net_cost} />
+            </Card>
+          </Col>
+        </Row>
+        <Plot data={this.state.results.decile_plot.data} layout={this.state.results.decile_plot.layout}/>
+        <Row>
+          <Col>
+            <Card>
+              <Statistic 
+              title="Top 1% mean effect" 
+              value={Math.abs(this.state.results["1pct"])}
+              precision={2}
+              valueStyle={{ color: this.state.results["1pct"] >= 0 ? '#3f8600' : "#cf1322" }}
+              prefix={this.state.results["1pct"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined />£</>}
+              />
+            </Card>
+          </Col>
+          <Col>
+            <Card>
+              <Statistic 
+              title="Top 10% mean effect" 
+              value={Math.abs(this.state.results["10pct"])}
+              precision={2}
+              valueStyle={{ color: this.state.results["10pct"] >= 0 ? '#3f8600' : "#cf1322" }}
+              prefix={this.state.results["10pct"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined />£</>}
+              />
+            </Card>
+          </Col>
+          <Col>
+            <Card>
+              <Statistic 
+              title="Median effect" 
+              value={Math.abs(this.state.results["median"])}
+              precision={2}
+              valueStyle={{ color: this.state.results["median"] >= 0 ? '#3f8600' : "#cf1322" }}
+              prefix={this.state.results["median"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined />£</>}
+              />
+            </Card>
+          </Col>
+        </Row>
+      </>:
+      <Empty description="Simulate your plan on the UK population">
+        <Button onClick={() => {this.simulate()}}>Simulate</Button>
+        {this.state.waiting ? <><br /><br /><Spin indicator={antIcon}/></> : null}
+      </Empty>
+      }
+      </>
     )
   }
 }
 
-class ParameterEditor extends React.Component {
+function BasicRate(props) {
+  return (
+    <>
+    <Divider>Basic Rate</Divider>
+    <p>The basic rate is the first of three tax brackets on all income, after allowances are deducted.</p>
+    <InputNumber
+      defaultValue={20}
+      min={0}
+      max={100}
+      formatter={value => `${value}%`}
+      parser={value => value.replace('%', '')}
+      onChange={value => {props.onChange("basic_rate", value)}}
+    />
+    </>
+  )
+}
+
+function HigherRate(props) {
+  return (
+    <>
+    <Divider>Higher Rate</Divider>
+    <p>The higher rate is the middle tax bracket.</p>
+    <InputNumber
+      defaultValue={40}
+      min={0}
+      max={100}
+      formatter={value => `${value}%`}
+      parser={value => value.replace('%', '')}
+      onChange={value => {props.onChange("higher_rate", value)}}
+    />
+    </>
+  )
+}
+
+function AdditionalRate(props) {
+  return (
+    <>
+    <Divider>Additional Rate</Divider>
+    <p>The additional rate is the highest tax bracket, with no upper bound.</p>
+    <InputNumber
+      defaultValue={45}
+      min={0}
+      max={100}
+      formatter={value => `${value}%`}
+      parser={value => value.replace('%', '')}
+      onChange={value => {props.onChange("add_rate", value)}}
+    />
+    </>
+  )
+}
+
+function IncomeTaxControls(props) {
+  return (
+    <>
+      <BasicRate onChange={props.onChange}/>
+      <HigherRate onChange={props.onChange} />
+      <AdditionalRate onChange={props.onChange} />
+    </>
+  )
+}
+
+function BasicIncomeControls(props) {
+  return (
+    <>
+      <Divider>Child Basic Income</Divider>
+      <p>A basic income for children is given to every child aged under 18, regardless of household income.</p>
+      <InputNumber
+        defaultValue={0}
+        min={0}
+        formatter={value => `${value}/week`}
+        parser={value => value.replace('/week', '')}
+        onChange={value => {props.onChange("child_BI", value)}}
+      />
+    </>
+  )
+}
+
+function NothingControls(props) {
+  return (
+    <>
+      <Divider>Nothing selected</Divider>
+      <p>Choose a category of tax or benefit controls on the left to edit.</p>
+    </>
+  )
+}
+
+function Controls(props) {
+  const controlSet = {
+    "main_rates": <IncomeTaxControls onChange={props.onChange} />,
+    "basic_income": <BasicIncomeControls onChange={props.onChange} />
+  };
+  if(!(props.selected in controlSet)) {
+    return <NothingControls />
+  } else {
+    return controlSet[props.selected];
+  }
+}
+
+function PlanSummary(props) {
+  return (
+    <>
+    <Divider>Your plan</Divider>
+    <Steps progressDot direction="vertical">
+      {props.plan.basic_rate ?
+      <Step status="finish" title="Basic Rate" description={`Change the basic rate to ${props.plan.basic_rate}%`} /> :
+      null }
+      {props.plan.higher_rate ?
+      <Step status="finish" title="Higher Rate" description={`Change the higher rate to ${props.plan.higher_rate}%`} /> :
+      null }
+      {props.plan.add_rate ?
+      <Step status="finish" title="Additional Rate" description={`Change the additional rate to ${props.plan.add_rate}%`} /> :
+      null }
+      {props.plan.child_BI ?
+      <Step status="finish" title="Child Basic Income" description={`Give a basic income of £${props.plan.child_BI}/week to children`} /> :
+      null }
+    </Steps>
+    </>
+  )
+}
+
+
+class ControlTab extends React.Component {
   render() {
     return (
-      <div style={{paddingBottom: 5, paddingTop: 10, borderTop: "2px solid"}}>
-        <h4 style={{fontSize: 10}}>{this.props.name.split("/").join(" > ")}</h4>
-        <p style={{fontSize: 20}}>{this.props.desc}</p>
-        <h6>Current value: {this.props.value}</h6>
-        <TextInput label="Reformed value" onChange={e => {this.props.change(this.props.name, e.target.value)}}/>
-      </div>
+      <Menu
+        onClick={this.props.onClick}
+        mode="inline"
+        openKeys={["tax", "income_tax", "national_insurance"]}
+      >
+        <SubMenu key="tax" title="Tax">
+          <SubMenu key="income_tax" title="Income Tax">
+            <Menu.Item key="main_rates">Main Rates</Menu.Item>
+            <Menu.Item key="allowances">Allowances</Menu.Item>
+          </SubMenu>
+          <SubMenu key="national_insurance" title="National Insurance">
+            <Menu.Item key="employee_side">Employee-Side</Menu.Item>
+          </SubMenu>
+        </SubMenu>
+        <Menu.Item key="basic_income">Basic Income</Menu.Item>
+      </Menu>
     )
-  }
-}
-
-class Parameters extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {parameterTree: {}}
-  }
-
-  componentDidMount() {
-    fetch("http://127.0.0.1:5000/parameters").then(res => res.json()).then(json => {this.setState({parameterTree: json})})
-  }
-
-  render() {
-    return <ParameterNode data={this.state.parameterTree} depth={0} choose={this.props.choose}/>
-  }
-}
-
-class ParameterNode extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  
-  render() {
-    if(this.props.data.children) {
-      return (
-          <div style={{paddingLeft: this.props.depth * 5 - 5}}>
-            {this.props.name}
-            {Object.keys(this.props.data.children).map((name, i) => <ParameterNode name={name} key={i} data={this.props.data.children[name]} depth={this.props.depth + 1} choose={(name, desc, value) => {this.props.choose((this.props.name ? this.props.name + "/" : "") + name, desc, value)}}/>)}
-          </div>
-        )
-    } else {
-      return (
-        <div style={{cursor: "pointer"}} className="parameterHolder" onClick={() => {this.props.choose(this.props.name, this.props.data.description, this.props.data.value)}}>
-          {this.props.name}
-        </div>
-      )
-    }
   }
 }
 
