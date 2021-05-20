@@ -86,7 +86,7 @@ class Results extends React.Component {
               value={Math.abs(this.state.results["1pct"])}
               precision={2}
               valueStyle={{ color: this.state.results["1pct"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["1pct"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined />£</>}
+              prefix={this.state.results["1pct"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
               />
             </Card>
           </Col>
@@ -97,7 +97,7 @@ class Results extends React.Component {
               value={Math.abs(this.state.results["10pct"])}
               precision={2}
               valueStyle={{ color: this.state.results["10pct"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["10pct"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined />£</>}
+              prefix={this.state.results["10pct"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
               />
             </Card>
           </Col>
@@ -108,7 +108,7 @@ class Results extends React.Component {
               value={Math.abs(this.state.results["median"])}
               precision={2}
               valueStyle={{ color: this.state.results["median"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["median"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined />£</>}
+              prefix={this.state.results["median"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
               />
             </Card>
           </Col>
@@ -193,9 +193,27 @@ function BasicIncomeControls(props) {
       <InputNumber
         defaultValue={0}
         min={0}
-        formatter={value => `${value}/week`}
-        parser={value => value.replace('/week', '')}
+        formatter={value => `£${value}/week`}
+        parser={value => value.replace('/week', '').replace("£", "")}
         onChange={value => {props.onChange("child_BI", value)}}
+      />
+      <Divider>Adult Basic Income</Divider>
+      <p>Basic income for adults is given to individuals aged over 18 but under State Pension age.</p>
+      <InputNumber
+        defaultValue={0}
+        min={0}
+        formatter={value => `£${value}/week`}
+        parser={value => value.replace('/week', '').replace("£", "")}
+        onChange={value => {props.onChange("adult_BI", value)}}
+      />
+      <Divider>Senior Basic Income</Divider>
+      <p>A basic income for senior citizens is given to those over State Pension age.</p>
+      <InputNumber
+        defaultValue={0}
+        min={0}
+        formatter={value => `£${value}/week`}
+        parser={value => value.replace('/week', '').replace("£", "")}
+        onChange={value => {props.onChange("senior_BI", value)}}
       />
     </>
   )
@@ -238,6 +256,12 @@ function PlanSummary(props) {
       null }
       {props.plan.child_BI ?
       <Step status="finish" title="Child Basic Income" description={`Give a basic income of £${props.plan.child_BI}/week to children`} /> :
+      null }
+      {props.plan.adult_BI ?
+      <Step status="finish" title="Adult Basic Income" description={`Give a basic income of £${props.plan.adult_BI}/week to adults`} /> :
+      null }
+      {props.plan.senior_BI ?
+      <Step status="finish" title="Senior Basic Income" description={`Give a basic income of £${props.plan.senior_BI}/week to senior citizens`} /> :
       null }
     </Steps>
     </>
