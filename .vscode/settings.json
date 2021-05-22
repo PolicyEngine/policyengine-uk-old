@@ -1,3 +1,4 @@
 {
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "python.pythonPath": "/home/nikhilwoodruff/anaconda3/envs/openfisca-uk/bin/python"
 }
