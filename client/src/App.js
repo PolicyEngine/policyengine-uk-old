@@ -61,9 +61,11 @@ class App extends React.Component {
                 <Step title="Results" />
               </Steps>
             </Row>
-            <Row style={{width: "100%"}}>
+            <Row>
               <Col>
-                <ControlTab onClick={name => {this.setState({selected: name.key})}}/>
+                <div className="main-menu" style={{height:"88%", overflowY: "auto", width: "100%"}}>
+                  <ControlTab onClick={name => {this.setState({selected: name.key})}}/>
+                </div>
               </Col>
               <Col md={3}>
                 <Controls selected={this.state.selected} onChange={(name, val) => {let plan = this.state.plan; plan[name] = val; this.setState({plan: plan})}}/>
@@ -90,7 +92,7 @@ class App extends React.Component {
 function SimulateButton(props) {
   return (
     <div>
-      <Link to="/simulation">Simulate</Link>
+      <Link to="/simulation"><Button>Simulate</Button></Link>
     </div>
   )
 }
@@ -123,6 +125,7 @@ class Results extends React.Component {
   }
 
   render() {
+    console.log(this.state.results)
     return (
       <>
       <Divider>Results</Divider>
@@ -136,6 +139,7 @@ class Results extends React.Component {
           </Col>
         </Row>
         <Plot data={this.state.results.decile_plot.data} layout={this.state.results.decile_plot.layout}/>
+        <Plot data={this.state.results.poverty_plot.data} layout={this.state.results.poverty_plot.layout}/>
         <Row>
           <Col>
             <Card>
@@ -144,7 +148,7 @@ class Results extends React.Component {
               value={Math.abs(this.state.results["1pct"])}
               precision={2}
               valueStyle={{ color: this.state.results["1pct"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["1pct"] >= 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
+              prefix={this.state.results["1pct"] >= 0 ? <><ArrowUpOutlined />£</> : <><ArrowDownOutlined />£</>}
               />
             </Card>
           </Col>
@@ -155,7 +159,7 @@ class Results extends React.Component {
               value={Math.abs(this.state.results["10pct"])}
               precision={2}
               valueStyle={{ color: this.state.results["10pct"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["10pct"] >= 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
+              prefix={this.state.results["10pct"] >= 0 ? <><ArrowUpOutlined />£</> : <><ArrowDownOutlined />£</>}
               />
             </Card>
           </Col>
@@ -166,7 +170,7 @@ class Results extends React.Component {
               value={Math.abs(this.state.results["median"])}
               precision={2}
               valueStyle={{ color: this.state.results["median"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["median"] >= 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
+              prefix={this.state.results["median"] >= 0 ? <><ArrowUpOutlined />£</> : <><ArrowDownOutlined />£</>}
               />
             </Card>
           </Col>
