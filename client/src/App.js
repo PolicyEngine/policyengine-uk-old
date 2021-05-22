@@ -5,13 +5,22 @@ import React from 'react';
 import Plot from 'react-plotly.js';
 import { Menu } from 'antd';
 import "antd/dist/antd.css";
-import { InputNumber, PageHeader, Divider, Button, Empty, Spin, Steps, Statistic, Card } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { InputNumber, PageHeader, Divider, Button, Empty, Spin, Steps, Statistic, Card, Layout } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { UserOutlined, SolutionOutlined, LoadingOutlined, SmileOutlined } from '@ant-design/icons';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import { AnimatePresence, motion } from 'framer-motion';
+
+const { Step } = Steps;
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 const { SubMenu } = Menu;
-const { Step } = Steps;
+const { Header, Content, Footer } = Layout;
 
 class App extends React.Component {
   constructor(props) {
@@ -21,37 +30,87 @@ class App extends React.Component {
 
   render() {
     return (
-      <>
-        <PageHeader
-          title="openfisca-uk"
-        />
-        <Row style={{height: "100%", width: "100%"}}>
-          <Col md={2}>
-            <ControlTab onClick={name => {this.setState({selected: name.key})}}/>
-          </Col>
-          <Col md={2}>
-            <Controls selected={this.state.selected} onChange={(name, val) => {let plan = this.state.plan; plan[name] = val; this.setState({plan: plan})}}/>
-          </Col>
-          <Col md={2}>
-            <PlanSummary plan={this.state.plan}/>
-          </Col>
-          <Col md={6}>
-            <Results plan={this.state.plan}/>
-          </Col>
-        </Row>
-      </>
+      <div style={{paddingLeft: 20, paddingRight: 20}}>
+      <PageHeader
+        title="openfisca-uk"
+        subTitle="reform explorer"
+        style={{height: 80}}
+      />
+      <Router>
+        <Switch>
+          <Route path="/simulation">
+            <Row style={{paddingLeft: 250, paddingRight: 250, paddingBottom: 20}}>
+              <Steps current={1}>
+                <Step title="Policy" />
+                <Step title="Results" />
+              </Steps>
+            </Row>
+            <Row>
+              <Col md={2} style={{paddingLeft: 50}}>
+                <PlanSummary plan={this.state.plan}/>
+              </Col>
+              <Col md={10}>
+                <Results plan={this.state.plan}/>
+              </Col>
+            </Row>
+          </Route>
+          <Route path="/">
+            <Row style={{paddingLeft: 250, paddingRight: 250, paddingBottom: 20}}>
+              <Steps current={0}>
+                <Step title="Policy" />
+                <Step title="Results" />
+              </Steps>
+            </Row>
+            <Row style={{width: "100%"}}>
+              <Col>
+                <ControlTab onClick={name => {this.setState({selected: name.key})}}/>
+              </Col>
+              <Col md={3}>
+                <Controls selected={this.state.selected} onChange={(name, val) => {let plan = this.state.plan; plan[name] = val; this.setState({plan: plan})}}/>
+              </Col>
+              <Col md={5}>
+                <PolicyCommentary selected={this.state.selected}/>
+              </Col>
+              <Col md={2}>
+                <PlanSummary plan={this.state.plan} />
+                <Empty description="" image={null}>
+                  <SimulateButton />
+                </Empty>
+              </Col>
+            </Row>
+          </Route>
+        </Switch>
+      </Router>
+        
+      </div>
     )
   }
+}
+
+function SimulateButton(props) {
+  return (
+    <div>
+      <Link to="/simulation">Simulate</Link>
+    </div>
+  )
+}
+
+function PolicyCommentary(props) {
+  return (
+    <>
+    <Divider>The UK Tax-Benefit System</Divider>
+    This calculator presents a toolkit for anyone to use, to estimate the effects of their ideas around how the UK taxes and distributes money on households, families and people in the United Kingdom.
+    </>
+  )
 }
 
 class Results extends React.Component {
   constructor(props) {
     super(props);
     this.state = {results: null, waiting: false}
-    this.simulate = this.simulate.bind(this);
   }
 
-  simulate() {
+  componentDidMount() {
     this.setState({waiting: true}, () => {
       fetch("http://localhost:5000/reform", {
         method: "POST",
@@ -64,7 +123,6 @@ class Results extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <>
       <Divider>Results</Divider>
@@ -86,7 +144,7 @@ class Results extends React.Component {
               value={Math.abs(this.state.results["1pct"])}
               precision={2}
               valueStyle={{ color: this.state.results["1pct"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["1pct"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
+              prefix={this.state.results["1pct"] >= 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
               />
             </Card>
           </Col>
@@ -97,7 +155,7 @@ class Results extends React.Component {
               value={Math.abs(this.state.results["10pct"])}
               precision={2}
               valueStyle={{ color: this.state.results["10pct"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["10pct"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
+              prefix={this.state.results["10pct"] >= 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
               />
             </Card>
           </Col>
@@ -108,14 +166,13 @@ class Results extends React.Component {
               value={Math.abs(this.state.results["median"])}
               precision={2}
               valueStyle={{ color: this.state.results["median"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["median"] > 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
+              prefix={this.state.results["median"] >= 0 ? <><ArrowUpOutlined /> £</> : <><ArrowDownOutlined /></>}
               />
             </Card>
           </Col>
         </Row>
       </>:
-      <Empty description="Simulate your plan on the UK population">
-        <Button onClick={() => {this.simulate()}}>Simulate</Button>
+      <Empty description="Simulating your plan on the UK population">
         {this.state.waiting ? <><br /><br /><Spin indicator={antIcon}/></> : null}
       </Empty>
       }
@@ -275,18 +332,33 @@ class ControlTab extends React.Component {
       <Menu
         onClick={this.props.onClick}
         mode="inline"
-        openKeys={["tax", "income_tax", "national_insurance"]}
+        openKeys={["tax", "income_tax", "national_insurance", "benefit", "means"]}
       >
         <SubMenu key="tax" title="Tax">
           <SubMenu key="income_tax" title="Income Tax">
-            <Menu.Item key="main_rates">Main Rates</Menu.Item>
+            <Menu.Item key="main_rates">Labour income</Menu.Item>
+            <Menu.Item key="sav_div">Savings and dividends</Menu.Item>
             <Menu.Item key="allowances">Allowances</Menu.Item>
+            <Menu.Item key="it_alt">Structural</Menu.Item>
           </SubMenu>
           <SubMenu key="national_insurance" title="National Insurance">
-            <Menu.Item key="employee_side">Employee-Side</Menu.Item>
+            <Menu.Item key="employee_side">Employees</Menu.Item>
+            <Menu.Item key="employer_side">Employers</Menu.Item>
+            <Menu.Item key="ni_alt">Structural</Menu.Item>
           </SubMenu>
         </SubMenu>
-        <Menu.Item key="basic_income">Basic Income</Menu.Item>
+        <SubMenu key="benefit" title="Benefit">
+          <SubMenu key="means" title="Means-tested benefits">
+            <Menu.Item key="universal_credit">Universal Credit</Menu.Item>
+            <Menu.Item key="jsa">JSA</Menu.Item>
+            <Menu.Item key="cb">Child Benefit</Menu.Item>
+            <Menu.Item key="wtc">Working Tax Credit</Menu.Item>
+            <Menu.Item key="ctc">Child Tax Credit</Menu.Item>
+            <Menu.Item key="hb">Housing Benefit</Menu.Item>
+            <Menu.Item key="is">Income Support</Menu.Item>
+          </SubMenu>
+        </SubMenu>
+        <Menu.Item key="basic_income">Basic income</Menu.Item>
       </Menu>
     )
   }
