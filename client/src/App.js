@@ -5,27 +5,115 @@ import React from 'react';
 import Plot from 'react-plotly.js';
 import { Menu } from 'antd';
 import "antd/dist/antd.css";
-import { InputNumber, PageHeader, Divider, Button, Empty, Spin, Steps, Statistic, Card, Layout } from 'antd';
+import { PageHeader, Divider, Button, Empty, Spin, Steps, Statistic, Card } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-import { UserOutlined, SolutionOutlined, LoadingOutlined, SmileOutlined } from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
 } from "react-router-dom";
-import { AnimatePresence, motion } from 'framer-motion';
+import { Controls } from './controls';
 
 const { Step } = Steps;
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 const { SubMenu } = Menu;
-const { Header, Content, Footer } = Layout;
+
+const DEFAULT_PLAN = {
+  basic_rate: {
+    title: "Basic rate",
+    description: "The basic rate is the first of three tax brackets on all income, after allowances are deducted.",
+    default: 20,
+    value: 20,
+    summary: "Change the basic rate to @%",
+    type: "rate"
+  },
+  higher_rate: {
+    title: "Higher rate",
+    description: "The higher rate is the middle tax bracket.",
+    default: 40,
+    value: 40,
+    summary: "Change the higher rate to @%",
+    type: "rate"
+  },
+  add_rate: {
+    title: "Additional rate",
+    description: "The additional rate is the highest tax bracket, with no upper bound.",
+    default: 45,
+    value: 45,
+    summary: "Change the additional rate to @%",
+    type: "rate"
+  },
+  basic_threshold: {
+    title: "Basic rate threshold",
+    description: "Lower threshold for the basic rate, on income after allowances (including the personal allowance) have been deducted.",
+    default: 0,
+    value: 0,
+    max: 100000,
+    summary: "Change the basic rate to £@/year",
+    type: "yearly"
+  },
+  higher_threshold: {
+    title: "Higher rate threshold",
+    description: "The lower threshold for the higher rate of income tax (and therefore the upper threshold of the basic rate).",
+    default: 37500,
+    value: 37500,
+    max: 200000,
+    summary: "Change the higher rate to £@/year",
+    type: "yearly"
+  },
+  add_threshold: {
+    title: "Additional rate",
+    description: "The lower threshold for the additional rate.",
+    default: 150000,
+    value: 150000,
+    max: 1000000,
+    summary: "Change the additional rate to £@/year",
+    type: "yearly"
+  },
+  personal_allowance: {
+    title: "Personal allowance",
+    description: "The personal allowance is deducted from general income.",
+    default: 12500,
+    value: 12500,
+    summary: "Change the personal allowance to £@/year",
+    type: "yearly"
+  },
+  child_BI: {
+    title: "Child basic income",
+    description: "A basic income for children is given to every child aged under 18, regardless of household income.",
+    default: 0,
+    value: 0,
+    max: 250,
+    summary: "Give a basic income of £@/week to children",
+    type: "weekly"
+  },
+  adult_BI: {
+    title: "Adult basic income",
+    description: "Basic income for adults is given to individuals aged over 18 but under State Pension age.",
+    default: 0,
+    value: 0,
+    max: 250,
+    summary: "Give a basic income of £@/week to adults",
+    type: "weekly"
+  },
+  senior_BI: {
+    title: "Senior basic income",
+    description: "A basic income for senior citizens is given to those over State Pension age.",
+    default: 0,
+    value: 0,
+    max: 250,
+    summary: "Give a basic income of £@/week to seniors",
+    type: "weekly"
+  },
+}
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {selected: null, plan: {}};
+    this.state = {selected: null, plan: DEFAULT_PLAN};
   }
 
   render() {
@@ -37,51 +125,57 @@ class App extends React.Component {
         style={{height: 80}}
       />
       <Router>
-        <Switch>
-          <Route path="/simulation">
-            <Row style={{paddingLeft: 250, paddingRight: 250, paddingBottom: 20}}>
-              <Steps current={1}>
-                <Step title="Policy" />
-                <Step title="Results" />
-              </Steps>
-            </Row>
-            <Row>
-              <Col md={2} style={{paddingLeft: 50}}>
-                <PlanSummary plan={this.state.plan}/>
-              </Col>
-              <Col md={10}>
-                <Results plan={this.state.plan}/>
-              </Col>
-            </Row>
-          </Route>
-          <Route path="/">
-            <Row style={{paddingLeft: 250, paddingRight: 250, paddingBottom: 20}}>
-              <Steps current={0}>
-                <Step title="Policy" />
-                <Step title="Results" />
-              </Steps>
-            </Row>
-            <Row>
-              <Col>
-                <div className="main-menu" style={{height:"88%", overflowY: "auto", width: "100%"}}>
-                  <ControlTab onClick={name => {this.setState({selected: name.key})}}/>
-                </div>
-              </Col>
-              <Col md={3}>
-                <Controls selected={this.state.selected} onChange={(name, val) => {let plan = this.state.plan; plan[name] = val; this.setState({plan: plan})}}/>
-              </Col>
-              <Col md={5}>
-                <PolicyCommentary selected={this.state.selected}/>
-              </Col>
-              <Col md={2}>
-                <PlanSummary plan={this.state.plan} />
-                <Empty description="" image={null}>
-                  <SimulateButton />
-                </Empty>
-              </Col>
-            </Row>
-          </Route>
-        </Switch>
+          <Switch>
+            <Route path="/simulation">
+                <Row style={{paddingLeft: 250, paddingRight: 250, paddingBottom: 20}}>
+                  <Steps current={1}>
+                    <Step title="Policy" />
+                    <Step title="Results" />
+                  </Steps>
+                </Row>
+                <Row>
+                  <Col md={2} style={{paddingLeft: 50}}>
+                    <PlanSummary plan={this.state.plan}/>
+                  </Col>
+                  <Col md={10}>
+                    <Results plan={this.state.plan}/>
+                  </Col>
+                </Row>
+            </Route>
+            <Route path="/">
+                <Row style={{paddingLeft: 250, paddingRight: 250, paddingBottom: 20}}>
+                  <Steps current={0}>
+                    <Step title="Policy" />
+                    <Step title="Results" />
+                  </Steps>
+                </Row>
+                <Row>
+                  <Col>
+                    <div className="main-menu" style={{height:"88%", overflowY: "auto", width: "100%"}}>
+                      <ControlTab onClick={name => {this.setState({selected: name.key})}}/>
+                    </div>
+                  </Col>
+                  <Col md={3}>
+                    <div className="main-menu" style={{height:"88%", overflowY: "auto", width: "100%"}}>
+                      <Controls plan={this.state.plan} selected={this.state.selected} onChange={(name, val) => {let plan = this.state.plan; plan[name].value = val; this.setState({plan: plan})}}/>
+                    </div>
+                  </Col>
+                  <Col md={5}>
+                    <div className="main-menu" style={{height:"88%", overflowY: "auto", width: "100%"}}>
+                      <PolicyCommentary selected={this.state.selected}/>
+                    </div>
+                  </Col>
+                  <Col md={2}>
+                    <div className="main-menu" style={{height:"88%", overflowY: "auto", width: "100%"}}>
+                    <PlanSummary plan={this.state.plan} />
+                    <Empty description="" image={null}>
+                      <SimulateButton />
+                    </Empty>
+                    </div>
+                  </Col>
+                </Row>
+            </Route>
+          </Switch>
       </Router>
         
       </div>
@@ -101,7 +195,7 @@ function PolicyCommentary(props) {
   return (
     <>
     <Divider>The UK Tax-Benefit System</Divider>
-    This calculator presents a toolkit for anyone to use, to estimate the effects of their ideas around how the UK taxes and distributes money on households, families and people in the United Kingdom.
+    This calculator presents a toolkit for anyone to use, to estimate the effects of their ideas around how the UK taxes and distributes money on households, families and people in the United Kingdom. The first side panel displays a collection of policy switches; each of these describes a particular reform under a single parameter which may be combined with any other reform. Develop your policy plan by adding these reforms, and once you're ready to see the results, click the simulate button.
     </>
   )
 }
@@ -113,19 +207,30 @@ class Results extends React.Component {
   }
 
   componentDidMount() {
+    let submission = {}
+    for(let key in this.props.plan) {
+      if (this.props.plan[key].value !== this.props.plan[key].default) {
+        submission[key] = this.props.plan[key].value;
+      }
+    }
     this.setState({waiting: true}, () => {
       fetch("http://localhost:5000/reform", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(this.props.plan)
+        body: JSON.stringify(submission)
       }).then(res => res.json()).then(json => {this.setState({results: json, waiting: false});})
     })
   }
 
   render() {
-    console.log(this.state.results)
+    if(this.state.results && this.state.results["status"] === "error") {
+      return (
+        <Empty description="Error">
+        </Empty>
+      )
+    }
     return (
       <>
       <Divider>Results</Divider>
@@ -185,145 +290,20 @@ class Results extends React.Component {
   }
 }
 
-function BasicRate(props) {
-  return (
-    <>
-    <Divider>Basic Rate</Divider>
-    <p>The basic rate is the first of three tax brackets on all income, after allowances are deducted.</p>
-    <InputNumber
-      defaultValue={20}
-      min={0}
-      max={100}
-      formatter={value => `${value}%`}
-      parser={value => value.replace('%', '')}
-      onChange={value => {props.onChange("basic_rate", value)}}
-    />
-    </>
-  )
-}
 
-function HigherRate(props) {
-  return (
-    <>
-    <Divider>Higher Rate</Divider>
-    <p>The higher rate is the middle tax bracket.</p>
-    <InputNumber
-      defaultValue={40}
-      min={0}
-      max={100}
-      formatter={value => `${value}%`}
-      parser={value => value.replace('%', '')}
-      onChange={value => {props.onChange("higher_rate", value)}}
-    />
-    </>
-  )
-}
-
-function AdditionalRate(props) {
-  return (
-    <>
-    <Divider>Additional Rate</Divider>
-    <p>The additional rate is the highest tax bracket, with no upper bound.</p>
-    <InputNumber
-      defaultValue={45}
-      min={0}
-      max={100}
-      formatter={value => `${value}%`}
-      parser={value => value.replace('%', '')}
-      onChange={value => {props.onChange("add_rate", value)}}
-    />
-    </>
-  )
-}
-
-function IncomeTaxControls(props) {
-  return (
-    <>
-      <BasicRate onChange={props.onChange}/>
-      <HigherRate onChange={props.onChange} />
-      <AdditionalRate onChange={props.onChange} />
-    </>
-  )
-}
-
-function BasicIncomeControls(props) {
-  return (
-    <>
-      <Divider>Child Basic Income</Divider>
-      <p>A basic income for children is given to every child aged under 18, regardless of household income.</p>
-      <InputNumber
-        defaultValue={0}
-        min={0}
-        formatter={value => `£${value}/week`}
-        parser={value => value.replace('/week', '').replace("£", "")}
-        onChange={value => {props.onChange("child_BI", value)}}
-      />
-      <Divider>Adult Basic Income</Divider>
-      <p>Basic income for adults is given to individuals aged over 18 but under State Pension age.</p>
-      <InputNumber
-        defaultValue={0}
-        min={0}
-        formatter={value => `£${value}/week`}
-        parser={value => value.replace('/week', '').replace("£", "")}
-        onChange={value => {props.onChange("adult_BI", value)}}
-      />
-      <Divider>Senior Basic Income</Divider>
-      <p>A basic income for senior citizens is given to those over State Pension age.</p>
-      <InputNumber
-        defaultValue={0}
-        min={0}
-        formatter={value => `£${value}/week`}
-        parser={value => value.replace('/week', '').replace("£", "")}
-        onChange={value => {props.onChange("senior_BI", value)}}
-      />
-    </>
-  )
-}
-
-function NothingControls(props) {
-  return (
-    <>
-      <Divider>Nothing selected</Divider>
-      <p>Choose a category of tax or benefit controls on the left to edit.</p>
-    </>
-  )
-}
-
-function Controls(props) {
-  const controlSet = {
-    "main_rates": <IncomeTaxControls onChange={props.onChange} />,
-    "basic_income": <BasicIncomeControls onChange={props.onChange} />
-  };
-  if(!(props.selected in controlSet)) {
-    return <NothingControls />
-  } else {
-    return controlSet[props.selected];
-  }
-}
 
 function PlanSummary(props) {
   return (
     <>
     <Divider>Your plan</Divider>
     <Steps progressDot direction="vertical">
-      {props.plan.basic_rate ?
-      <Step status="finish" title="Basic Rate" description={`Change the basic rate to ${props.plan.basic_rate}%`} /> :
-      null }
-      {props.plan.higher_rate ?
-      <Step status="finish" title="Higher Rate" description={`Change the higher rate to ${props.plan.higher_rate}%`} /> :
-      null }
-      {props.plan.add_rate ?
-      <Step status="finish" title="Additional Rate" description={`Change the additional rate to ${props.plan.add_rate}%`} /> :
-      null }
-      {props.plan.child_BI ?
-      <Step status="finish" title="Child Basic Income" description={`Give a basic income of £${props.plan.child_BI}/week to children`} /> :
-      null }
-      {props.plan.adult_BI ?
-      <Step status="finish" title="Adult Basic Income" description={`Give a basic income of £${props.plan.adult_BI}/week to adults`} /> :
-      null }
-      {props.plan.senior_BI ?
-      <Step status="finish" title="Senior Basic Income" description={`Give a basic income of £${props.plan.senior_BI}/week to senior citizens`} /> :
-      null }
+      {
+        Object.keys(props.plan).map((key, i) => (
+          props.plan[key].value !== props.plan[key].default ?
+          <Step key={key} status="finish" title={props.plan[key].title} description={props.plan[key].summary.replace("@", props.plan[key].value)} /> :
+          null
+        ))
+      }
     </Steps>
     </>
   )
