@@ -75,6 +75,12 @@ export function Controls(props) {
           "add_rate",
           "add_threshold"
       ],
+      "employee_side": [
+        "NI_main_rate",
+        "NI_PT",
+        "NI_add_rate",
+        "NI_UEL"
+      ],
       "allowances": [
         "personal_allowance"
       ],

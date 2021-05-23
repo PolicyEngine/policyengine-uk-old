@@ -30,7 +30,8 @@ def compute_reform():
         print("Received reform request")
         start_time = time()
         params = request.json
-        reform = Microsimulation(create_reform(params), input_year=2020)
+        reform_object = create_reform(params)
+        reform = Microsimulation(reform_object, input_year=2020)
         reform_sim_build = time()
         print(f"Constructed reform sim ({round(reform_sim_build - start_time, 2)}s)")
         new_income = reform.calc("equiv_household_net_income", map_to="person")
@@ -44,10 +45,11 @@ def compute_reform():
         top_10_pct_share_effect = gain[old_income.decile_rank() == 10].mean()
         median_effect = new_income.median() - old_income.median()
         poverty = poverty_chart(baseline, reform)
+        age_plot = create_age_plot(gain, baseline)
         analysis_done = time()
         del reform
         print(f"Analysis results calculated ({round(analysis_done - calculations_done, 2)}s)")
-        return {"status": "success", "net_cost": gbp(net_cost), "decile_plot": json.loads(decile_plot), "1pct": top_1_pct_share_effect, "10pct": top_10_pct_share_effect, "median": median_effect, "poverty_plot": json.loads(poverty)}
+        return {"status": "success", "age": json.loads(age_plot), "net_cost": gbp(net_cost), "decile_plot": json.loads(decile_plot), "1pct": top_1_pct_share_effect, "10pct": top_10_pct_share_effect, "median": median_effect, "poverty_plot": json.loads(poverty)}
     except Exception as e:
         print(e)
         return {"status": "error"}

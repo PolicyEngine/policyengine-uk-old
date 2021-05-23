@@ -77,6 +77,14 @@ def create_reform(params):
         reforms += [change_param("tax.income_tax.rates.uk", params["add_threshold"], bracket=2, threshold=True)]
     if "personal_allowance" in params:
         reforms += [change_param("tax.income_tax.allowances.personal_allowance.amount", params["personal_allowance"])]
+    if "NI_main_rate" in params:
+        reforms += [change_param("tax.national_insurance.class_1.rates.employee.main", params["NI_main_rate"] / 100)]
+    if "NI_add_rate" in params:
+        reforms += [change_param("tax.national_insurance.class_1.rates.employee.additional", params["NI_add_rate"] / 100)]
+    if "NI_PT" in params:
+        reforms += [change_param("tax.national_insurance.class_1.thresholds.primary_threshold", params["NI_PT"])]
+    if "NI_UEL" in params:
+        reforms += [change_param("tax.national_insurance.class_1.thresholds.upper_earnings_limit", params["NI_UEL"])]
     if "child_BI" in params:
         child_BI = params["child_BI"]
     else:

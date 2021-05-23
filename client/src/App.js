@@ -78,8 +78,43 @@ const DEFAULT_PLAN = {
     description: "The personal allowance is deducted from general income.",
     default: 12500,
     value: 12500,
+    max: 25000,
     summary: "Change the personal allowance to £@/year",
     type: "yearly"
+  },
+  NI_main_rate: {
+    title: "NI main rate",
+    description: "The Class 1 NI main rate is paid on employment earnings between the Primary Threshold and the Upper Earnings Limit.",
+    default: 12,
+    value: 12,
+    summary: "Change the NI main rate to @%",
+    type: "rate"
+  },
+  NI_add_rate: {
+    title: "NI additional rate",
+    description: "The Class 1 NI additional rate is paid on employment earnings above the Upper Earnings Limit.",
+    default: 2,
+    value: 2,
+    summary: "Change the NI additional rate to @%",
+    type: "rate"
+  },
+  NI_PT: {
+    title: "NI Primary Threshold",
+    description: "The Primary Threshold is the lower bound for the main rate of NI.",
+    default: 183,
+    value: 183,
+    max: 1000,
+    summary: "Change the PT to £@/week",
+    type: "weekly"
+  },
+  NI_UEL: {
+    title: "NI Upper Earnings Limit",
+    description: "The Upper Earnings Limit is the upper bound for the main rate of NI.",
+    default: 962,
+    value: 962,
+    max: 10000,
+    summary: "Change the UEL to £@/week",
+    type: "weekly"
   },
   child_BI: {
     title: "Child basic income",
@@ -129,7 +164,7 @@ class App extends React.Component {
             <Route path="/simulation">
                 <Row style={{paddingLeft: 250, paddingRight: 250, paddingBottom: 20}}>
                   <Steps current={1}>
-                    <Step title="Policy" />
+                    <Step title="Policy"></Step>
                     <Step title="Results" />
                   </Steps>
                 </Row>
@@ -242,10 +277,6 @@ class Results extends React.Component {
               <Statistic title="Net cost" value={this.state.results.net_cost} />
             </Card>
           </Col>
-        </Row>
-        <Plot data={this.state.results.decile_plot.data} layout={this.state.results.decile_plot.layout}/>
-        <Plot data={this.state.results.poverty_plot.data} layout={this.state.results.poverty_plot.layout}/>
-        <Row>
           <Col>
             <Card>
               <Statistic 
@@ -278,6 +309,19 @@ class Results extends React.Component {
               prefix={this.state.results["median"] >= 0 ? <><ArrowUpOutlined />£</> : <><ArrowDownOutlined />£</>}
               />
             </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+        <Plot data={this.state.results.decile_plot.data} layout={this.state.results.decile_plot.layout} style={{width:"100%"}}/>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+        <Plot data={this.state.results.poverty_plot.data} layout={this.state.results.poverty_plot.layout} style={{width:"100%"}}/>
+          </Col>
+          <Col>
+        <Plot data={this.state.results.age.data} layout={this.state.results.age.layout} style={{width:"100%"}}/>
           </Col>
         </Row>
       </>:
