@@ -2,3 +2,4 @@ Flask==2.0.0
 Flask-Cors==3.0.10
 openfisca-uk @ git+https://github.com/PSLmodels/openfisca-uk.git@f2184f998496ee2da7ff926a8c25f71ec0508604#egg=OpenFisca_UK
 plotly==4.14.3
+rdbl
