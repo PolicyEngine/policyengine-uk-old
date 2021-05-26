@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/static/css/main.5c0d5346.chunk.css",
-    "main.js": "/static/js/main.161324de.chunk.js",
-    "main.js.map": "/static/js/main.161324de.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.bc5a8959.js",
-    "runtime-main.js.map": "/static/js/runtime-main.bc5a8959.js.map",
-    "static/css/2.edaac0db.chunk.css": "/static/css/2.edaac0db.chunk.css",
-    "static/js/2.37ad5cea.chunk.js": "/static/js/2.37ad5cea.chunk.js",
-    "static/js/2.37ad5cea.chunk.js.map": "/static/js/2.37ad5cea.chunk.js.map",
-    "static/js/3.abb8bed2.chunk.js": "/static/js/3.abb8bed2.chunk.js",
-    "static/js/3.abb8bed2.chunk.js.map": "/static/js/3.abb8bed2.chunk.js.map",
-    "index.html": "/index.html",
-    "static/css/2.edaac0db.chunk.css.map": "/static/css/2.edaac0db.chunk.css.map",
-    "static/css/main.5c0d5346.chunk.css.map": "/static/css/main.5c0d5346.chunk.css.map",
-    "static/js/2.37ad5cea.chunk.js.LICENSE.txt": "/static/js/2.37ad5cea.chunk.js.LICENSE.txt"
+    "main.css": "/openfisca-uk-ui-client/static/css/main.5c0d5346.chunk.css",
+    "main.js": "/openfisca-uk-ui-client/static/js/main.cd81297c.chunk.js",
+    "main.js.map": "/openfisca-uk-ui-client/static/js/main.cd81297c.chunk.js.map",
+    "runtime-main.js": "/openfisca-uk-ui-client/static/js/runtime-main.367309b8.js",
+    "runtime-main.js.map": "/openfisca-uk-ui-client/static/js/runtime-main.367309b8.js.map",
+    "static/css/2.edaac0db.chunk.css": "/openfisca-uk-ui-client/static/css/2.edaac0db.chunk.css",
+    "static/js/2.37ad5cea.chunk.js": "/openfisca-uk-ui-client/static/js/2.37ad5cea.chunk.js",
+    "static/js/2.37ad5cea.chunk.js.map": "/openfisca-uk-ui-client/static/js/2.37ad5cea.chunk.js.map",
+    "static/js/3.abb8bed2.chunk.js": "/openfisca-uk-ui-client/static/js/3.abb8bed2.chunk.js",
+    "static/js/3.abb8bed2.chunk.js.map": "/openfisca-uk-ui-client/static/js/3.abb8bed2.chunk.js.map",
+    "index.html": "/openfisca-uk-ui-client/index.html",
+    "static/css/2.edaac0db.chunk.css.map": "/openfisca-uk-ui-client/static/css/2.edaac0db.chunk.css.map",
+    "static/css/main.5c0d5346.chunk.css.map": "/openfisca-uk-ui-client/static/css/main.5c0d5346.chunk.css.map",
+    "static/js/2.37ad5cea.chunk.js.LICENSE.txt": "/openfisca-uk-ui-client/static/js/2.37ad5cea.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.bc5a8959.js",
+    "static/js/runtime-main.367309b8.js",
     "static/css/2.edaac0db.chunk.css",
     "static/js/2.37ad5cea.chunk.js",
     "static/css/main.5c0d5346.chunk.css",
-    "static/js/main.161324de.chunk.js"
+    "static/js/main.cd81297c.chunk.js"
   ]
 }
