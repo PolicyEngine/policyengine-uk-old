@@ -12,8 +12,8 @@ import logging
 import json
 from time import time
 import plotly.graph_objects as go
-from server.reforms import *
-from server.graphs import *
+from reforms import *
+from graphs import *
 
 app = Flask(__name__)
 CORS(app)
