@@ -13,23 +13,20 @@ jobs:
         with:
           persist-credentials: false
       
-      - name: Navigate to client folder
-        run: cd client
-      
       - name: Setup node.js
         uses: actions/setup-node@v2
         with:
           node-version: '14'
       
       - name: Install dependencies
-        run: npm install
+        run: cd client && npm install
 
       - name: Build
-        run: npm run build
+        run: cd client && npm run build
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: build
+          FOLDER: client/build
