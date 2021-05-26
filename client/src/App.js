@@ -159,7 +159,7 @@ class App extends React.Component {
         subTitle="reform explorer"
         style={{height: 80}}
       />
-      <Router>
+      <Router basename="/openfisca-uk-ui-client">
           <Switch>
             <Route path="/simulation">
                 <Row style={{paddingLeft: 250, paddingRight: 250, paddingBottom: 20}}>
