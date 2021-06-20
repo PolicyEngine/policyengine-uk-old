@@ -5,7 +5,7 @@ from openfisca_core.model_api import *
 from openfisca_uk.entities import *
 from openfisca_uk.tools.general import *
 from flask_cors import CORS
-from openfisca_uk.microdata.simulation import Microsimulation
+from openfisca_uk import Microsimulation
 from rdbl import gbp
 import plotly.express as px
 import logging
@@ -22,6 +22,9 @@ CORS(app)
 SYSTEM = openfisca_uk.CountryTaxBenefitSystem()
 baseline = openfisca_uk.Microsimulation(input_year=2020)
 baseline.calc("household_net_income")
+
+def pct_change(x, y):
+    return (y - x) / x
 
 
 @app.route("/reform", methods=["POST"])
@@ -41,17 +44,32 @@ def compute_reform():
         gain = new_income - old_income
         net_cost = reform.calc("net_income").sum() - baseline.calc("net_income").sum()
         decile_plot = create_decile_plot(gain, old_income)
-        top_1_pct_share_effect = gain[old_income.percentile_rank() == 100].mean()
-        top_10_pct_share_effect = gain[old_income.decile_rank() == 10].mean()
-        median_effect = new_income.median() - old_income.median()
+        poverty_change = pct_change(baseline.calc("in_poverty_bhc", map_to="person").mean(), reform.calc("in_poverty_bhc", map_to="person").mean())
+        hnet_r = reform.calc("household_net_income", map_to="person")
+        hnet = baseline.calc("household_net_income", map_to="person")
+        winner_share = (hnet_r > hnet).mean()
+        loser_share = (hnet_r < hnet).mean()
+        gini_change = pct_change(hnet.gini(), hnet_r.gini())
         poverty = poverty_chart(baseline, reform)
         age_plot = create_age_plot(gain, baseline)
+        mtr_plot = average_mtr_changes(baseline, reform)
         analysis_done = time()
         del reform
         print(f"Analysis results calculated ({round(analysis_done - calculations_done, 2)}s)")
-        return {"status": "success", "age": json.loads(age_plot), "net_cost": gbp(net_cost), "decile_plot": json.loads(decile_plot), "1pct": top_1_pct_share_effect, "10pct": top_10_pct_share_effect, "median": median_effect, "poverty_plot": json.loads(poverty)}
+        return {
+            "status": "success", 
+            "age": json.loads(age_plot), 
+            "net_cost": gbp(net_cost), 
+            "decile_plot": json.loads(decile_plot), 
+            "poverty_plot": json.loads(poverty),
+            "poverty_change": float(poverty_change),
+            "winner_share": float(winner_share),
+            "loser_share": float(loser_share),
+            "inequality_change": float(gini_change),
+            "mtr_plot": json.loads(mtr_plot)
+        }
     except Exception as e:
-        print(e)
+        print(e.with_traceback())
         return {"status": "error"}
 
 @app.after_request

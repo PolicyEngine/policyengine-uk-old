@@ -15,6 +15,7 @@ import {
   Link,
 } from "react-router-dom";
 import { Controls } from './controls';
+import { withWarn } from 'antd/lib/modal/confirm';
 
 const { Step } = Steps;
 
@@ -145,66 +146,121 @@ const DEFAULT_PLAN = {
   },
 }
 
+function TopProgress(props) {
+  return (
+    <>
+      <Row style={{padding: 50}} className="d-none d-md-flex">
+        <Col md={4}>
+          <p>Welcome to the OpenFisca-UK Reform Explorer. Powered by the open-source microsimulation model OpenFisca-UK, this site allows you to experiment with different changes to how taxes and benefits are set in the United Kingdom, and simulate the results on people, families and households in the country.</p>
+        </Col>
+        <Col md={8}>
+          <div className="d-flex justify-content-center">
+            <div style={{width: 800}}>
+              <Steps current={props.step}>
+                <Step title="Policy" description="Specify changes to the current taxes and benefit programmes"></Step>
+                <Step title="Results" description="Simulate the changes on people, families and households in the UK"/>
+              </Steps>
+            </div>
+          </div>
+        </Col>
+      </Row>
+      <Row style={{padding: 50, paddingTop: 20}} className="d-md-none">
+        <Col md={4} style={{paddingBottom: 20}}>
+          <p>Welcome to the OpenFisca-UK Reform Explorer. Powered by the open-source microsimulation model OpenFisca-UK, this site allows you to experiment with different changes to how taxes and benefits are set in the United Kingdom, and simulate the results on people, families and households in the country.</p>
+        </Col>
+        <Col md={8}>
+        <Steps current={props.step} direction="vertical">
+          <Step title="Policy" description="Specify changes to the current taxes and benefit programmes"></Step>
+          <Step title="Results" description="Simulate the changes on people, families and households in the UK"/>
+        </Steps>
+        </Col>
+      </Row>
+    </>
+  )
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {selected: null, plan: DEFAULT_PLAN};
+    this.state = {selected: "main_rates", plan: DEFAULT_PLAN, results: null, ready: false, waiting: true};
+    this.getPlanFromURL = this.getPlanFromURL.bind(this);
+    this.simulate = this.simulate.bind(this);
+  }
+
+  getPlanFromURL() {
+    let searchParams = (new URL(document.location)).searchParams;
+    let plan = this.state.plan;
+    for(let key of searchParams.keys()) {
+      plan[key].value = +searchParams.get(key);
+    }
+    this.setState({plan: plan, ready: true});
+  }
+
+  simulate() {
+    this.getPlanFromURL();
+    let submission = {}
+    for(let key in this.state.plan) {
+      submission[key] = this.state.plan[key].value;
+    }
+    this.setState({waiting: true}, () => {
+      fetch("http://localhost:5000/reform", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(submission)
+      }).then(res => res.json()).then(json => {this.setState({results: json, waiting: false});})
+    })
   }
 
   render() {
     return (
-      <div style={{paddingLeft: 20, paddingRight: 20}}>
-      <PageHeader
-        title="openfisca-uk"
-        subTitle="reform explorer"
-        style={{height: 80}}
-      />
+      <div>
+        <div className="d-none d-md-block">
+          <PageHeader
+            title="openfisca-uk"
+            subTitle="reform explorer"
+          />
+        </div>
+        <div className="d-md-none d-flex justify-content-center">
+          <PageHeader
+            title="openfisca-uk"
+            subTitle="reform explorer"
+          />
+        </div>
       <Router>
           <Switch>
-            <Route path="/simulation">
-                <Row style={{paddingLeft: 250, paddingRight: 250, paddingBottom: 20}}>
-                  <Steps current={1}>
-                    <Step title="Policy"></Step>
-                    <Step title="Results" />
-                  </Steps>
-                </Row>
+            <Route path="/simulate">
+                <TopProgress step={1}/>
                 <Row>
                   <Col md={2} style={{paddingLeft: 50}}>
                     <PlanSummary plan={this.state.plan}/>
                   </Col>
-                  <Col md={10}>
-                    <Results plan={this.state.plan}/>
+                  <Col md={10} style={{paddingLeft: 60, padding: 60}}>
+                    {
+                      this.state.results ? <Results results={this.state.results}/> : <LoadingResults onMount={this.simulate}/>
+                    }
                   </Col>
                 </Row>
             </Route>
             <Route path="/">
-                <Row style={{paddingLeft: 250, paddingRight: 250, paddingBottom: 20}}>
-                  <Steps current={0}>
-                    <Step title="Policy" />
-                    <Step title="Results" />
-                  </Steps>
-                </Row>
+                <TopProgress step={0}/>
                 <Row>
-                  <Col>
-                    <div className="main-menu" style={{height:"88%", overflowY: "auto", width: "100%"}}>
+                  <Col md={3} style={{paddingRight: 0}}>
+                    <div className="main-menu">
                       <ControlTab onClick={name => {this.setState({selected: name.key})}}/>
                     </div>
                   </Col>
-                  <Col md={3}>
-                    <div className="main-menu" style={{height:"88%", overflowY: "auto", width: "100%"}}>
-                      <Controls plan={this.state.plan} selected={this.state.selected} onChange={(name, val) => {let plan = this.state.plan; plan[name].value = val; this.setState({plan: plan})}}/>
+                  <Col md={6} style={{padding: 50}}>
+                    <div className="main-menu">
+                      <Controls plan={this.state.plan} selected={this.state.selected} onChange={(name, val) => {let plan = this.state.plan; plan[name].value = val; this.setState({plan: plan});}}/>
                     </div>
                   </Col>
-                  <Col md={5}>
-                    <div className="main-menu" style={{height:"88%", overflowY: "auto", width: "100%"}}>
-                      <PolicyCommentary selected={this.state.selected}/>
-                    </div>
-                  </Col>
-                  <Col md={2}>
-                    <div className="main-menu" style={{height:"88%", overflowY: "auto", width: "100%"}}>
+                  <Col md={3} style={{padding: 50}}>
+                    <div className="main-menu">
                     <PlanSummary plan={this.state.plan} />
                     <Empty description="" image={null}>
-                      <SimulateButton />
+                      <SimulateButton plan={this.state.plan}/>
                     </Empty>
                     </div>
                   </Col>
@@ -219,44 +275,40 @@ class App extends React.Component {
 }
 
 function SimulateButton(props) {
+  let plan = props.plan;
+  let searchParams = new URLSearchParams(window.location.search);
+  for(let key in plan) {
+    if(plan[key].value !== plan[key].default) {
+      searchParams.set(key, +plan[key].value);
+    } else {
+      searchParams.delete(key);
+    }
+  }
+  let url = `/simulate?${searchParams.toString()}`;
   return (
     <div>
-      <Link to="/simulation"><Button>Simulate</Button></Link>
+      <Link to={url}><Button>Simulate</Button></Link>
     </div>
   )
 }
 
-function PolicyCommentary(props) {
-  return (
-    <>
-    <Divider>The UK Tax-Benefit System</Divider>
-    This calculator presents a toolkit for anyone to use, to estimate the effects of their ideas around how the UK taxes and distributes money on households, families and people in the United Kingdom. The first side panel displays a collection of policy switches; each of these describes a particular reform under a single parameter which may be combined with any other reform. Develop your policy plan by adding these reforms, and once you're ready to see the results, click the simulate button.
-    </>
-  )
+class LoadingResults extends React.Component {
+  componentDidMount() {
+    this.props.onMount();
+  }
+  render() {
+    return (
+      <Empty description="Simulating your plan on the UK population">
+        <br /><br /><Spin indicator={antIcon}/>
+      </Empty>
+    )
+  }
 }
 
 class Results extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {results: null, waiting: false}
-  }
-
-  componentDidMount() {
-    let submission = {}
-    for(let key in this.props.plan) {
-      if (this.props.plan[key].value !== this.props.plan[key].default) {
-        submission[key] = this.props.plan[key].value;
-      }
-    }
-    this.setState({waiting: true}, () => {
-      fetch("http://localhost:5000/reform", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(submission)
-      }).then(res => res.json()).then(json => {this.setState({results: json, waiting: false});})
-    })
+    this.state = {results: props.results, waiting: false};
   }
 
   render() {
@@ -269,66 +321,75 @@ class Results extends React.Component {
     return (
       <>
       <Divider>Results</Divider>
-      {this.state.results ? 
-      <>
         <Row>
-          <Col>
-            <Card>
+          <Col style={{padding: 10, margin: 10}}>
+            <Card style={{minWidth: 150}}>
               <Statistic title="Net cost" value={this.state.results.net_cost} />
             </Card>
           </Col>
-          <Col>
-            <Card>
+          <Col style={{padding: 10, margin: 10}}>
+            <Card style={{minWidth: 150}}>
               <Statistic 
-              title="Top 1% mean effect" 
-              value={Math.abs(this.state.results["1pct"])}
-              precision={2}
-              valueStyle={{ color: this.state.results["1pct"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["1pct"] >= 0 ? <><ArrowUpOutlined />£</> : <><ArrowDownOutlined />£</>}
+              title="Poverty rate change" 
+              value={this.state.results["poverty_change"] * 100}
+              precision={1}
+              //valueStyle={{ color: this.state.results["poverty_change"] >= 0 ? '#3f8600' : "#cf1322" }}
+              prefix={this.state.results["poverty_change"] >= 0 ? <><ArrowUpOutlined /></> : <><ArrowDownOutlined /></>}
+              suffix="%"
               />
             </Card>
           </Col>
-          <Col>
-            <Card>
+          <Col style={{padding: 10, margin: 10}}>
+            <Card style={{minWidth: 150}}>
               <Statistic 
-              title="Top 10% mean effect" 
-              value={Math.abs(this.state.results["10pct"])}
-              precision={2}
-              valueStyle={{ color: this.state.results["10pct"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["10pct"] >= 0 ? <><ArrowUpOutlined />£</> : <><ArrowDownOutlined />£</>}
+              title="Winner share" 
+              value={this.state.results["winner_share"] * 100}
+              precision={1}
+              //valueStyle={{ color: this.state.results["winner_share"] >= 0.5 ? '#3f8600' : "#cf1322" }}
+              suffix="%"
               />
             </Card>
           </Col>
-          <Col>
-            <Card>
+          <Col style={{padding: 10, margin: 10}}>
+            <Card style={{minWidth: 150}}>
               <Statistic 
-              title="Median effect" 
-              value={Math.abs(this.state.results["median"])}
-              precision={2}
-              valueStyle={{ color: this.state.results["median"] >= 0 ? '#3f8600' : "#cf1322" }}
-              prefix={this.state.results["median"] >= 0 ? <><ArrowUpOutlined />£</> : <><ArrowDownOutlined />£</>}
+              title="Loser share" 
+              value={this.state.results["loser_share"] * 100}
+              precision={1}
+              //valueStyle={{ color: this.state.results["loser_share"] >= 0.5 ? '#3f8600' : "#cf1322" }}
+              suffix="%"
+              />
+            </Card>
+          </Col>
+          <Col style={{padding: 10, margin: 10}}>
+            <Card style={{minWidth: 150}}>
+              <Statistic 
+              title="Inequality" 
+              value={this.state.results["inequality_change"] * 100}
+              precision={1}
+              //valueStyle={{ color: this.state.results["inequality_change"] < 1 ? '#3f8600' : "#cf1322" }}
+              prefix={this.state.results["poverty_change"] >= 0 ? <><ArrowUpOutlined /></> : <><ArrowDownOutlined /></>}
+              suffix="%"
               />
             </Card>
           </Col>
         </Row>
-        <Row>
-          <Col>
-        <Plot data={this.state.results.decile_plot.data} layout={this.state.results.decile_plot.layout} style={{width:"100%"}}/>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-        <Plot data={this.state.results.poverty_plot.data} layout={this.state.results.poverty_plot.layout} style={{width:"100%"}}/>
-          </Col>
-          <Col>
-        <Plot data={this.state.results.age.data} layout={this.state.results.age.layout} style={{width:"100%"}}/>
-          </Col>
-        </Row>
-      </>:
-      <Empty description="Simulating your plan on the UK population">
-        {this.state.waiting ? <><br /><br /><Spin indicator={antIcon}/></> : null}
-      </Empty>
-      }
+        <div>
+          <Row>
+            <Col md={6}>
+              <Plot data={this.state.results.decile_plot.data} layout={this.state.results.decile_plot.layout} config={{displayModeBar: false}} style={{width: "100%"}}/>
+            </Col>
+            <Col md={6}>
+              <Plot data={this.state.results.poverty_plot.data} layout={this.state.results.poverty_plot.layout} config={{displayModeBar: false}} style={{width: "100%"}}/>
+            </Col>
+            <Col md={6}>
+              <Plot data={this.state.results.age.data} layout={this.state.results.age.layout} config={{displayModeBar: false}} style={{width: "100%"}}/>
+            </Col>
+            <Col md={6}>
+              <Plot data={this.state.results.mtr_plot.data} layout={this.state.results.mtr_plot.layout} config={{displayModeBar: false}} style={{width: "100%"}}/>
+            </Col>
+          </Row>
+        </div>
       </>
     )
   }
@@ -360,7 +421,8 @@ class ControlTab extends React.Component {
       <Menu
         onClick={this.props.onClick}
         mode="inline"
-        openKeys={["tax", "income_tax", "national_insurance", "benefit", "means"]}
+        defaultOpenKeys={["tax", "income_tax"]}
+        defaultSelectedKeys={["main_rates"]}
       >
         <SubMenu key="tax" title="Tax">
           <SubMenu key="income_tax" title="Income Tax">
