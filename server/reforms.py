@@ -17,12 +17,13 @@ def change_param(param, value, bracket=None, threshold=False):
                 node = node.rate
         node.update(periods.period("year:2015:10"), value=value)
         return parameters
-    
+
     class reform(Reform):
         def apply(self):
             self.modify_parameters(modifier)
-    
+
     return reform
+
 
 def basic_income(child, adult, senior):
     class gross_income(Variable):
@@ -48,43 +49,113 @@ def basic_income(child, adult, senior):
                 + person("is_SP_age", period) * senior * 52
             )
             return add(person, period, COMPONENTS) + basic_income
-    
+
     class basic_income(Reform):
         def apply(self):
             self.update_variable(gross_income)
-    
+
     return basic_income
+
 
 def neutralizer_reform(variable):
     class reform(Reform):
         def apply(self):
             self.neutralize_variable(variable)
+
     return reform
+
 
 def create_reform(params):
     reforms = []
     if "basic_rate" in params:
-        reforms += [change_param("tax.income_tax.rates.uk", params["basic_rate"] / 100, bracket=0, threshold=False)]
+        reforms += [
+            change_param(
+                "tax.income_tax.rates.uk",
+                params["basic_rate"] / 100,
+                bracket=0,
+                threshold=False,
+            )
+        ]
     if "higher_rate" in params:
-        reforms += [change_param("tax.income_tax.rates.uk", params["higher_rate"] / 100, bracket=1, threshold=False)]
+        reforms += [
+            change_param(
+                "tax.income_tax.rates.uk",
+                params["higher_rate"] / 100,
+                bracket=1,
+                threshold=False,
+            )
+        ]
     if "add_rate" in params:
-        reforms += [change_param("tax.income_tax.rates.uk", params["add_rate"] / 100, bracket=2, threshold=False)]
+        reforms += [
+            change_param(
+                "tax.income_tax.rates.uk",
+                params["add_rate"] / 100,
+                bracket=2,
+                threshold=False,
+            )
+        ]
     if "basic_threshold" in params:
-        reforms += [change_param("tax.income_tax.rates.uk", params["basic_threshold"], bracket=0, threshold=True)]
+        reforms += [
+            change_param(
+                "tax.income_tax.rates.uk",
+                params["basic_threshold"],
+                bracket=0,
+                threshold=True,
+            )
+        ]
     if "higher_threshold" in params:
-        reforms += [change_param("tax.income_tax.rates.uk", params["higher_threshold"], bracket=1, threshold=True)]
+        reforms += [
+            change_param(
+                "tax.income_tax.rates.uk",
+                params["higher_threshold"],
+                bracket=1,
+                threshold=True,
+            )
+        ]
     if "add_threshold" in params:
-        reforms += [change_param("tax.income_tax.rates.uk", params["add_threshold"], bracket=2, threshold=True)]
+        reforms += [
+            change_param(
+                "tax.income_tax.rates.uk",
+                params["add_threshold"],
+                bracket=2,
+                threshold=True,
+            )
+        ]
     if "personal_allowance" in params:
-        reforms += [change_param("tax.income_tax.allowances.personal_allowance.amount", params["personal_allowance"])]
+        reforms += [
+            change_param(
+                "tax.income_tax.allowances.personal_allowance.amount",
+                params["personal_allowance"],
+            )
+        ]
     if "NI_main_rate" in params:
-        reforms += [change_param("tax.national_insurance.class_1.rates.employee.main", params["NI_main_rate"] / 100)]
+        reforms += [
+            change_param(
+                "tax.national_insurance.class_1.rates.employee.main",
+                params["NI_main_rate"] / 100,
+            )
+        ]
     if "NI_add_rate" in params:
-        reforms += [change_param("tax.national_insurance.class_1.rates.employee.additional", params["NI_add_rate"] / 100)]
+        reforms += [
+            change_param(
+                "tax.national_insurance.class_1.rates.employee.additional",
+                params["NI_add_rate"] / 100,
+            )
+        ]
     if "NI_PT" in params:
-        reforms += [change_param("tax.national_insurance.class_1.thresholds.primary_threshold", params["NI_PT"])]
+        reforms += [
+            change_param(
+                "tax.national_insurance.class_1.thresholds.primary_threshold",
+                params["NI_PT"],
+            )
+        ]
     if "NI_UEL" in params:
-        reforms += [change_param("tax.national_insurance.class_1.thresholds.upper_earnings_limit", params["NI_UEL"])]
+        reforms += [
+            change_param(
+                "tax.national_insurance.class_1.thresholds.upper_earnings_limit",
+                params["NI_UEL"],
+            )
+        ]
     if "child_BI" in params:
         child_BI = params["child_BI"]
     else:

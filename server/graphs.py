@@ -3,44 +3,79 @@ import plotly.graph_objects as go
 from openfisca_uk import IndividualSim
 import pandas as pd
 
+
 def create_decile_plot(gain, old_income):
-    return px.bar(gain.groupby(old_income.decile_rank()).mean()).update_layout(
-        title="Income effect by decile",
-        xaxis_title="Equivalised disposable income decile",
-        yaxis_title="Average income effect",
-        yaxis_tickprefix="£",
-        template="plotly_white",
-        showlegend=False,
-    ).update_traces(marker_color='#1890ff').to_json()
+    return (
+        px.bar(gain.groupby(old_income.decile_rank()).mean())
+        .update_layout(
+            title="Income effect by decile",
+            xaxis_title="Equivalised disposable income decile",
+            yaxis_title="Average income effect",
+            yaxis_tickprefix="£",
+            template="plotly_white",
+            showlegend=False,
+        )
+        .update_traces(marker_color="#1890ff")
+        .to_json()
+    )
+
 
 def create_age_plot(gain, sim):
-    return px.line(gain.groupby(sim.calc("age")).mean().rolling(3).median()).update_layout(
-        title="Income effect by age",
-        xaxis_title="Age",
-        yaxis_title="Average income effect",
-        yaxis_tickprefix="£",
-        template="plotly_white",
-        showlegend=False,
-    ).update_traces(marker_color='#1890ff').to_json()
+    return (
+        px.line(gain.groupby(sim.calc("age")).mean().rolling(3).median())
+        .update_layout(
+            title="Income effect by age",
+            xaxis_title="Age",
+            yaxis_title="Average income effect",
+            yaxis_tickprefix="£",
+            template="plotly_white",
+            showlegend=False,
+        )
+        .update_traces(marker_color="#1890ff")
+        .to_json()
+    )
+
 
 def percent_change(x, y):
     return (y - x) / x
 
+
 def poverty_rate(sim, population_var):
-    return sim.calc("in_poverty_bhc", map_to="person")[sim.calc(population_var) > 0].mean()
+    return sim.calc("in_poverty_bhc", map_to="person")[
+        sim.calc(population_var) > 0
+    ].mean()
+
 
 def poverty_chart(baseline, reform):
-    child = percent_change(poverty_rate(baseline, "is_child"), poverty_rate(reform, "is_child"))
-    adult = percent_change(poverty_rate(baseline, "is_WA_adult"), poverty_rate(reform, "is_WA_adult"))
-    senior = percent_change(poverty_rate(baseline, "is_SP_age"), poverty_rate(reform, "is_SP_age"))
-    person = percent_change(poverty_rate(baseline, "people"), poverty_rate(reform, "people"))
-    fig = px.bar(x=["Child", "Working-age", "Retired", "All"], y=[child, adult, senior, person])
-    fig.update_layout(template="plotly_white", title="Poverty rate changes", xaxis=dict(title="Population"), yaxis=dict(title="Percent change", tickformat="%"))
-    return fig.update_traces(marker_color='#1890ff').to_json()
+    child = percent_change(
+        poverty_rate(baseline, "is_child"), poverty_rate(reform, "is_child")
+    )
+    adult = percent_change(
+        poverty_rate(baseline, "is_WA_adult"),
+        poverty_rate(reform, "is_WA_adult"),
+    )
+    senior = percent_change(
+        poverty_rate(baseline, "is_SP_age"), poverty_rate(reform, "is_SP_age")
+    )
+    person = percent_change(
+        poverty_rate(baseline, "people"), poverty_rate(reform, "people")
+    )
+    fig = px.bar(
+        x=["Child", "Working-age", "Retired", "All"],
+        y=[child, adult, senior, person],
+    )
+    fig.update_layout(
+        template="plotly_white",
+        title="Poverty rate changes",
+        xaxis=dict(title="Population"),
+        yaxis=dict(title="Percent change", tickformat="%"),
+    )
+    return fig.update_traces(marker_color="#1890ff").to_json()
+
 
 def hypothetical_tax_chart(reform_obj):
     def plot_budget(household_config, title):
-        BLUE = "#1890ff" #"#1976D2"
+        BLUE = "#1890ff"  # "#1976D2"
         GREY = "#BDBDBD"
         individual_colors = [GREY, BLUE]
         baseline_policy = IndividualSim(year=2020)
@@ -55,9 +90,9 @@ def hypothetical_tax_chart(reform_obj):
                 "Net income (Baseline)": baseline_policy.calc(
                     "household_net_income"
                 )[0],
-                "Net income (Reform)": reform_policy.calc("household_net_income")[
-                    0
-                ],
+                "Net income (Reform)": reform_policy.calc(
+                    "household_net_income"
+                )[0],
                 "Tax (Baseline)": baseline_policy.calc("tax")[0],
                 "Tax (Reform)": reform_policy.calc("tax")[0],
                 "Benefits (Baseline)": baseline_policy.calc("benefits")[0],
@@ -134,12 +169,10 @@ def hypothetical_tax_chart(reform_obj):
                 fig.data[i].visible = "legendonly"
         return fig
 
-
     def single_parent_UC(sim):
         sim.add_person(age=26, is_benunit_head=True, name="adult")
         sim.add_benunit(adults=["adult"], claims_UC=True)
         sim.add_household(adults=["adult"])
-
 
     fig = plot_budget(
         single_parent_UC,
@@ -148,17 +181,28 @@ def hypothetical_tax_chart(reform_obj):
 
     return fig.to_json()
 
+
 def average_mtr_changes(baseline_sim, reform_sim):
-    avg_mtr = lambda sim: float((1 - sim.deriv("household_net_income", wrt="employment_income"))[sim.calc("is_adult")].dropna().mean())
-    fig = px.bar(
-        x=["Baseline", "Reform"],
-        y=list(map(avg_mtr, (baseline_sim, reform_sim)))
-    ).update_layout(
-        title="Changes to marginal tax rates",
-        xaxis_title="Policy",
-        yaxis_title="Average effective marginal tax rate",
-        yaxis_tickformat="%",
-        template="plotly_white",
-        showlegend=False,
-    ).update_traces(marker_color='#1890ff')
+    avg_mtr = lambda sim: float(
+        (1 - sim.deriv("household_net_income", wrt="employment_income"))[
+            sim.calc("is_adult")
+        ]
+        .dropna()
+        .mean()
+    )
+    fig = (
+        px.bar(
+            x=["Baseline", "Reform"],
+            y=list(map(avg_mtr, (baseline_sim, reform_sim))),
+        )
+        .update_layout(
+            title="Changes to marginal tax rates",
+            xaxis_title="Policy",
+            yaxis_title="Average effective marginal tax rate",
+            yaxis_tickformat="%",
+            template="plotly_white",
+            showlegend=False,
+        )
+        .update_traces(marker_color="#1890ff")
+    )
     return fig.to_json()
