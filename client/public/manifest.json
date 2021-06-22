@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "OpenFisca-UK UI",
+  "name": "OpenFisca-UK Reform Explorer",
   "icons": [
     {
       "src": "favicon.ico",

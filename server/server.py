@@ -26,6 +26,7 @@ baseline.calc("household_net_income")
 def pct_change(x, y):
     return (y - x) / x
 
+cached_results = {}
 
 @app.route("/reform", methods=["POST"])
 def compute_reform():
@@ -33,6 +34,9 @@ def compute_reform():
         print("Received reform request")
         start_time = time()
         params = request.json
+        param_string = json.dumps(params)
+        if param_string in cached_results:
+            return cached_results[param_string]
         reform_object = create_reform(params)
         reform = Microsimulation(reform_object, input_year=2020)
         reform_sim_build = time()
@@ -56,7 +60,7 @@ def compute_reform():
         analysis_done = time()
         del reform
         print(f"Analysis results calculated ({round(analysis_done - calculations_done, 2)}s)")
-        return {
+        result = {
             "status": "success", 
             "age": json.loads(age_plot), 
             "net_cost": gbp(net_cost), 
@@ -68,6 +72,8 @@ def compute_reform():
             "inequality_change": float(gini_change),
             "mtr_plot": json.loads(mtr_plot)
         }
+        cached_results[param_string] = result
+        return result
     except Exception as e:
         print(e.with_traceback())
         return {"status": "error"}

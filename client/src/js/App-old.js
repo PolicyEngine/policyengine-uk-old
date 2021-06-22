@@ -1,4 +1,4 @@
-import './App.css';
+import '../css/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Row, Col} from 'react-bootstrap';
 import React from 'react';
@@ -15,7 +15,6 @@ import {
   Link,
 } from "react-router-dom";
 import { Controls } from './controls';
-import { withWarn } from 'antd/lib/modal/confirm';
 
 const { Step } = Steps;
 
@@ -155,10 +154,12 @@ function TopProgress(props) {
         </Col>
         <Col md={8}>
           <div className="d-flex justify-content-center">
-            <div style={{width: 800}}>
+            <div style={{width: 1000}}>
               <Steps current={props.step}>
                 <Step title="Policy" description="Specify changes to the current taxes and benefit programmes"></Step>
-                <Step title="Results" description="Simulate the changes on people, families and households in the UK"/>
+                <Step title="UK-wide effects" description="Simulate the changes on people, families and households in the UK"/>
+                <Step title="About you" description="Describe your household to calculate the effects on you and your family"/>
+                <Step title="Your results" description="Simulate the reform, showing your finances before and after"/>
               </Steps>
             </div>
           </div>
@@ -172,6 +173,8 @@ function TopProgress(props) {
         <Steps current={props.step} direction="vertical">
           <Step title="Policy" description="Specify changes to the current taxes and benefit programmes"></Step>
           <Step title="Results" description="Simulate the changes on people, families and households in the UK"/>
+          <Step title="About you" description="Describe your household to calculate the effects on you and your family"/>
+          <Step title="Your results" description="Simulate the reform, showing your finances before and after"/>
         </Steps>
         </Col>
       </Row>
@@ -243,7 +246,7 @@ class App extends React.Component {
                   </Col>
                 </Row>
             </Route>
-            <Route path="/">
+            <Route path="/" exact>
                 <TopProgress step={0}/>
                 <Row>
                   <Col md={3} style={{paddingRight: 0}}>
@@ -265,6 +268,10 @@ class App extends React.Component {
                     </div>
                   </Col>
                 </Row>
+            </Route>
+            <Route path="/about-you">
+              <TopProgress step={2}/>
+              <IndividualControls />
             </Route>
           </Switch>
       </Router>
@@ -320,7 +327,7 @@ class Results extends React.Component {
     }
     return (
       <>
-      <Divider>Results</Divider>
+      <Divider>Population results</Divider>
         <Row>
           <Col style={{padding: 10, margin: 10}}>
             <Card style={{minWidth: 150}}>
@@ -333,7 +340,6 @@ class Results extends React.Component {
               title="Poverty rate change" 
               value={this.state.results["poverty_change"] * 100}
               precision={1}
-              //valueStyle={{ color: this.state.results["poverty_change"] >= 0 ? '#3f8600' : "#cf1322" }}
               prefix={this.state.results["poverty_change"] >= 0 ? <><ArrowUpOutlined /></> : <><ArrowDownOutlined /></>}
               suffix="%"
               />
@@ -345,7 +351,6 @@ class Results extends React.Component {
               title="Winner share" 
               value={this.state.results["winner_share"] * 100}
               precision={1}
-              //valueStyle={{ color: this.state.results["winner_share"] >= 0.5 ? '#3f8600' : "#cf1322" }}
               suffix="%"
               />
             </Card>
@@ -356,7 +361,6 @@ class Results extends React.Component {
               title="Loser share" 
               value={this.state.results["loser_share"] * 100}
               precision={1}
-              //valueStyle={{ color: this.state.results["loser_share"] >= 0.5 ? '#3f8600' : "#cf1322" }}
               suffix="%"
               />
             </Card>
@@ -367,7 +371,6 @@ class Results extends React.Component {
               title="Inequality" 
               value={this.state.results["inequality_change"] * 100}
               precision={1}
-              //valueStyle={{ color: this.state.results["inequality_change"] < 1 ? '#3f8600' : "#cf1322" }}
               prefix={this.state.results["poverty_change"] >= 0 ? <><ArrowUpOutlined /></> : <><ArrowDownOutlined /></>}
               suffix="%"
               />
@@ -440,6 +443,7 @@ class ControlTab extends React.Component {
         <SubMenu key="benefit" title="Benefit">
           <SubMenu key="means" title="Means-tested benefits">
             <Menu.Item key="universal_credit">Universal Credit</Menu.Item>
+            <Menu.Item key="UC">Universal Credit2</Menu.Item>
             <Menu.Item key="jsa">JSA</Menu.Item>
             <Menu.Item key="cb">Child Benefit</Menu.Item>
             <Menu.Item key="wtc">Working Tax Credit</Menu.Item>
@@ -450,6 +454,45 @@ class ControlTab extends React.Component {
         </SubMenu>
         <Menu.Item key="basic_income">Basic income</Menu.Item>
       </Menu>
+    )
+  }
+}
+
+class IndividualControls extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {situation: {household:{num_families: 1}, families: [{num_people: 1}]}}
+  }
+  render() {
+    return (
+      <Row>
+        <Col md={3} style={{paddingRight: 0}}>
+          <div className="main-menu">
+          <Menu
+          onClick={this.props.onClick}
+          mode="inline"
+          defaultOpenKeys={[]}
+          defaultSelectedKeys={[]}
+        >
+          <Menu.Item key="household">Your household</Menu.Item>
+          <SubMenu key="family-1" title="Family">
+            <Menu.Item key="family-1-general">General</Menu.Item>
+            <Menu.Item key="family-1-benefits">Benefits</Menu.Item>
+            <SubMenu key="people" title="People">
+              <SubMenu key="person-1" title="Person">
+                <Menu.Item key="family-1-general">General</Menu.Item>
+                <Menu.Item key="family-1-benefits">Benefits</Menu.Item>
+              </SubMenu>
+            </SubMenu>
+          </SubMenu>
+        </Menu>
+          </div>
+        </Col>
+        <Col md={9}>
+
+        </Col>
+      </Row>
+      
     )
   }
 }
