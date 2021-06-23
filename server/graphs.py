@@ -21,8 +21,9 @@ def create_decile_plot(gain, old_income):
 
 
 def create_age_plot(gain, sim):
+    values = gain.groupby(sim.calc("age")).mean().rolling(3).median()
     return (
-        px.line(gain.groupby(sim.calc("age")).mean().rolling(3).median())
+        px.line(values)
         .update_layout(
             title="Income effect by age",
             xaxis_title="Age",
