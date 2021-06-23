@@ -1,4 +1,3 @@
-import "../css/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import "antd/dist/antd.css";
@@ -63,15 +62,15 @@ function Parameter(props) {
 	);
 }
 
-function ParameterGroup(props) {
+export function ParameterGroup(props) {
 	return (
 		<>
-			{props.names.map((name) => <Parameter key={name} name={name} param={props.plan[name]} onChange={props.onChange} rate />)}
+			{props.names.map((name) => <Parameter key={name} name={name} param={props.policy[name]} onChange={props.onChange} rate />)}
 		</>
 	);
 }
 
-function NothingControls(props) {
+export function NothingControls(props) {
 	return (
 		<>
 			<Divider>No parameters available</Divider>
@@ -80,7 +79,7 @@ function NothingControls(props) {
 	);
 }
 
-export function Controls(props) {
+function PolicyControls(props) {
 	const controlSet = {
 		main_rates: [
 			"basic_rate",
@@ -107,7 +106,9 @@ export function Controls(props) {
 	};
 	const names = controlSet[props.selected];
 	if (!(props.selected in controlSet)) {
-		return <NothingControls key={props.selected} plan={props.plan} />;
+		return <NothingControls key={props.selected} policy={props.policy} />;
 	}
-	return <ParameterGroup key={props.selected} onChange={props.onChange} plan={props.plan} names={names} />;
+	return <ParameterGroup key={props.selected} onChange={props.onChange} policy={props.policy} names={names} />;
 }
+
+export default PolicyControls;

@@ -1,4 +1,4 @@
-const DEFAULT_PLAN = {
+const DEFAULT_POLICY = {
 	basic_rate: {
 		title: "Basic rate",
 		description: "The basic rate is the first of three tax brackets on all income, after allowances are deducted.",
@@ -122,4 +122,4 @@ const DEFAULT_PLAN = {
 	},
 };
 
-export default DEFAULT_PLAN;
+export default DEFAULT_POLICY;

@@ -1,5 +1,6 @@
 from openfisca_core import periods
 from openfisca_core.model_api import *
+from openfisca_uk import BASELINE_VARIABLES
 from openfisca_uk.entities import *
 from openfisca_uk.tools.general import *
 
@@ -26,33 +27,21 @@ def change_param(param, value, bracket=None, threshold=False):
 
 
 def basic_income(child, adult, senior):
-    class gross_income(Variable):
-        value_type = float
-        entity = Person
-        label = u"Gross income, including benefits"
-        definition_period = YEAR
-
+    class benefits(BASELINE_VARIABLES.benefits):
         def formula(person, period, parameters):
-            COMPONENTS = [
-                "employment_income",
-                "pension_income",
-                "self_employment_income",
-                "property_income",
-                "savings_interest_income",
-                "dividend_income",
-                "miscellaneous_income",
-                "benefits",
-            ]
+            original_benefits = BASELINE_VARIABLES.benefits.formula(
+                person, period, parameters
+            )
             basic_income = (
                 person("is_child", period) * child * 52
                 + person("is_WA_adult", period) * adult * 52
                 + person("is_SP_age", period) * senior * 52
             )
-            return add(person, period, COMPONENTS) + basic_income
+            return original_benefits + basic_income
 
     class basic_income(Reform):
         def apply(self):
-            self.update_variable(gross_income)
+            self.update_variable(benefits)
 
     return basic_income
 

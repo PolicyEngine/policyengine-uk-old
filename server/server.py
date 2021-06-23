@@ -14,14 +14,25 @@ from time import time
 import plotly.graph_objects as go
 from reforms import *
 from graphs import *
+from individual import *
 
 app = Flask(__name__)
 CORS(app)
 
 
 SYSTEM = openfisca_uk.CountryTaxBenefitSystem()
-baseline = openfisca_uk.Microsimulation(input_year=2020)
+baseline = openfisca_uk.Microsimulation(year=2021)
 baseline.calc("household_net_income")
+
+avg_mtr = lambda sim: float(
+    (1 - sim.deriv("household_net_income", wrt="employment_income"))[
+        sim.calc("is_adult")
+    ]
+    .dropna()
+    .mean()
+)
+
+# baseline_mtr = avg_mtr(baseline)
 
 
 def pct_change(x, y):
@@ -29,6 +40,27 @@ def pct_change(x, y):
 
 
 cached_results = {}
+cached_situation_results = {}
+
+
+@app.route("/situation-reform", methods=["post"])
+def compute_situation_reform():
+    try:
+        print("Received situation reform request")
+        start_time = time()
+        params = request.json
+        param_string = json.dumps(params)
+        if param_string in cached_situation_results:
+            return cached_situation_results[param_string]
+        reform_object = create_reform(params)
+        baseline, reformed = get_sims(reform_object, params)
+        headline_figures = get_headline_figures(baseline, reformed)
+        output = {**headline_figures}
+        print(f"Completed situation reform ({round(time() - start_time, 1)})s")
+        cached_situation_results[param_string] = output
+        return output
+    except Exception as e:
+        print(e.with_traceback())
 
 
 @app.route("/reform", methods=["POST"])
@@ -41,7 +73,7 @@ def compute_reform():
         if param_string in cached_results:
             return cached_results[param_string]
         reform_object = create_reform(params)
-        reform = Microsimulation(reform_object, input_year=2020)
+        reform = Microsimulation(reform_object, year=2021)
         reform_sim_build = time()
         print(
             f"Constructed reform sim ({round(reform_sim_build - start_time, 2)}s)"
@@ -70,7 +102,7 @@ def compute_reform():
         gini_change = pct_change(hnet.gini(), hnet_r.gini())
         poverty = poverty_chart(baseline, reform)
         age_plot = create_age_plot(gain, baseline)
-        mtr_plot = average_mtr_changes(baseline, reform)
+        mtr_plot = average_mtr_changes(baseline_mtr, reform)
         analysis_done = time()
         del reform
         print(

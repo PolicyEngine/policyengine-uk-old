@@ -182,7 +182,7 @@ def hypothetical_tax_chart(reform_obj):
     return fig.to_json()
 
 
-def average_mtr_changes(baseline_sim, reform_sim):
+def average_mtr_changes(baseline_mtr, reform_sim):
     avg_mtr = lambda sim: float(
         (1 - sim.deriv("household_net_income", wrt="employment_income"))[
             sim.calc("is_adult")
@@ -193,7 +193,7 @@ def average_mtr_changes(baseline_sim, reform_sim):
     fig = (
         px.bar(
             x=["Baseline", "Reform"],
-            y=list(map(avg_mtr, (baseline_sim, reform_sim))),
+            y=[baseline_mtr, avg_mtr(reform_sim)],
         )
         .update_layout(
             title="Changes to marginal tax rates",

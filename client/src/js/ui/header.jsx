@@ -1,12 +1,26 @@
 import { Row, Col, Container } from "react-bootstrap";
 import React from "react";
 import { Steps, PageHeader } from "antd";
+import { Link } from "react-router-dom";
 
 import "../../css/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/antd.css";
 
 const { Step } = Steps;
+
+function getURLParamsFromPolicy(target, policy) {
+	let searchParams = new URLSearchParams(window.location.search);
+	for (const key in policy) {
+		if (policy[key].value !== policy[key].default) {
+			searchParams.set(key, +policy[key].value);
+		} else {
+			searchParams.delete(key);
+		}
+	}
+	const url = `${target || "/situation"}?${searchParams.toString()}`;
+	return url;
+}
 
 function TopHeader() {
 	return (
@@ -29,7 +43,7 @@ function TopHeader() {
 
 function Header(props) {
 	const INTRO = (
-		<p>
+		<p style={{fontSize: 16}}>
       Welcome to the OpenFisca-UK Reform Explorer. Powered by the open-source
       microsimulation model OpenFisca-UK, this site allows you to experiment
       with different changes to how taxes and benefits are set in the United
@@ -37,16 +51,16 @@ function Header(props) {
       the country.
 		</p>
 	);
-	const TITLES = ["Policy", "UK-wide effects", "About you", "Your results"];
+	const TITLES = ["Policy", "About you", "UK-wide effects", "Your results"];
 	const DESCRIPTIONS = [
 		"Specify changes to the current taxes and benefit programmes",
-		"Simulate the changes on people, families and households in the UK",
 		"Describe your household to calculate the effects on you and your family",
+		"Simulate the changes on people, families and households in the UK",
 		"Simulate the reform, showing your finances before and after"
 	];
 	let steps = [];
 	for(let i = 0; i < TITLES.length; i++) {
-		steps.push(<Step key={i} title={TITLES[i]} description={DESCRIPTIONS[i]} style={{minWidth: 200}} />);
+		steps.push(<Step key={i} title={TITLES[i]} description={DESCRIPTIONS[i]} style={{minWidth: 200}}/>);
 	}
 	return (
 		<>
