@@ -23,7 +23,7 @@ CORS(app)
 
 
 SYSTEM = openfisca_uk.CountryTaxBenefitSystem()
-baseline = openfisca_uk.Microsimulation()
+baseline = openfisca_uk.Microsimulation(year=2020)
 baseline.calc("household_net_income")
 
 avg_mtr = lambda sim: float(
@@ -104,7 +104,7 @@ def compute_reform():
         if param_string in cached_results:
             return cached_results[param_string]
         reform_object = create_reform(params)
-        reform = Microsimulation(reform_object)
+        reform = Microsimulation(reform_object, year=2020)
         reform_sim_build = time()
         print(
             f"Constructed reform sim ({round(reform_sim_build - start_time, 2)}s)"
