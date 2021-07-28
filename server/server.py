@@ -23,7 +23,7 @@ CORS(app)
 
 
 SYSTEM = openfisca_uk.CountryTaxBenefitSystem()
-baseline = openfisca_uk.Microsimulation(year=2020)
+baseline = openfisca_uk.Microsimulation()
 baseline.calc("household_net_income")
 
 avg_mtr = lambda sim: float(
@@ -34,11 +34,12 @@ avg_mtr = lambda sim: float(
     .mean()
 )
 
-#baseline_mtr = avg_mtr(baseline)
-baseline_mtr = 0.29
+baseline_mtr = avg_mtr(baseline)
+
 
 def pct_change(x, y):
     return (y - x) / x
+
 
 CACHE = Path("cache")
 
@@ -69,9 +70,11 @@ else:
     with open(situation_cache_file, "w+") as f:
         pass
 
+
 def cache(filename, results):
     with open(filename, "w") as f:
         json.dump(results, f)
+
 
 @app.route("/situation-reform", methods=["post"])
 def compute_situation_reform():
@@ -104,7 +107,7 @@ def compute_reform():
         if param_string in cached_results:
             return cached_results[param_string]
         reform_object = create_reform(params)
-        reform = Microsimulation(reform_object, year=2020)
+        reform = Microsimulation(reform_object)
         reform_sim_build = time()
         print(
             f"Constructed reform sim ({round(reform_sim_build - start_time, 2)}s)"
@@ -117,7 +120,10 @@ def compute_reform():
         print(
             f"Calculated new net incomes ({round(calculations_done - reform_sim_build, 2)}s)"
         )
-        gain = MicroSeries((new_income - old_income).values.astype(float), weights=old_income.weights.values)
+        gain = MicroSeries(
+            (new_income - old_income).values.astype(float),
+            weights=old_income.weights.values,
+        )
         net_cost = (
             reform.calc("net_income").sum() - baseline.calc("net_income").sum()
         )
@@ -130,7 +136,9 @@ def compute_reform():
         hnet = baseline.calc("household_net_income", map_to="person")
         winner_share = (hnet_r > hnet).mean()
         loser_share = (hnet_r < hnet).mean()
-        gini_change = pct_change(MicroSeries(hnet.dropna()).gini(), MicroSeries(hnet_r).gini())
+        gini_change = pct_change(
+            MicroSeries(hnet.dropna()).gini(), MicroSeries(hnet_r).gini()
+        )
         poverty = poverty_chart(baseline, reform)
         age_plot = create_age_plot(gain, baseline)
         mtr_plot = average_mtr_changes(baseline_mtr, reform)
