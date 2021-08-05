@@ -57,6 +57,6 @@ class SituationResults extends React.Component {
 	<FirstDropdown doThisWhenSelected={() => update(this.state, selectedValue)}>
 	</FirstDropdown>
 	<SecondDropdown list={this.state.selectedValue.list}/>
-</DropdownContainer>
+</DropdownContainer>;
 
 export default SituationResults;
