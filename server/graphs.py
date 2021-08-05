@@ -8,9 +8,9 @@ def create_decile_plot(gain, old_income):
     return (
         px.bar(gain.groupby(old_income.decile_rank()).mean())
         .update_layout(
-            title="Income effect by decile",
+            title="Impact on net income by decile",
             xaxis_title="Equivalised disposable income decile",
-            yaxis_title="Average income effect",
+            yaxis_title="Average change to net income",
             yaxis_tickprefix="£",
             template="plotly_white",
             showlegend=False,
@@ -25,9 +25,9 @@ def create_age_plot(gain, sim):
     return (
         px.line(values)
         .update_layout(
-            title="Income effect by age",
+            title="Impact on net income by age",
             xaxis_title="Age",
-            yaxis_title="Average income effect",
+            yaxis_title="Average change to net income",
             yaxis_tickprefix="£",
             template="plotly_white",
             showlegend=False,
