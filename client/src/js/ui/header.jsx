@@ -31,11 +31,18 @@ function TopHeader() {
 					subTitle="by the UBI Center"
 				/>
 			</div>
-			<div className="d-md-none d-flex justify-content-center">
-				<PageHeader
-					title="UK Policy Engine"
-					subTitle="by the UBI Center"
-				/>
+			<div className="d-md-none">
+				<div className="d-flex justify-content-center">
+					<PageHeader
+						title="UK Policy Engine"
+						style={{paddingBottom: 8}}
+					/>
+				</div>
+				<div className="d-flex justify-content-center">
+					<div className="ant-page-header-heading-sub-title">
+						By the UBI Center
+					</div>
+				</div>
 			</div>
 		</>
 	);
@@ -65,9 +72,9 @@ function Header(props) {
 	return (
 		<>
 			<TopHeader />
-			<Container style={{minWidth: 400}} fluid>
+			<Container fluid>
 				<Row style={{ padding: 50 }} className="d-none d-xl-flex">
-					<Col md={4} style={{minWidth: 300}}>{INTRO}</Col>
+					<Col md={4} style={{paddingRight: 40}}>{INTRO}</Col>
 					<Col md={8}>
 						<div className="d-flex justify-content-center">
 							<div>
@@ -78,7 +85,7 @@ function Header(props) {
 						</div>
 					</Col>
 				</Row>
-				<Row style={{ padding: 50, paddingTop: 20 }} className="d-xl-none">
+				<Row style={{ padding: 10 }} className="d-xl-none">
 					<Col md={4} style={{ paddingBottom: 20 }}>
 						{INTRO}
 					</Col>

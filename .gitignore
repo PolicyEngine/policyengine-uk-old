@@ -9,7 +9,7 @@ client/.pnp.js
 client/coverage
 
 # production
-# client/build
+client/build
 
 # misc
 client/.DS_Store
@@ -22,3 +22,6 @@ client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
 **/__pycache__
+
+server/cache/populations.json
+server/cache/situations.json
