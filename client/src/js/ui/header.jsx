@@ -27,14 +27,14 @@ function TopHeader() {
 		<>
 			<div className="d-none d-md-block">
 				<PageHeader
-					title="openfisca-uk"
-					subTitle="reform explorer"
+					title="UK Policy Engine"
+					subTitle="by the UBI Center"
 				/>
 			</div>
 			<div className="d-md-none d-flex justify-content-center">
 				<PageHeader
-					title="openfisca-uk"
-					subTitle="reform explorer"
+					title="UK Policy Engine"
+					subTitle="by the UBI Center"
 				/>
 			</div>
 		</>
@@ -44,7 +44,7 @@ function TopHeader() {
 function Header(props) {
 	const INTRO = (
 		<p style={{fontSize: 16}}>
-      Welcome to the OpenFisca-UK Reform Explorer. Powered by the open-source
+      Welcome to the UBI Center's UK Policy Engine. Powered by the open-source
       microsimulation model OpenFisca-UK, this site allows you to experiment
       with different changes to how taxes and benefits are set in the United
       Kingdom, and simulate the results on people, families and households in
