@@ -175,7 +175,10 @@ def hypothetical_tax_chart(reform_obj):
         sim.add_benunit(adults=["adult"], claims_UC=True)
         sim.add_household(adults=["adult"])
 
-    fig = plot_budget(single_parent_UC, "Budget effect (Single person)",)
+    fig = plot_budget(
+        single_parent_UC,
+        "Budget effect (Single person)",
+    )
 
     return fig.to_json()
 
@@ -190,7 +193,8 @@ def average_mtr_changes(baseline_mtr, reform_sim):
     )
     fig = (
         px.bar(
-            x=["Baseline", "Reform"], y=[baseline_mtr, avg_mtr(reform_sim)],
+            x=["Baseline", "Reform"],
+            y=[baseline_mtr, avg_mtr(reform_sim)],
         )
         .update_layout(
             title="Changes to marginal tax rates",
