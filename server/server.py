@@ -88,7 +88,15 @@ def compute_situation_reform():
         reform_object = create_reform(params)
         baseline, reformed = get_sims(reform_object, params)
         headline_figures = get_headline_figures(baseline, reformed)
-        output = {**headline_figures}
+        budget_graph = get_budget_graph(reform_object, params)
+        mtr_graph = get_mtr_graph(reform_object, params)
+        waterfall_chart = get_waterfall_chart(reform_object, params)
+        output = {
+            **headline_figures,
+            "budget_chart": json.loads(budget_graph),
+            "mtr_chart": json.loads(mtr_graph),
+            "waterfall_chart": json.loads(waterfall_chart),
+        }
         print(f"Completed situation reform ({round(time() - start_time, 1)})s")
         cached_situation_results[param_string] = output
         cache(situation_cache_file, cached_situation_results)

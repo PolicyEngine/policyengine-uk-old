@@ -27,20 +27,30 @@ def change_param(param, value, bracket=None, threshold=False):
 
 
 def basic_income(child, adult, senior):
-    class benefits(BASELINE_VARIABLES.benefits):
-        def formula(person, period, parameters):
-            original_benefits = BASELINE_VARIABLES.benefits.formula(
-                person, period, parameters
-            )
+    class UBI(Variable):
+        entity = Person
+        definition_period = YEAR
+        label = u"UBI"
+        value_type = float
+
+        def formula(person, period):
             basic_income = (
                 person("is_child", period) * child * 52
                 + person("is_WA_adult", period) * adult * 52
                 + person("is_SP_age", period) * senior * 52
             )
-            return original_benefits + basic_income
+            return basic_income
+
+    class benefits(BASELINE_VARIABLES.benefits):
+        def formula(person, period, parameters):
+            original_benefits = BASELINE_VARIABLES.benefits.formula(
+                person, period, parameters
+            )
+            return original_benefits + person("UBI", period)
 
     class basic_income(Reform):
         def apply(self):
+            self.add_variable(UBI)
             self.update_variable(benefits)
 
     return basic_income
@@ -159,4 +169,4 @@ def create_reform(params):
         senior_BI = 0
     if adult_BI + child_BI + senior_BI > 0:
         reforms += [basic_income(child_BI, adult_BI, senior_BI)]
-    return reforms
+    return tuple(reforms)

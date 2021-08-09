@@ -35,6 +35,8 @@ function PolicyOverview(props) {
 				}
 			</Steps>
 			<Empty description="" image={null}>
+				<SimulateButton text="Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
+				<div style={{paddingTop: 30}} />
 				<SimulateButton policy={props.policy} onClick={props.onSubmit} text="Describe your situation"/>
 			</Empty>
 		</>

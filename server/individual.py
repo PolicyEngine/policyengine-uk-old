@@ -1,12 +1,15 @@
-from openfisca_uk import IndividualSim
+from openfisca_core.reforms import reform
+from openfisca_uk import IndividualSim, graphs
 import numpy as np
+from ubicenter import format_fig
+from ubicenter.plotly import GRAY, BLUE
+import pandas as pd
+import plotly.express as px
 
 
-def get_sims(reform_obj, params):
-    baseline = IndividualSim(year=2021)
-    reformed = IndividualSim(reform_obj, year=2021)
-    household = params["situation"]["household"]
-    for sim in (baseline, reformed):
+def get_situation_func(params):
+    def situation(sim):
+        household = params["situation"]["household"]
         num_families = len(household["families"])
         hh_adults = []
         hh_children = []
@@ -36,11 +39,25 @@ def get_sims(reform_obj, params):
                 else:
                     bu_children += [name]
             sim.add_benunit(
-                adults=bu_adults, children=bu_children, claims_UC=True
+                adults=bu_adults,
+                children=bu_children,
+                claims_UC=True,
+                claims_child_benefit=True,
             )
             hh_adults += bu_adults
             hh_children += bu_children
         sim.add_household(adults=hh_adults, children=hh_children)
+        return sim
+
+    return situation
+
+
+def get_sims(reform_obj, params):
+    baseline = IndividualSim(year=2021)
+    reformed = IndividualSim(reform_obj, year=2021)
+    situation = get_situation_func(params)
+    for sim in (baseline, reformed):
+        situation(sim)
     return baseline, reformed
 
 
@@ -61,3 +78,134 @@ def get_headline_figures(baseline, reformed):
             "household_net_income",
         ]
     }
+
+
+def get_budget_graph(reform_obj, params):
+    graph = graphs.budget_chart(
+        reform_obj, situation_function=get_situation_func(params)
+    )
+    return (
+        format_fig(graph, show=False)
+        .update_layout(
+            title="Net income by employment income",
+            xaxis_title="Employment income",
+            yaxis_title="Yearly amount",
+            yaxis_tickprefix="£",
+        )
+        .update_traces(marker_color="#1890ff")
+        .to_json()
+    )
+
+
+def get_mtr_graph(reform_obj, params):
+    graph = graphs.mtr_chart(
+        reform_obj, situation_function=get_situation_func(params)
+    )
+    return (
+        format_fig(graph, show=False)
+        .update_layout(
+            title="Effective marginal tax rate by employment income",
+            xaxis_title="Employment income",
+            yaxis_title="Effective MTR",
+        )
+        .update_traces(marker_color="#1890ff")
+        .to_json()
+    )
+
+
+def get_changes(reform, situation, variables):
+    baseline = IndividualSim(year=2021)
+    reformed = IndividualSim(reform, year=2021)
+
+    for sim in baseline, reformed:
+        situation(sim)
+
+    changes = [0] * len(variables)
+
+    for i in range(len(variables)):
+        try:
+            baseline_value = baseline.calc(variables[i]).sum()
+        except KeyError:
+            baseline_value = 0
+        try:
+            reformed_value = reformed.calc(variables[i]).sum()
+        except KeyError:
+            reformed_value = 0
+        changes[i] = reformed_value - baseline_value
+
+    return changes
+
+
+def get_waterfall_df(reform, situation):
+    VARIABLES = (
+        "income_tax",
+        "national_insurance",
+        "UBI",
+        "household_net_income",
+    )
+    NAMES = ("Income Tax", "National Insurance", "UBI")
+    INVERT = (True, True, False)
+    changes = get_changes(reform, situation, VARIABLES)
+    final_change = changes[-1]
+    changes = changes[:-1]
+    df = pd.DataFrame(
+        {
+            "Component": NAMES,
+            "Change": changes * np.where(INVERT, -1, 1),
+            "Type": np.where(
+                changes * np.where(INVERT, -1, 1) > 0, "Gain", "Loss"
+            ),
+        }
+    )
+    base = df.Change.cumsum()
+    for i in range(len(base) - 1, 0, -1):
+        if base[i] - base[i - 1] > 0:
+            base[i] = base[i - 1]
+    df.Change = df.Change.abs()
+    df = pd.concat(
+        [
+            df,
+            pd.DataFrame(
+                {"Component": df.Component, "Change": base, "Type": "-"}
+            ),
+        ]
+    )
+    if final_change > 0:
+        final_type = "Gain"
+    elif final_change == 0:
+        final_type = "-"
+    else:
+        final_type = "Loss"
+    df = pd.concat(
+        [
+            df,
+            pd.DataFrame(
+                {
+                    "Component": ["Net income"],
+                    "Change": [final_change],
+                    "Type": [final_type],
+                }
+            ),
+        ]
+    )
+    return df
+
+
+def get_waterfall_chart(reform, params):
+    situation = get_situation_func(params)
+    WHITE = "#FFF"
+    df = get_waterfall_df(reform, situation)
+    fig = format_fig(
+        px.bar(
+            df.sort_values("Type"),
+            x="Component",
+            y="Change",
+            color="Type",
+            barmode="stack",
+            color_discrete_sequence=[WHITE, "#1890ff", GRAY],
+        ).update_layout(
+            title="Change to net income by component", yaxis_tickprefix="£"
+        ),
+        show=False,
+    )
+    return fig.to_json()

@@ -2,17 +2,19 @@ import plotly.express as px
 import plotly.graph_objects as go
 from openfisca_uk import IndividualSim
 import pandas as pd
+from ubicenter import format_fig
 
 
 def create_decile_plot(gain, old_income):
     return (
-        px.bar(gain.groupby(old_income.decile_rank()).mean())
+        format_fig(
+            px.bar(gain.groupby(old_income.decile_rank()).mean()), show=False
+        )
         .update_layout(
             title="Impact on net income by decile",
             xaxis_title="Equivalised disposable income decile",
             yaxis_title="Average change to net income",
             yaxis_tickprefix="£",
-            template="plotly_white",
             showlegend=False,
         )
         .update_traces(marker_color="#1890ff")
@@ -23,13 +25,12 @@ def create_decile_plot(gain, old_income):
 def create_age_plot(gain, sim):
     values = gain.groupby(sim.calc("age")).mean().rolling(3).median()
     return (
-        px.line(values)
+        format_fig(px.line(values), show=False)
         .update_layout(
             title="Impact on net income by age",
             xaxis_title="Age",
             yaxis_title="Average change to net income",
             yaxis_tickprefix="£",
-            template="plotly_white",
             showlegend=False,
         )
         .update_traces(marker_color="#1890ff")
@@ -61,12 +62,14 @@ def poverty_chart(baseline, reform):
     person = percent_change(
         poverty_rate(baseline, "people"), poverty_rate(reform, "people")
     )
-    fig = px.bar(
-        x=["Child", "Working-age", "Retired", "All"],
-        y=[child, adult, senior, person],
+    fig = format_fig(
+        px.bar(
+            x=["Child", "Working-age", "Retired", "All"],
+            y=[child, adult, senior, person],
+        ),
+        show=False,
     )
     fig.update_layout(
-        template="plotly_white",
         title="Poverty rate changes",
         xaxis=dict(title="Population"),
         yaxis=dict(title="Percent change", tickformat="%"),
@@ -142,18 +145,21 @@ def hypothetical_tax_chart(reform_obj):
             }
         )
 
-        fig = px.line(
-            df,
-            x="Employment income",
-            y=[
-                "Net income (Baseline)",
-                "Net income (Reform)",
-                "Tax (Baseline)",
-                "Tax (Reform)",
-                "Benefits (Baseline)",
-                "Benefits (Reform)",
-            ],
-            color_discrete_sequence=individual_colors,
+        fig = format_fig(
+            px.line(
+                df,
+                x="Employment income",
+                y=[
+                    "Net income (Baseline)",
+                    "Net income (Reform)",
+                    "Tax (Baseline)",
+                    "Tax (Reform)",
+                    "Benefits (Baseline)",
+                    "Benefits (Reform)",
+                ],
+                color_discrete_sequence=individual_colors,
+            ),
+            show=False,
         )
         fig.update_layout(
             title=title,
@@ -192,16 +198,18 @@ def average_mtr_changes(baseline_mtr, reform_sim):
         .mean()
     )
     fig = (
-        px.bar(
-            x=["Baseline", "Reform"],
-            y=[baseline_mtr, avg_mtr(reform_sim)],
+        format_fig(
+            px.bar(
+                x=["Baseline", "Reform"],
+                y=[baseline_mtr, avg_mtr(reform_sim)],
+            ),
+            show=False,
         )
         .update_layout(
             title="Changes to marginal tax rates",
             xaxis_title="Policy",
             yaxis_title="Average effective marginal tax rate",
             yaxis_tickformat="%",
-            template="plotly_white",
             showlegend=False,
         )
         .update_traces(marker_color="#1890ff")
