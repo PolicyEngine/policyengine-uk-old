@@ -16,3 +16,7 @@ body {
 .ant-page-header-heading-sub-title {
     font-size: 20px !important;
 }
+
+.svg-container .user-select-none {
+    margin: 0px !important;
+}

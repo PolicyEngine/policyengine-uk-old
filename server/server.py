@@ -90,7 +90,7 @@ def compute_situation_reform():
         headline_figures = get_headline_figures(baseline, reformed)
         budget_graph = get_budget_graph(reform_object, params)
         mtr_graph = get_mtr_graph(reform_object, params)
-        waterfall_chart = get_waterfall_chart(reform_object, params)
+        waterfall_chart = get_budget_waterfall_chart(reform_object, params)
         output = {
             **headline_figures,
             "budget_chart": json.loads(budget_graph),
