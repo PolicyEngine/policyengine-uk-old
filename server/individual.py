@@ -35,9 +35,7 @@ def get_sims(reform_obj, params):
                     bu_adults += [name]
                 else:
                     bu_children += [name]
-            sim.add_benunit(
-                adults=bu_adults, children=bu_children, claims_UC=True
-            )
+            sim.add_benunit(adults=bu_adults, children=bu_children, claims_UC=True)
             hh_adults += bu_adults
             hh_children += bu_children
         sim.add_household(adults=hh_adults, children=hh_children)

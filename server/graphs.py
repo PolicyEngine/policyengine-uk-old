@@ -52,8 +52,7 @@ def poverty_chart(baseline, reform):
         poverty_rate(baseline, "is_child"), poverty_rate(reform, "is_child")
     )
     adult = percent_change(
-        poverty_rate(baseline, "is_WA_adult"),
-        poverty_rate(reform, "is_WA_adult"),
+        poverty_rate(baseline, "is_WA_adult"), poverty_rate(reform, "is_WA_adult"),
     )
     senior = percent_change(
         poverty_rate(baseline, "is_SP_age"), poverty_rate(reform, "is_SP_age")
@@ -62,8 +61,7 @@ def poverty_chart(baseline, reform):
         poverty_rate(baseline, "people"), poverty_rate(reform, "people")
     )
     fig = px.bar(
-        x=["Child", "Working-age", "Retired", "All"],
-        y=[child, adult, senior, person],
+        x=["Child", "Working-age", "Retired", "All"], y=[child, adult, senior, person],
     )
     fig.update_layout(
         template="plotly_white",
@@ -88,12 +86,10 @@ def hypothetical_tax_chart(reform_obj):
         reform_policy.vary("employment_income")
         df = pd.DataFrame(
             {
-                "Net income (Baseline)": baseline_policy.calc(
-                    "household_net_income"
-                )[0],
-                "Net income (Reform)": reform_policy.calc(
-                    "household_net_income"
-                )[0],
+                "Net income (Baseline)": baseline_policy.calc("household_net_income")[
+                    0
+                ],
+                "Net income (Reform)": reform_policy.calc("household_net_income")[0],
                 "Tax (Baseline)": baseline_policy.calc("tax")[0],
                 "Tax (Reform)": reform_policy.calc("tax")[0],
                 "Benefits (Baseline)": baseline_policy.calc("benefits")[0],
@@ -101,15 +97,11 @@ def hypothetical_tax_chart(reform_obj):
                 "Employment income": employment_income,
                 "MTR (Baseline)": 1
                 - baseline_policy.calc_deriv(
-                    "household_net_income",
-                    var_target="household",
-                    wrt_target="adult",
+                    "household_net_income", var_target="household", wrt_target="adult",
                 ),
                 "MTR (Reform)": 1
                 - reform_policy.calc_deriv(
-                    "household_net_income",
-                    var_target="household",
-                    wrt_target="adult",
+                    "household_net_income", var_target="household", wrt_target="adult",
                 ),
                 "Tax MTR (Baseline)": baseline_policy.calc_deriv(
                     "tax", var_target="adult", wrt_target="adult"
@@ -124,14 +116,10 @@ def hypothetical_tax_chart(reform_obj):
                     "income_tax", var_target="adult", wrt_target="adult"
                 ),
                 "NI MTR (Baseline)": baseline_policy.calc_deriv(
-                    "national_insurance",
-                    var_target="adult",
-                    wrt_target="adult",
+                    "national_insurance", var_target="adult", wrt_target="adult",
                 ),
                 "NI MTR (Reform)": reform_policy.calc_deriv(
-                    "national_insurance",
-                    var_target="adult",
-                    wrt_target="adult",
+                    "national_insurance", var_target="adult", wrt_target="adult",
                 ),
                 "Benefit MTR (Baseline)": -baseline_policy.calc_deriv(
                     "benefits", var_target="adult", wrt_target="adult"
@@ -175,10 +163,7 @@ def hypothetical_tax_chart(reform_obj):
         sim.add_benunit(adults=["adult"], claims_UC=True)
         sim.add_household(adults=["adult"])
 
-    fig = plot_budget(
-        single_parent_UC,
-        "Budget effect (Single person)",
-    )
+    fig = plot_budget(single_parent_UC, "Budget effect (Single person)",)
 
     return fig.to_json()
 
@@ -192,10 +177,7 @@ def average_mtr_changes(baseline_mtr, reform_sim):
         .mean()
     )
     fig = (
-        px.bar(
-            x=["Baseline", "Reform"],
-            y=[baseline_mtr, avg_mtr(reform_sim)],
-        )
+        px.bar(x=["Baseline", "Reform"], y=[baseline_mtr, avg_mtr(reform_sim)],)
         .update_layout(
             title="Changes to marginal tax rates",
             xaxis_title="Policy",

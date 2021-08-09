@@ -109,13 +109,9 @@ def compute_reform():
         reform_object = create_reform(params)
         reform = Microsimulation(reform_object)
         reform_sim_build = time()
-        print(
-            f"Constructed reform sim ({round(reform_sim_build - start_time, 2)}s)"
-        )
+        print(f"Constructed reform sim ({round(reform_sim_build - start_time, 2)}s)")
         new_income = reform.calc("equiv_household_net_income", map_to="person")
-        old_income = baseline.calc(
-            "equiv_household_net_income", map_to="person"
-        )
+        old_income = baseline.calc("equiv_household_net_income", map_to="person")
         calculations_done = time()
         print(
             f"Calculated new net incomes ({round(calculations_done - reform_sim_build, 2)}s)"
@@ -124,9 +120,7 @@ def compute_reform():
             (new_income - old_income).values.astype(float),
             weights=old_income.weights.values,
         )
-        net_cost = (
-            reform.calc("net_income").sum() - baseline.calc("net_income").sum()
-        )
+        net_cost = reform.calc("net_income").sum() - baseline.calc("net_income").sum()
         decile_plot = create_decile_plot(gain, old_income)
         poverty_change = pct_change(
             baseline.calc("in_poverty_bhc", map_to="person").mean(),
@@ -176,8 +170,7 @@ def after_request_func(response):
         response.headers.add("Access-Control-Allow-Headers", "Content-Type")
         response.headers.add("Access-Control-Allow-Headers", "x-csrf-token")
         response.headers.add(
-            "Access-Control-Allow-Methods",
-            "GET, POST, OPTIONS, PUT, PATCH, DELETE",
+            "Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE",
         )
         if origin:
             response.headers.add("Access-Control-Allow-Origin", origin)
