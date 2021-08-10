@@ -2,7 +2,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from openfisca_uk import IndividualSim
 import pandas as pd
-from ubicenter import format_fig
+from formatting import format_fig
 
 
 def create_decile_plot(gain, old_income):

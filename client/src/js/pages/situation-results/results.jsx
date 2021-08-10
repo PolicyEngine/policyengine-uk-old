@@ -39,11 +39,11 @@ function Chart(props) {
 	return (
 		<>
 			<Col md={3} />
-			<Col md={6}>
+			<Col md={6} >
 				<Plot
 					data={props.plot.data}
 					layout={props.plot.layout}
-					config={{ displayModeBar: true }}
+					config={{ displayModeBar: false }}
 					frames={props.plot.frames}
 					style={{ width: "100%" }}
 				/>

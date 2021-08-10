@@ -1,10 +1,10 @@
 from openfisca_core.reforms import reform
 from openfisca_uk import CountryTaxBenefitSystem, IndividualSim, graphs
 import numpy as np
-from ubicenter import format_fig
+from formatting import format_fig
 import pandas as pd
 import plotly.express as px
-from ubicenter.plotly import GRAY, BLUE
+from ubicenter.plotly import GRAY, BLUE, format_fig
 WHITE = "#FFF"
 from openfisca_uk import BASELINE_VARIABLES
 
@@ -283,6 +283,7 @@ def get_budget_waterfall_chart(reform, params):
     fig = px.bar(df, x="variable", y="value", color="type", animation_frame="Policy", color_discrete_map={"Gain": BLUE, "Loss": GRAY, "": WHITE})
     variable_sums = df.groupby(["variable", "Policy"]).value.sum()
     fig.update_layout(
+        title="Budget breakdown",
         xaxis_title="",
         yaxis_title="Yearly amount",
         yaxis_tickprefix="£",
