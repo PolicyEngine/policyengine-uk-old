@@ -246,7 +246,7 @@ def get_funding_breakdown(reform, components, **kwargs):
             base[i - 1] = base[i]
     df.Spending = df.Spending.abs()
     df = pd.concat([pd.DataFrame(dict(Component=df.Component, Spending=base, Type="", is_value=False)), df])
-    df = pd.concat([df, pd.DataFrame(dict(Component=["Remaining"], Spending=[final_spending], Type=np.where(np.array([final_spending]) > 0, "Spending", "Revenue"), is_value=[True]))])
+    df = pd.concat([df, pd.DataFrame(dict(Component=["Net cost"], Spending=[final_spending], Type=np.where(np.array([final_spending]) > 0, "Spending", "Revenue"), is_value=[True]))])
     df = df[~df.Component.isna()]
     fig = format_fig(px.bar(
         df, 
@@ -260,4 +260,15 @@ def get_funding_breakdown(reform, components, **kwargs):
             "": WHITE
         }
     ), show=False)
+    fig.add_shape(type="line",
+        xref="paper",
+        yref="y",
+        x0=0, y0=0,
+        x1=1, y1=0,
+        line=dict(
+            color="grey",
+            width=1,
+            dash="dash"
+        ),
+    )
     return fig.to_json()

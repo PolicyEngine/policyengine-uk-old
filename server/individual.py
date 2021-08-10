@@ -300,4 +300,16 @@ def get_budget_waterfall_chart(reform, params):
         legend_title="",
         yaxis_range=(min(variable_sums.min(), 0), variable_sums.max())
     )
-    return format_fig(fig, show=False).to_json()
+    fig = format_fig(fig, show=False)
+    fig.add_shape(type="line",
+        xref="paper",
+        yref="y",
+        x0=0, y0=0,
+        x1=1, y1=0,
+        line=dict(
+            color="grey",
+            width=1,
+            dash="dash"
+        ),
+    )
+    return fig.to_json()
