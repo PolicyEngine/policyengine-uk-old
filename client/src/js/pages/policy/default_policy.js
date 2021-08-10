@@ -94,7 +94,7 @@ const DEFAULT_POLICY = {
 		type: "weekly",
 	},
 	child_UBI: {
-		title: "Child basic income",
+		title: "Child UBI",
 		description: "A basic income for children is given to every child aged under 18, regardless of household income.",
 		default: 0,
 		value: 0,
@@ -103,7 +103,7 @@ const DEFAULT_POLICY = {
 		type: "weekly",
 	},
 	adult_UBI: {
-		title: "Adult basic income",
+		title: "Adult UBI",
 		description: "Basic income for adults is given to individuals aged over 18 but under State Pension age.",
 		default: 0,
 		value: 0,
@@ -112,7 +112,7 @@ const DEFAULT_POLICY = {
 		type: "weekly",
 	},
 	senior_UBI: {
-		title: "Senior basic income",
+		title: "Senior UBI",
 		description: "A basic income for senior citizens is given to those over State Pension age.",
 		default: 0,
 		value: 0,
