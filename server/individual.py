@@ -25,14 +25,16 @@ def get_situation_func(params):
                 person = family["people"][j]
                 name = f"family-{i}-person-{j}"
                 age = person["age"]["value"]
-                earnings = person["employment_income"]["value"]
+                variable_values = {}
+                for var in person.keys():
+                    if var in BASELINE_VARIABLES:
+                        variable_values[var] = person[var]["value"]
                 is_head = age >= 18 and not head_assigned
                 if is_head:
                     head_assigned = True
                 sim.add_person(
                     name=name,
-                    age=age,
-                    employment_income=earnings,
+                    **variable_values,
                     is_benunit_head=is_head,
                     is_household_head=is_head,
                 )
@@ -214,6 +216,10 @@ def get_waterfall_chart(reform, params):
 
 COMPONENTS = (
     "employment_income",
+    "self_employment_income",
+    "pension_income",
+    "savings_interest_income",
+    "dividend_income",
     "universal_credit",
     "child_benefit",
     "UBI",
@@ -222,7 +228,7 @@ COMPONENTS = (
     "net_income"
 )
 
-IS_POSITIVE = [True] * 4 + [False] * 2 + [True]
+IS_POSITIVE = [True] * 8 + [False] * 2 + [True]
 
 def get_variables(reform, situation, variables=COMPONENTS):
     sim = IndividualSim(reform, year=2021)
@@ -241,6 +247,10 @@ def get_variables(reform, situation, variables=COMPONENTS):
 key_to_label = dict(
     net_income = "Net income",
     employment_income = "Employment income",
+    self_employment_income = "Self-employment income",
+    pension_income = "Pension income",
+    savings_interest_income = "Savings income",
+    dividend_income = "Dividend income",
     universal_credit = "Universal Credit",
     child_benefit = "Child Benefit",
     UBI = "UBI",

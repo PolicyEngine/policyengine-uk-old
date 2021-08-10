@@ -78,8 +78,8 @@ const DEFAULT_POLICY = {
 	NI_PT: {
 		title: "NI Primary Threshold",
 		description: "The Primary Threshold is the lower bound for the main rate of NI.",
-		default: 166,
-		value: 166,
+		default: 183,
+		value: 183,
 		max: 1000,
 		summary: "Change the PT to £@/week",
 		type: "weekly",

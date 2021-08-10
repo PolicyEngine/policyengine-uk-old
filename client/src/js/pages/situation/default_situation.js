@@ -32,7 +32,35 @@ export const DEFAULT_PERSON = {
 		default: 0,
 		value: 0,
 		max: 150000
-	}
+	},
+	self_employment_income: {
+		title: "Self-employment income",
+		description: "Income from self-employment (the amount taken from the business, not the trading profit)",
+		default: 0,
+		value: 0,
+		max: 150000
+	},
+	pension_income: {
+		title: "Pension income",
+		description: "Income from pensions (excluding the State Pension)",
+		default: 0,
+		value: 0,
+		max: 150000
+	},
+	savings_interest_income: {
+		title: "Savings interest income",
+		description: "Income from savings interest (including ISAs)",
+		default: 0,
+		value: 0,
+		max: 150000
+	},
+	dividend_income: {
+		title: "Dividend income",
+		description: "Income from dividends",
+		default: 0,
+		value: 0,
+		max: 150000
+	},
 };
 
 const DEFAULT_SITUATION = {

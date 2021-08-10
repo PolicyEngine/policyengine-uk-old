@@ -43,7 +43,7 @@ def percent_change(x, y):
 
 
 def poverty_rate(sim, population_var):
-    return sim.calc("in_poverty_bhc", map_to="person")[
+    return sim.calc("in_poverty_bhc", map_to="person", period=2021)[
         sim.calc(population_var) > 0
     ].mean()
 
@@ -191,8 +191,8 @@ def hypothetical_tax_chart(reform_obj):
 
 def average_mtr_changes(baseline_mtr, reform_sim):
     avg_mtr = lambda sim: float(
-        (1 - sim.deriv("household_net_income", wrt="employment_income"))[
-            sim.calc("is_adult")
+        (1 - sim.deriv("household_net_income", wrt="employment_income", period=2021))[
+            sim.calc("is_adult", period=2021)
         ]
         .dropna()
         .mean()

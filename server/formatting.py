@@ -73,6 +73,7 @@ def format_fig(
         title_font_size=20,
         plot_bgcolor="white",
         paper_bgcolor="white",
+        marker_line_width=0
     )
     if show:
         fig.show(config=CONFIG)
