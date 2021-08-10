@@ -20,7 +20,7 @@ class PopulationResults extends React.Component {
 			submission[key] = this.state.plan[key].value;
 		}
 		this.setState({ waiting: true }, () => {
-			fetch("http://192.168.0.14:4000/reform", {
+			fetch("http://uk.policyengine.org:4000/reform", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

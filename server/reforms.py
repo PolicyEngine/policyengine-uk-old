@@ -169,4 +169,24 @@ def create_reform(params):
         senior_BI = 0
     if adult_BI + child_BI + senior_BI > 0:
         reforms += [basic_income(child_BI, adult_BI, senior_BI)]
+    ABOLITIONS = (
+        "savings_allowance",
+        "dividend_allowance",
+        "income_tax",
+        "NI",
+        "UC",
+        "CB"
+    )
+    ABOLITION_VARS = (
+        "savings_allowance",
+        "dividend_allowance",
+        "income_tax",
+        "national_insurance",
+        "universal_credit",
+        "child_benefit"
+    )
+    for variable, var in zip(ABOLITIONS, ABOLITION_VARS):
+        if f"abolish_{variable}" in params:
+            if params[f"abolish_{variable}"]:
+                reforms += [neutralizer_reform(var)]
     return tuple(reforms)
