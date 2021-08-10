@@ -51,7 +51,7 @@ function SituationOverview(props) {
 			{
 				!props.noButton ?
 					<Empty description="" image={null}>
-						<SimulateButton text="Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
+						<SimulateButton primary text="Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
 						<div style={{paddingTop: 30}} />
 						<SimulateButton text="Skip to your outcome" target="/situation-results" policy={props.policy} onClick={props.onSubmit}/>
 					</Empty> :
