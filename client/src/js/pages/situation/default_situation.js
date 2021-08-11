@@ -14,7 +14,7 @@ export const DEFAULT_FAMILY = {
 		description: "The number of people in the family",
 		default: 1,
 		value: 1,
-		max: 10,
+		max: 2,
 	}
 };
 
@@ -31,14 +31,7 @@ export const DEFAULT_PERSON = {
 		description: "Income from employment (gross)",
 		default: 0,
 		value: 0,
-		max: 150000
-	},
-	self_employment_income: {
-		title: "Self-employment income",
-		description: "Income from self-employment (the amount taken from the business, not the trading profit)",
-		default: 0,
-		value: 0,
-		max: 150000
+		max: 80000
 	},
 	pension_income: {
 		title: "Pension income",
@@ -52,14 +45,14 @@ export const DEFAULT_PERSON = {
 		description: "Income from savings interest (including ISAs)",
 		default: 0,
 		value: 0,
-		max: 150000
+		max: 5000
 	},
 	dividend_income: {
 		title: "Dividend income",
 		description: "Income from dividends",
 		default: 0,
 		value: 0,
-		max: 150000
+		max: 5000
 	},
 };
 
