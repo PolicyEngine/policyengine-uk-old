@@ -27,9 +27,12 @@ baseline = openfisca_uk.Microsimulation()
 baseline.calc("household_net_income")
 
 avg_mtr = lambda sim: float(
-    (1 - sim.deriv("household_net_income", wrt="employment_income", group_limit=2))[
-        sim.calc("is_adult")
-    ]
+    (
+        1
+        - sim.deriv(
+            "household_net_income", wrt="employment_income", group_limit=2
+        )
+    )[sim.calc("is_adult")]
     .dropna()
     .mean()
 )
@@ -119,7 +122,9 @@ def compute_reform():
         param_string = json.dumps(params)
         if param_string in cached_results:
             return cached_results[param_string]
-        reform_object, reform_components = create_reform(params, return_names=True)
+        reform_object, reform_components = create_reform(
+            params, return_names=True
+        )
         reform = Microsimulation(reform_object)
         reform_sim_build = time()
         print(
@@ -153,7 +158,9 @@ def compute_reform():
             MicroSeries(hnet.dropna()).gini(), MicroSeries(hnet_r).gini()
         )
         headliners = time()
-        print(f"Calculated headline figures ({round(headliners - calculations_done, 2)}s)")
+        print(
+            f"Calculated headline figures ({round(headliners - calculations_done, 2)}s)"
+        )
         poverty = poverty_chart(baseline, reform)
         print("Poverty chart done")
         age_plot = create_age_plot(gain, baseline)
@@ -178,7 +185,7 @@ def compute_reform():
             "loser_share": float(loser_share),
             "inequality_change": float(gini_change),
             "mtr_plot": json.loads(mtr_plot),
-            "waterfall": json.loads(waterfall)
+            "waterfall": json.loads(waterfall),
         }
         cached_results[param_string] = result
         cache(population_cache_file, cached_results)

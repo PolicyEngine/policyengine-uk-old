@@ -30,7 +30,7 @@ def basic_income(child, adult, senior):
     class UBI(Variable):
         entity = Person
         definition_period = YEAR
-        label = u"UBI"
+        label = "UBI"
         value_type = float
 
         def formula(person, period):
@@ -188,7 +188,7 @@ def create_reform(params, return_names=False):
         "income_tax",
         "NI",
         "UC",
-        "CB"
+        "CB",
     )
     ABOLITION_NAMES = (
         "Savings Allowance",
@@ -204,9 +204,11 @@ def create_reform(params, return_names=False):
         "income_tax",
         "national_insurance",
         "universal_credit",
-        "child_benefit"
+        "child_benefit",
     )
-    for variable, var, name in zip(ABOLITIONS, ABOLITION_VARS, ABOLITION_NAMES):
+    for variable, var, name in zip(
+        ABOLITIONS, ABOLITION_VARS, ABOLITION_NAMES
+    ):
         if f"abolish_{variable}" in params:
             if params[f"abolish_{variable}"]:
                 reforms += [neutralizer_reform(var)]
