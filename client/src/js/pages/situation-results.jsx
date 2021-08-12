@@ -21,7 +21,7 @@ class SituationResults extends React.Component {
 		}
 		submission["situation"] = this.state.situation;
 		this.setState({ waiting: true }, () => {
-			fetch("http://uk.policyengine.org:4000/situation-reform", {
+			fetch("http://localhost:4000/situation-reform", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
