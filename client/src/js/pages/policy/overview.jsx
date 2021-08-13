@@ -16,7 +16,7 @@ export function SimulateButton(props) {
 	const url = `${props.target || "/situation"}?${searchParams.toString()}`;
 	return (
 		<div>
-			<Link to={url}><Button onClick={props.onClick}>{props.text || "Simulate"}</Button></Link>
+			<Link to={url}><Button type={props.primary ? "primary" : null} onClick={props.onClick}>{props.text || "Simulate"}</Button></Link>
 		</div>
 	);
 }
@@ -35,9 +35,9 @@ function PolicyOverview(props) {
 				}
 			</Steps>
 			<Empty description="" image={null}>
-				<SimulateButton text="Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
+				<SimulateButton primary policy={props.policy} onClick={props.onSubmit} text="Describe your situation"/>
 				<div style={{paddingTop: 30}} />
-				<SimulateButton policy={props.policy} onClick={props.onSubmit} text="Describe your situation"/>
+				<SimulateButton text="Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
 			</Empty>
 		</>
 	);

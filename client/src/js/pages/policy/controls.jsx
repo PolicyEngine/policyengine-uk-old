@@ -89,20 +89,32 @@ function PolicyControls(props) {
 			"add_rate",
 			"add_threshold",
 		],
+		sav_div: [
+			"abolish_savings_allowance",
+			"abolish_dividend_allowance",
+		],
+		it_alt: [
+			"abolish_income_tax"
+		],
 		employee_side: [
 			"NI_main_rate",
 			"NI_PT",
 			"NI_add_rate",
 			"NI_UEL",
 		],
+		ni_alt: [
+			"abolish_NI"
+		],
 		allowances: [
 			"personal_allowance",
 		],
 		basic_income: [
-			"child_BI",
-			"adult_BI",
-			"senior_BI",
+			"child_UBI",
+			"adult_UBI",
+			"senior_UBI",
 		],
+		universal_credit: ["abolish_UC"],
+		cb: ["abolish_CB"]
 	};
 	const names = controlSet[props.selected];
 	if (!(props.selected in controlSet)) {

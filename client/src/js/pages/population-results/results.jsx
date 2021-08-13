@@ -23,7 +23,7 @@ function HeadlineFigure(props) {
 
 function Chart(props) {
 	return (
-		<Col md={6}>
+		<Col md={props.md ? props.md : 6}>
 			<Plot
 				data={props.plot.data}
 				layout={props.plot.layout}
@@ -70,6 +70,9 @@ export function PopulationResultsPane(props) {
 					precision={1}
 					suffix="%"
 				/>
+			</Row>
+			<Row>
+				<Chart plot={props.results.waterfall} md={12} />
 			</Row>
 			<Row>
 				<Chart plot={props.results.decile_plot} />

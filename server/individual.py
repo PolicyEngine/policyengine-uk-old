@@ -1,10 +1,13 @@
 from openfisca_core.reforms import reform
-from openfisca_uk import IndividualSim, graphs
+from openfisca_uk import CountryTaxBenefitSystem, IndividualSim, graphs
 import numpy as np
-from ubicenter import format_fig
-from ubicenter.plotly import GRAY, BLUE
+from formatting import format_fig
 import pandas as pd
 import plotly.express as px
+from ubicenter.plotly import GRAY, BLUE, format_fig
+
+WHITE = "#FFF"
+from openfisca_uk import BASELINE_VARIABLES
 
 
 def get_situation_func(params):
@@ -23,14 +26,16 @@ def get_situation_func(params):
                 person = family["people"][j]
                 name = f"family-{i}-person-{j}"
                 age = person["age"]["value"]
-                earnings = person["employment_income"]["value"]
+                variable_values = {}
+                for var in person.keys():
+                    if var in BASELINE_VARIABLES:
+                        variable_values[var] = person[var]["value"]
                 is_head = age >= 18 and not head_assigned
                 if is_head:
                     head_assigned = True
                 sim.add_person(
                     name=name,
-                    age=age,
-                    employment_income=earnings,
+                    **variable_values,
                     is_benunit_head=is_head,
                     is_household_head=is_head,
                 )
@@ -207,5 +212,144 @@ def get_waterfall_chart(reform, params):
             title="Change to net income by component", yaxis_tickprefix="£"
         ),
         show=False,
+    )
+    return fig.to_json()
+
+
+COMPONENTS = (
+    "employment_income",
+    "self_employment_income",
+    "pension_income",
+    "savings_interest_income",
+    "dividend_income",
+    "universal_credit",
+    "child_benefit",
+    "UBI",
+    "income_tax",
+    "national_insurance",
+    "net_income",
+)
+
+IS_POSITIVE = [True] * 8 + [False] * 2 + [True]
+
+
+def get_variables(reform, situation, variables=COMPONENTS):
+    sim = IndividualSim(reform, year=2021)
+    situation(sim)
+    amounts = []
+    for variable in COMPONENTS:
+        try:
+            amounts += [sim.calc(variable).sum()]
+        except:
+            amounts += [0]
+    df = pd.DataFrame(
+        dict(
+            variable=COMPONENTS,
+            value=amounts,
+            type=np.where(IS_POSITIVE, "Gain", "Loss"),
+            is_value=True,
+        )
+    )
+    df.value *= np.where(IS_POSITIVE, 1, -1)
+    df = df[df.variable.isin(variables)].reset_index(drop=True)
+    return df
+
+
+key_to_label = dict(
+    net_income="Net income",
+    employment_income="Employment income",
+    self_employment_income="Self-employment income",
+    pension_income="Pension income",
+    savings_interest_income="Savings income",
+    dividend_income="Dividend income",
+    universal_credit="Universal Credit",
+    child_benefit="Child Benefit",
+    UBI="UBI",
+    income_tax="Income Tax",
+    national_insurance="NI",
+)
+
+
+def variable_key_to_label(key):
+    try:
+        return key_to_label[key]
+    except:
+        return ""
+
+
+def get_budget_waterfall_data(
+    reform, situation, label="Baseline", variables=COMPONENTS
+):
+    df = get_variables(reform, situation, variables=variables)
+    net_income = df[df.variable == "net_income"].copy()
+    df = df[df.variable != "net_income"].reset_index(drop=True)
+    base = pd.Series([0] + list(df.value.cumsum()))
+    for i in range(1, len(base)):
+        if base[i] < base[i - 1]:
+            base[i - 1] = base[i]
+    df.value = df.value.abs()
+    df = pd.concat(
+        [
+            pd.DataFrame(
+                dict(variable=df.variable, value=base, type="", is_value=False)
+            ),
+            df,
+        ]
+    )
+    df = pd.concat([df, net_income])
+    df = df[~df.variable.isna()]
+    df.variable = df.variable.apply(variable_key_to_label)
+    df["Policy"] = label
+    return df
+
+
+def get_budget_waterfall_chart(reform, params):
+    situation = get_situation_func(params)
+    baseline_variable_df = get_variables((), situation)
+    baseline_variables = baseline_variable_df.variable[
+        baseline_variable_df.value != 0
+    ].unique()
+    reform_variable_df = get_variables(reform, situation)
+    reform_variables = reform_variable_df.variable[
+        reform_variable_df.value != 0
+    ].unique()
+    variables = list(set(list(baseline_variables) + list(reform_variables)))
+    df = pd.concat(
+        [
+            get_budget_waterfall_data(
+                (), situation, "Baseline", variables=variables
+            ),
+            get_budget_waterfall_data(
+                reform, situation, "Reform", variables=variables
+            ),
+        ]
+    )
+    fig = px.bar(
+        df,
+        x="variable",
+        y="value",
+        color="type",
+        animation_frame="Policy",
+        color_discrete_map={"Gain": BLUE, "Loss": GRAY, "": WHITE},
+    )
+    variable_sums = df.groupby(["variable", "Policy"]).value.sum()
+    fig.update_layout(
+        title="Budget breakdown",
+        xaxis_title="",
+        yaxis_title="Yearly amount",
+        yaxis_tickprefix="£",
+        legend_title="",
+        yaxis_range=(min(variable_sums.min(), 0), variable_sums.max()),
+    )
+    fig = format_fig(fig, show=False)
+    fig.add_shape(
+        type="line",
+        xref="paper",
+        yref="y",
+        x0=0,
+        y0=0,
+        x1=1,
+        y1=0,
+        line=dict(color="grey", width=1, dash="dash"),
     )
     return fig.to_json()
