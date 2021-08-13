@@ -52,7 +52,7 @@ function PolicySituationOverview(props) {
 			{
 				!props.noButton ?
 					<Empty description="" image={null}>
-						<SimulateButton text="See your results" target="/situation-results" policy={props.policy} onClick={props.onSubmit}/>
+						<SimulateButton primary text="See your results" target="/situation-results" policy={props.policy} onClick={props.onSubmit}/>
 					</Empty> :
 					null
 			}

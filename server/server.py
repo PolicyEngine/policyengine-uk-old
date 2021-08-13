@@ -12,11 +12,12 @@ import logging
 import json
 from time import time
 import plotly.graph_objects as go
-from reforms import *
-from graphs import *
-from individual import *
+from server.reforms import *
+from server.graphs import *
+from server.individual import *
 from pathlib import Path
 from microdf import MicroSeries
+from pathlib import Path
 
 app = Flask(__name__)
 CORS(app)
@@ -27,9 +28,12 @@ baseline = openfisca_uk.Microsimulation()
 baseline.calc("household_net_income")
 
 avg_mtr = lambda sim: float(
-    (1 - sim.deriv("household_net_income", wrt="employment_income"))[
-        sim.calc("is_adult")
-    ]
+    (
+        1
+        - sim.deriv(
+            "household_net_income", wrt="employment_income", group_limit=2
+        )
+    )[sim.calc("is_adult")]
     .dropna()
     .mean()
 )
@@ -47,7 +51,7 @@ cached_results = {}
 cached_situation_results = {}
 population_cache_file = CACHE / "populations.json"
 situation_cache_file = CACHE / "situations.json"
-
+"""
 if population_cache_file.exists():
     try:
         with open(population_cache_file, "r") as f:
@@ -70,10 +74,13 @@ else:
     with open(situation_cache_file, "w+") as f:
         pass
 
+"""
+
 
 def cache(filename, results):
-    with open(filename, "w") as f:
-        json.dump(results, f)
+    return
+    # with open(filename, "w") as f:
+    #    json.dump(results, f)
 
 
 @app.route("/situation-reform", methods=["post"])
@@ -86,9 +93,22 @@ def compute_situation_reform():
         if param_string in cached_situation_results:
             return cached_situation_results[param_string]
         reform_object = create_reform(params)
+        print("Constructed reform")
         baseline, reformed = get_sims(reform_object, params)
         headline_figures = get_headline_figures(baseline, reformed)
-        output = {**headline_figures}
+        print("Calculated headline figures")
+        budget_graph = get_budget_graph(reform_object, params)
+        print("Budget graph done")
+        mtr_graph = get_mtr_graph(reform_object, params)
+        print("MTR graph done")
+        waterfall_chart = get_budget_waterfall_chart(reform_object, params)
+        print("Waterfall graph done")
+        output = {
+            **headline_figures,
+            "budget_chart": json.loads(budget_graph),
+            "mtr_chart": json.loads(mtr_graph),
+            "waterfall_chart": json.loads(waterfall_chart),
+        }
         print(f"Completed situation reform ({round(time() - start_time, 1)})s")
         cached_situation_results[param_string] = output
         cache(situation_cache_file, cached_situation_results)
@@ -106,7 +126,9 @@ def compute_reform():
         param_string = json.dumps(params)
         if param_string in cached_results:
             return cached_results[param_string]
-        reform_object = create_reform(params)
+        reform_object, reform_components = create_reform(
+            params, return_names=True
+        )
         reform = Microsimulation(reform_object)
         reform_sim_build = time()
         print(
@@ -139,13 +161,22 @@ def compute_reform():
         gini_change = pct_change(
             MicroSeries(hnet.dropna()).gini(), MicroSeries(hnet_r).gini()
         )
+        headliners = time()
+        print(
+            f"Calculated headline figures ({round(headliners - calculations_done, 2)}s)"
+        )
         poverty = poverty_chart(baseline, reform)
+        print("Poverty chart done")
         age_plot = create_age_plot(gain, baseline)
+        print("Age chart done")
         mtr_plot = average_mtr_changes(baseline_mtr, reform)
+        print("MTR chart done")
+        waterfall = get_funding_breakdown(reform_object, reform_components)
+        print("Waterfall chart done")
         analysis_done = time()
         del reform
         print(
-            f"Analysis results calculated ({round(analysis_done - calculations_done, 2)}s)"
+            f"Plots calculated ({round(analysis_done - calculations_done, 2)}s)"
         )
         result = {
             "status": "success",
@@ -158,6 +189,7 @@ def compute_reform():
             "loser_share": float(loser_share),
             "inequality_change": float(gini_change),
             "mtr_plot": json.loads(mtr_plot),
+            "waterfall": json.loads(waterfall),
         }
         cached_results[param_string] = result
         cache(population_cache_file, cached_results)

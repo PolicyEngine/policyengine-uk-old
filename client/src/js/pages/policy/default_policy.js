@@ -93,8 +93,8 @@ const DEFAULT_POLICY = {
 		summary: "Change the UEL to £@/week",
 		type: "weekly",
 	},
-	child_BI: {
-		title: "Child basic income",
+	child_UBI: {
+		title: "Child UBI",
 		description: "A basic income for children is given to every child aged under 18, regardless of household income.",
 		default: 0,
 		value: 0,
@@ -102,8 +102,8 @@ const DEFAULT_POLICY = {
 		summary: "Give a basic income of £@/week to children",
 		type: "weekly",
 	},
-	adult_BI: {
-		title: "Adult basic income",
+	adult_UBI: {
+		title: "Adult UBI",
 		description: "Basic income for adults is given to individuals aged over 18 but under State Pension age.",
 		default: 0,
 		value: 0,
@@ -111,14 +111,62 @@ const DEFAULT_POLICY = {
 		summary: "Give a basic income of £@/week to adults",
 		type: "weekly",
 	},
-	senior_BI: {
-		title: "Senior basic income",
+	senior_UBI: {
+		title: "Senior UBI",
 		description: "A basic income for senior citizens is given to those over State Pension age.",
 		default: 0,
 		value: 0,
 		max: 250,
 		summary: "Give a basic income of £@/week to seniors",
 		type: "weekly",
+	},
+	abolish_savings_allowance: {
+		title: "Personal Savings Allowance",
+		description: "The Personal Savings Allowance is the amount of taxable savings interest income disregarded for Income Tax purposes. It has different values at different Income Tax bands - this switch abolishes all of them.",
+		default: false,
+		value: false,
+		summary: "Abolish the Personal Savings Allowance",
+		type: "bool"
+	},
+	abolish_dividend_allowance: {
+		title: "Dividend Allowance",
+		description: "The Dividend Allowance disregards up to £2,000 of taxable dividend income per year. This switch abolishes it.",
+		default: false,
+		value: false,
+		summary: "Abolish the Dividend Allowance",
+		type: "bool"
+	},
+	abolish_income_tax: {
+		title: "Income Tax",
+		description: "Income Tax raises over £190bn per year. This switch abolishes it.",
+		default: false,
+		value: false,
+		summary: "Abolish Income Tax",
+		type: "bool"
+	},
+	abolish_NI: {
+		title: "National Insurance",
+		description: "This switch abolishes National Insurance.",
+		default: false,
+		value: false,
+		summary: "Abolish National Insurance",
+		type: "bool"
+	},
+	abolish_UC: {
+		title: "Abolish Universal Credit",
+		description: "Universal Credit is the main means-tested benefit, currently being rolled out across the country.",
+		default: false,
+		value: false,
+		summary: "Abolish Universal Credit",
+		type: "bool"
+	},
+	abolish_CB: {
+		title: "Abolish Child Benefit",
+		description: "Child Benefit is a universal allowance to parents of children, with a means test embedded in Income Tax.",
+		default: false,
+		value: false,
+		summary: "Abolish Child Benefit",
+		type: "bool"
 	},
 };
 

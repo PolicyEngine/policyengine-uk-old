@@ -37,14 +37,18 @@ function ChangedHeadlineFigure(props) {
 
 function Chart(props) {
 	return (
-		<Col md={6}>
-			<Plot
-				data={props.plot.data}
-				layout={props.plot.layout}
-				config={{ displayModeBar: false }}
-				style={{ width: "100%" }} 
-			/>
-		</Col>
+		<>
+			<Col md={3} />
+			<Col md={6} >
+				<Plot
+					data={props.plot.data}
+					layout={props.plot.layout}
+					config={{ displayModeBar: false }}
+					frames={props.plot.frames}
+					style={{ width: "100%" }}
+				/>
+			</Col>
+		</>
 	);
 }
 
@@ -68,6 +72,15 @@ export function SituationResultsPane(props) {
 			<Divider>Your situation results</Divider>
 			<Row>
 				{headlineFigures}
+			</Row>
+			<Row>
+				<Chart plot={props.results.waterfall_chart} />
+			</Row>
+			<Row>
+				<Chart plot={props.results.budget_chart} />
+			</Row>
+			<Row>
+				<Chart plot={props.results.mtr_chart} />
 			</Row>
 		</>
 	);
