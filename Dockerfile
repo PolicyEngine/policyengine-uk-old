@@ -14,14 +14,11 @@ ENV PATH /env/bin:$PATH
 # dependencies into the virtualenv.
 ADD requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
-RUN cd /tmp
-RUN git clone https://github.com/ubicenter/openfisca-data
-RUN pip install -e openfisca-data
-RUN cd ..
-
 # Add the application source code.
 ADD . /app
+RUN pip install -e openfisca-data
+RUN openfisca-uk-setup --set-default frs
 
 # Run a WSGI server to serve the application. gunicorn must be declared as
 # a dependency in requirements.txt.
-CMD gunicorn -b :$PORT main:app
+CMD gunicorn -t 0 -b :$PORT main:app

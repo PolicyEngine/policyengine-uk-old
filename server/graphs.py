@@ -2,10 +2,10 @@ import plotly.express as px
 import plotly.graph_objects as go
 from openfisca_uk import IndividualSim, graphs, Microsimulation
 import pandas as pd
-from formatting import format_fig
+from server.formatting import format_fig
 from ubicenter.plotly import GRAY, BLUE
 import numpy as np
-
+#
 WHITE = "#FFF"
 
 
