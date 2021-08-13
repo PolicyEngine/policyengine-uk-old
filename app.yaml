@@ -1,5 +1,2 @@
-runtime: python37
-
-handlers:
-- url: /.*
-  script: auto
+runtime: custom
+env: flexible

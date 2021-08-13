@@ -12,11 +12,12 @@ import logging
 import json
 from time import time
 import plotly.graph_objects as go
-from reforms import *
-from graphs import *
-from individual import *
+from server.reforms import *
+from server.graphs import *
+from server.individual import *
 from pathlib import Path
 from microdf import MicroSeries
+from pathlib import Path
 
 app = Flask(__name__)
 CORS(app)
@@ -50,7 +51,7 @@ cached_results = {}
 cached_situation_results = {}
 population_cache_file = CACHE / "populations.json"
 situation_cache_file = CACHE / "situations.json"
-
+"""
 if population_cache_file.exists():
     try:
         with open(population_cache_file, "r") as f:
@@ -73,10 +74,11 @@ else:
     with open(situation_cache_file, "w+") as f:
         pass
 
-
+"""
 def cache(filename, results):
-    with open(filename, "w") as f:
-        json.dump(results, f)
+    return
+    #with open(filename, "w") as f:
+    #    json.dump(results, f)
 
 
 @app.route("/situation-reform", methods=["post"])
