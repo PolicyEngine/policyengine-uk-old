@@ -5,6 +5,7 @@ from server.formatting import format_fig
 import pandas as pd
 import plotly.express as px
 from ubicenter.plotly import GRAY, BLUE, format_fig
+
 #
 WHITE = "#FFF"
 from openfisca_uk import BASELINE_VARIABLES

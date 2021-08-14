@@ -5,6 +5,7 @@ import pandas as pd
 from server.formatting import format_fig
 from ubicenter.plotly import GRAY, BLUE
 import numpy as np
+
 #
 WHITE = "#FFF"
 

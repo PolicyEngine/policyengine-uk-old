@@ -19,6 +19,7 @@ from pathlib import Path
 from microdf import MicroSeries
 from pathlib import Path
 from threading import Thread
+
 #
 app = Flask(__name__)
 CORS(app)
@@ -39,7 +40,7 @@ avg_mtr = lambda sim: float(
     .mean()
 )
 
-baseline_mtr = 0.3# avg_mtr(baseline)
+baseline_mtr = 0.3  # avg_mtr(baseline)
 
 
 def pct_change(x, y):
@@ -50,6 +51,7 @@ CACHE = Path("cache")
 
 cached_results = {}
 cached_situation_results = {}
+
 
 @app.route("/", methods=["get"])
 def test():
@@ -97,7 +99,7 @@ def compute_reform():
         print("Received reform request")
         start_time = time()
         params = request.json
-        parameters = {x:y for x, y in params.items() if x != "component"}
+        parameters = {x: y for x, y in params.items() if x != "component"}
         param_string = json.dumps(params)
         if param_string in cached_results:
             if "component" in params:
