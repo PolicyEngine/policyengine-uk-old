@@ -23,7 +23,5 @@ client/yarn-debug.log*
 client/yarn-error.log*
 **/__pycache__
 
-server/cache/populations.json
-server/cache/situations.json
-
-openfisca-data
+openfisca_data/
+openfisca_uk/

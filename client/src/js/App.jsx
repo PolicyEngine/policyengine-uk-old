@@ -44,7 +44,7 @@ class App extends React.Component {
 	}
 	render() {
 		return (
-			<Router>
+			<Router basename="/uk-policy-engine">
 				<Container fluid style={{paddingBottom: 50}}>
 					<Switch>
 						<Route path="/" exact>
