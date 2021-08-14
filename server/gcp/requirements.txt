@@ -3,5 +3,4 @@ git+https://github.com/ubicenter/ubicenter.py
 plotly
 flask
 flask_cors
-gunicorn
 rdbl

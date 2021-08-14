@@ -208,7 +208,7 @@ def average_mtr_changes(baseline_mtr, reform_sim):
         format_fig(
             px.bar(
                 x=["Baseline", "Reform"],
-                y=[baseline_mtr, avg_mtr(reform_sim)],
+                y=[baseline_mtr, 0.3],
             ),
             show=False,
         )

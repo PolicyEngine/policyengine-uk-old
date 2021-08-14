@@ -39,7 +39,7 @@ avg_mtr = lambda sim: float(
     .mean()
 )
 
-baseline_mtr = avg_mtr(baseline)
+baseline_mtr = 0.3# avg_mtr(baseline)
 
 
 def pct_change(x, y):
@@ -53,7 +53,7 @@ cached_situation_results = {}
 
 @app.route("/", methods=["get"])
 def test():
-    return "Server up"
+    return "Status check: server up"
 
 
 @app.route("/situation-reform", methods=["post"])

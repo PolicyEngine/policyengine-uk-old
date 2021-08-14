@@ -5,7 +5,7 @@ on:
       - master
 jobs:
   build-and-deploy:
-    if: github.repository == 'nikhilwoodruff/openfisca-uk-ui-client'
+    if: github.repository == 'ubicenter/uk-policy-engine'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
