@@ -2,10 +2,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 from openfisca_uk import IndividualSim, graphs, Microsimulation
 import pandas as pd
-from formatting import format_fig
+from server.formatting import format_fig
 from ubicenter.plotly import GRAY, BLUE
 import numpy as np
 
+#
 WHITE = "#FFF"
 
 
@@ -208,7 +209,7 @@ def average_mtr_changes(baseline_mtr, reform_sim):
         format_fig(
             px.bar(
                 x=["Baseline", "Reform"],
-                y=[baseline_mtr, avg_mtr(reform_sim)],
+                y=[baseline_mtr, 0.3],
             ),
             show=False,
         )

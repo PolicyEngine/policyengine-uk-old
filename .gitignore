@@ -25,3 +25,5 @@ client/yarn-error.log*
 
 server/cache/populations.json
 server/cache/situations.json
+
+openfisca-data

@@ -1,11 +1,12 @@
 from openfisca_core.reforms import reform
 from openfisca_uk import CountryTaxBenefitSystem, IndividualSim, graphs
 import numpy as np
-from formatting import format_fig
+from server.formatting import format_fig
 import pandas as pd
 import plotly.express as px
 from ubicenter.plotly import GRAY, BLUE, format_fig
 
+#
 WHITE = "#FFF"
 from openfisca_uk import BASELINE_VARIABLES
 
