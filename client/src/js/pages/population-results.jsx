@@ -31,7 +31,7 @@ class PopulationResults extends React.Component {
 		return (
 			<Row>
 				<Col xl={9}>
-					<PopulationResultsPane results={this.state.results} submission={submission}/>
+					<PopulationResultsPane submission={submission}/>
 				</Col>
 				<Col xl={3} style={{paddingLeft: 50}}>
 					<PolicySituationOverview policy={this.props.policy} household={this.props.situation.household}/>

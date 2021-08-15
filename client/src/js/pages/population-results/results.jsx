@@ -21,19 +21,20 @@ class HeadlineFigure extends React.Component {
 				},
 				body: JSON.stringify(Object.assign(this.props.submission, {target: this.props.target})),
 			}).then((res) => res.json()).then((json) => {
+				console.log(json);
 				if(json.status == "complete") {
 					this.setState({ data: json.data});
 					clearInterval(this.refresh_task);
 				}
 			});
-		}, 1000);
+		}, 5000);
 	}
 
 	render() {
 		return (
 			<Col style={{ padding: 10, margin: 10 }}>
 				<Card style={{ minWidth: 150 }}>
-					{this.state.data ? 
+					{this.state.data != null ? 
 						<Statistic
 							title={this.props.title}
 							value={this.props.multiplier ? this.props.multiplier * this.state.data : this.state.data}
@@ -69,7 +70,7 @@ class Chart extends React.Component {
 					clearInterval(this.refresh_task);
 				}
 			});
-		}, 1000);
+		}, 5000);
 	}
 
 	render() {

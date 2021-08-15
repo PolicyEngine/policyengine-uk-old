@@ -2,6 +2,7 @@ import json
 from typing import Any
 from flask import Flask, request, make_response
 from flask_cors import CORS
+import logging
 
 from openfisca_uk import Microsimulation
 from server.refactor.simulation.reforms import create_reform
@@ -14,10 +15,11 @@ from server.refactor.populations.charts import (
 from server.refactor.populations.metrics import headline_metrics
 from server.refactor.hypothetical.situation import get_situation_func
 from server.refactor.hypothetical.metrics import headline_figures
-from server.refactor.hypothetical.charts import mtr_chart, budget_chart, waterfall_chart
+from server.refactor.hypothetical.charts import mtr_chart, budget_chart, budget_waterfall_chart
 
 
 app = Flask(__name__)
+logging.getLogger('werkzeug').disabled = True
 CORS(app)
 
 
@@ -51,7 +53,7 @@ def compute_reform():
 
     if key in CACHE:
         if "target" in params:
-            app.logger.info("Returning target")
+            # app.logger.info("Returning target")
             if params["target"] in CACHE[key]:
                 return {
                     "status": COMPLETE,
@@ -84,11 +86,13 @@ def compute_reform():
     else:
         situation = get_situation_func(params)
         CACHE[key]["headline_figures"] = headline_figures(reform, situation)
-        CACHE[key]["waterfall_chart"] = waterfall_chart(reform, situation)
+        CACHE[key]["waterfall_chart"] = budget_waterfall_chart(reform, situation)
         CACHE[key]["mtr_chart"] = mtr_chart(reform, situation)
         CACHE[key]["budget_chart"] = budget_chart(reform, situation)
 
     CACHE[key]["status"] = COMPLETE
+
+    app.logger.info("Reform complete.")
 
     return {}
 

@@ -8,7 +8,7 @@ import Situation from "./pages/situation";
 import PopulationResults from "./pages/population-results";
 import SituationResults from "./pages/situation-results";
 import {
-	BrowserRouter as Router,
+	HashRouter as Router,
 	Switch,
 	Route,
 	Link,
@@ -28,13 +28,13 @@ import "antd/dist/antd.css";
 
 function getPolicyFromURL() {
 	let plan = DEFAULT_POLICY;
-	const { searchParams } = new URL(document.location);
+	const searchParams = new URLSearchParams(document.location.hash.toString().slice(1 + document.location.pathname.length));
 	for (const key of searchParams.keys()) {
 		plan[key].value = +searchParams.get(key);
 	}
+	console.log(plan);
 	return plan;
 }
-
 
 
 class App extends React.Component {
@@ -44,7 +44,7 @@ class App extends React.Component {
 	}
 	render() {
 		return (
-			<Router>
+			<Router basename="/">
 				<Container fluid style={{paddingBottom: 50}}>
 					<Switch>
 						<Route path="/" exact>

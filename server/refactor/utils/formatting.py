@@ -61,7 +61,7 @@ def format_fig(
         formatted plotly figure.
     :rtype: go.Figure
     """
-    add_ubi_center_logo(fig, **kwargs)
+    # add_ubi_center_logo(fig, **kwargs)
     fig.update_xaxes(
         title_font=dict(size=16, color="black"), tickfont={"size": 14}
     )
