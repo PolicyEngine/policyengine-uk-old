@@ -48,7 +48,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<Router basename="/">
-				<Analytics id="G-QL2XFHB7B4">
+				<Analytics id="G-DPJ8J1XJG3" debug>
 					<Container fluid style={{paddingBottom: 50}}>
 						<Switch>
 							<Route path="/" exact>
