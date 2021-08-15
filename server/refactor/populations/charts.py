@@ -8,22 +8,28 @@ import pandas as pd
 
 WHITE = "#FFF"
 
+
 def decile_chart(baseline, reformed):
     income = baseline.calc("household_net_income", map_to="person")
     equiv_income = baseline.calc("equiv_household_net_income", map_to="person")
     gain = reformed.calc("household_net_income", map_to="person") - income
-    fig = format_fig(
+    fig = (
+        format_fig(
             px.bar(gain.groupby(equiv_income.decile_rank()).mean()), show=False
-        ).update_layout(
+        )
+        .update_layout(
             title="Impact on net income by decile",
             xaxis_title="Equivalised disposable income decile",
             yaxis_title="Average change to net income",
             yaxis_tickprefix="£",
             showlegend=False,
-            xaxis_tickvals=list(range(1, 11))
-        ).update_traces(marker_color=BLUE)
+            xaxis_tickvals=list(range(1, 11)),
+        )
+        .update_traces(marker_color=BLUE)
+    )
     fig = add_zero_line(fig)
     return json.loads(fig.to_json())
+
 
 def poverty_chart(baseline, reform):
     child = pct_change(
@@ -70,6 +76,7 @@ def get_partial_funding(reform, **kwargs):
             spending(baseline, Microsimulation(reform[:i], **kwargs))
         ]
     return expenditure
+
 
 def add_zero_line(fig):
     fig.add_shape(
@@ -140,9 +147,7 @@ def waterfall_chart(reform, components, **kwargs):
             color="Type",
             barmode="stack",
             color_discrete_map={"Revenue": BLUE, "Spending": GRAY, "": WHITE},
-        ).update_layout(
-            yaxis_tickprefix="£"
-        ),
+        ).update_layout(yaxis_tickprefix="£"),
         show=False,
     )
     fig = add_zero_line(fig)
@@ -153,16 +158,17 @@ def age_chart(baseline, reformed):
     income = baseline.calc("household_net_income", map_to="person")
     gain = reformed.calc("household_net_income", map_to="person") - income
     values = gain.groupby(baseline.calc("age")).mean().rolling(3).median()
-    fig = format_fig(
-            px.line(values), 
-            show=False
-        ).update_layout(
+    fig = (
+        format_fig(px.line(values), show=False)
+        .update_layout(
             title="Impact on net income by age",
             xaxis_title="Age",
             yaxis_title="Average change to net income",
             yaxis_tickprefix="£",
             showlegend=False,
-        ).update_traces(marker_color=BLUE)
+        )
+        .update_traces(marker_color=BLUE)
+    )
     fig.add_shape(
         type="line",
         xref="paper",
@@ -171,6 +177,6 @@ def age_chart(baseline, reformed):
         y0=0,
         x1=1,
         y1=0,
-        line=dict(color="grey", width=1, dash="dash")
+        line=dict(color="grey", width=1, dash="dash"),
     )
     return json.loads(fig.to_json())

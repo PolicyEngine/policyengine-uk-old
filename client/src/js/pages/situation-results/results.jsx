@@ -35,6 +35,8 @@ function ChangedHeadlineFigure(props) {
 	);
 }
 
+
+
 function Chart(props) {
 	return (
 		<>
