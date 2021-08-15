@@ -1,6 +1,5 @@
-from server.formatting import format_fig
 from openfisca_uk import graphs, IndividualSim
-from server.refactor.utils.formatting import format_fig
+from server.utils.formatting import format_fig
 import json
 import plotly.express as px
 import pandas as pd

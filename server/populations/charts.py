@@ -1,5 +1,5 @@
-from server.refactor.populations.metrics import poverty_rate, pct_change
-from server.refactor.utils.formatting import format_fig, BLUE, GRAY
+from server.populations.metrics import poverty_rate, pct_change
+from server.utils.formatting import format_fig, BLUE, GRAY
 import plotly.express as px
 import json
 import numpy as np

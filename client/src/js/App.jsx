@@ -28,11 +28,10 @@ import "antd/dist/antd.css";
 
 function getPolicyFromURL() {
 	let plan = DEFAULT_POLICY;
-	const searchParams = new URLSearchParams(document.location.hash.toString().slice(1 + document.location.pathname.length));
+	const searchParams = new URLSearchParams(document.location.hash.toString().slice(document.location.hash.indexOf("?")));
 	for (const key of searchParams.keys()) {
 		plan[key].value = +searchParams.get(key);
 	}
-	console.log(plan);
 	return plan;
 }
 

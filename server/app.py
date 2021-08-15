@@ -5,17 +5,17 @@ from flask_cors import CORS
 import logging
 
 from openfisca_uk import Microsimulation
-from server.refactor.simulation.reforms import create_reform
-from server.refactor.populations.charts import (
+from server.simulation.reforms import create_reform
+from server.populations.charts import (
     age_chart,
     decile_chart,
     poverty_chart,
     waterfall_chart,
 )
-from server.refactor.populations.metrics import headline_metrics
-from server.refactor.hypothetical.situation import get_situation_func
-from server.refactor.hypothetical.metrics import headline_figures
-from server.refactor.hypothetical.charts import mtr_chart, budget_chart, budget_waterfall_chart
+from server.populations.metrics import headline_metrics
+from server.hypothetical.situation import get_situation_func
+from server.hypothetical.metrics import headline_figures
+from server.hypothetical.charts import mtr_chart, budget_chart, budget_waterfall_chart
 
 
 app = Flask(__name__)
