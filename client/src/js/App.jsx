@@ -14,6 +14,7 @@ import {
 	Link,
 } from "react-router-dom";
 import { Container } from "react-bootstrap";
+import Analytics from "react-router-ga";
 
 // JSON imports
 
@@ -28,9 +29,11 @@ import "antd/dist/antd.css";
 
 function getPolicyFromURL() {
 	let plan = DEFAULT_POLICY;
-	const searchParams = new URLSearchParams(document.location.hash.toString().slice(document.location.hash.indexOf("?")));
-	for (const key of searchParams.keys()) {
-		plan[key].value = +searchParams.get(key);
+	if (document.location.hash.includes("?")) {
+		const searchParams = new URLSearchParams(document.location.hash.toString().slice(document.location.hash.indexOf("?")));
+		for (const key of searchParams.keys()) {
+			plan[key].value = +searchParams.get(key);
+		}
 	}
 	return plan;
 }
@@ -45,26 +48,28 @@ class App extends React.Component {
 	render() {
 		return (
 			<Router basename="/">
-				<Container fluid style={{paddingBottom: 50}}>
-					<Switch>
-						<Route path="/" exact>
-							<Header step={0}/>
-							<Policy policy={this.state.policy} onSubmit={policy => {this.setState({policy: policy});}}/>
-						</Route>
-						<Route path="/situation">
-							<Header step={1}/>
-							<Situation policy={this.state.policy} onSubmit={situation =>{this.setState({situation: situation});}} situation={this.state.situation} />
-						</Route>
-						<Route path="/population-results">
-							<Header step={2}/>
-							<PopulationResults policy={this.state.policy} situation={this.state.situation}/>
-						</Route>
-						<Route path="/situation-results">
-							<Header step={3}/>
-							<SituationResults policy={this.state.policy} situation={this.state.situation}/>
-						</Route>
-					</Switch>
-				</Container>
+				<Analytics id="G-Z3LK7EQ4V6">
+					<Container fluid style={{paddingBottom: 50}}>
+						<Switch>
+							<Route path="/" exact>
+								<Header step={0}/>
+								<Policy policy={this.state.policy} onSubmit={policy => {this.setState({policy: policy});}}/>
+							</Route>
+							<Route path="/situation">
+								<Header step={1}/>
+								<Situation policy={this.state.policy} onSubmit={situation =>{this.setState({situation: situation});}} situation={this.state.situation} />
+							</Route>
+							<Route path="/population-results">
+								<Header step={2}/>
+								<PopulationResults policy={this.state.policy} situation={this.state.situation}/>
+							</Route>
+							<Route path="/situation-results">
+								<Header step={3}/>
+								<SituationResults policy={this.state.policy} situation={this.state.situation}/>
+							</Route>
+						</Switch>
+					</Container>
+				</Analytics>
 			</Router>
 		);
 	}
