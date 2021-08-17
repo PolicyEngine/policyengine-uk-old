@@ -5,13 +5,12 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 from ubicenter.plotly import GRAY, BLUE
+
 WHITE = "#FFF"
 
 
 def budget_chart(reform, situation):
-    graph = graphs.budget_chart(
-        reform, situation_function=situation
-    )
+    graph = graphs.budget_chart(reform, situation_function=situation)
     return json.loads(
         format_fig(graph, show=False)
         .update_layout(
@@ -19,25 +18,22 @@ def budget_chart(reform, situation):
             xaxis_title="Employment income",
             yaxis_title="Yearly amount",
             yaxis_tickprefix="£",
-            showlegend=False
+            showlegend=False,
         )
         .update_traces(marker_color="#1890ff")
         .to_json()
     )
 
 
-
 def mtr_chart(reform, situation):
-    graph = graphs.mtr_chart(
-        reform, situation_function=situation
-    )
+    graph = graphs.mtr_chart(reform, situation_function=situation)
     return json.loads(
         format_fig(graph, show=False)
         .update_layout(
             title="Effective marginal tax rate by employment income",
             xaxis_title="Employment income",
             yaxis_title="Effective MTR",
-            showlegend=False
+            showlegend=False,
         )
         .update_traces(marker_color="#1890ff")
         .to_json()
@@ -103,9 +99,7 @@ def variable_key_to_label(key):
         return ""
 
 
-def get_budget_waterfall_data(
-    sim, label="Baseline", variables=COMPONENTS
-):
+def get_budget_waterfall_data(sim, label="Baseline", variables=COMPONENTS):
     df = get_variables(sim, variables=variables)
     net_income = df[df.variable == "net_income"].copy()
     df = df[df.variable != "net_income"].reset_index(drop=True)
@@ -144,9 +138,7 @@ def budget_waterfall_chart(baseline, reformed):
             get_budget_waterfall_data(
                 baseline, "Baseline", variables=variables
             ),
-            get_budget_waterfall_data(
-                reformed, "Reform", variables=variables
-            ),
+            get_budget_waterfall_data(reformed, "Reform", variables=variables),
         ]
     )
     fig = px.bar(

@@ -1,6 +1,7 @@
 from openfisca_uk.tools.simulation import IndividualSim
 import numpy as np
 
+
 def headline_figures(baseline, reformed):
     getValue = lambda sim, name: float(np.array(sim.calc(name)).sum())
     getValues = lambda name: {

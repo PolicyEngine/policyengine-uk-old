@@ -11,20 +11,31 @@ from server.simulation.situations import create_situation
 from server.simulation.reforms import create_reform
 
 from server.populations.metrics import headline_metrics
-from server.populations.charts import decile_chart, poverty_chart, age_chart, waterfall_chart
+from server.populations.charts import (
+    decile_chart,
+    poverty_chart,
+    age_chart,
+    waterfall_chart,
+)
 
 from server.situations.metrics import headline_figures
-from server.situations.charts import budget_waterfall_chart, mtr_chart, budget_chart
+from server.situations.charts import (
+    budget_waterfall_chart,
+    mtr_chart,
+    budget_chart,
+)
 
-logging.getLogger('werkzeug').disabled = True
+logging.getLogger("werkzeug").disabled = True
 
 
 baseline = Microsimulation()
 
 STORAGE = {}
 
+
 def save(key, data):
     STORAGE[key] = data
+
 
 def load(key):
     try:
@@ -32,14 +43,16 @@ def load(key):
     except:
         return None
 
-app = Flask(__name__, static_url_path='')
-logging.getLogger('werkzeug').disabled = True
+
+app = Flask(__name__, static_url_path="")
+logging.getLogger("werkzeug").disabled = True
 CORS(app)
 
 
 @app.route("/", methods=["GET"])
 def home():
     return send_from_directory("static", "index.html")
+
 
 @app.route("/api/population-reform", methods=["GET"])
 def population_reform():
@@ -53,11 +66,12 @@ def population_reform():
         decile_chart=decile_chart(baseline, reformed),
         age_chart=age_chart(baseline, reformed),
         poverty_chart=poverty_chart(baseline, reformed),
-        waterfall_chart=waterfall_chart(reform, components, baseline)
+        waterfall_chart=waterfall_chart(reform, components, baseline),
     )
     duration = time() - start_time
     app.logger.info(f"Population reform completed ({round(duration, 2)}s)")
     return result
+
 
 @app.errorhandler(404)
 def not_found(e):
@@ -69,6 +83,7 @@ def not_found(e):
     if path.exists():
         return send_from_directory(path.parent, path.name)
     return send_from_directory("static", "index.html")
+
 
 @app.route("/api/situation-reform", methods=["GET", "POST"])
 def situation_reform():
@@ -83,11 +98,12 @@ def situation_reform():
         **headline_figures(baseline, reformed),
         waterfall_chart=budget_waterfall_chart(baseline, reformed),
         budget_chart=budget_chart(reform, situation),
-        mtr_chart=mtr_chart(reform, situation)
+        mtr_chart=mtr_chart(reform, situation),
     )
     duration = time() - start_time
     app.logger.info(f"Situation reform completed ({round(duration, 2)}s)")
     return result
+
 
 @app.after_request
 def after_request_func(response):

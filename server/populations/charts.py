@@ -92,7 +92,9 @@ def add_zero_line(fig):
 
 
 def waterfall_chart(reform, components, baseline, **kwargs):
-    partial_funding = np.array([0] + get_partial_funding(reform, baseline, **kwargs))
+    partial_funding = np.array(
+        [0] + get_partial_funding(reform, baseline, **kwargs)
+    )
     spending = partial_funding[1:] - partial_funding[:-1]
     final_spending = partial_funding[-1]
     df = pd.DataFrame(
@@ -146,7 +148,9 @@ def waterfall_chart(reform, components, baseline, **kwargs):
             color="Type",
             barmode="stack",
             color_discrete_map={"Revenue": BLUE, "Spending": GRAY, "": WHITE},
-        ).update_layout(title="Funding breakdown", legend_title="", yaxis_tickprefix="£"),
+        ).update_layout(
+            title="Funding breakdown", legend_title="", yaxis_tickprefix="£"
+        ),
         show=False,
     )
     fig = add_zero_line(fig)
