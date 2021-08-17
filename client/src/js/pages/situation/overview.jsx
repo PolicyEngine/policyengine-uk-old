@@ -5,7 +5,6 @@ import { SimulateButton } from "../policy/overview";
 const { Step } = Steps;
 
 function SituationOverview(props) {
-	console.log(props.household);
 	const isSingleFamily = props.household.families.length < 2;
 	let numPensioners = 0;
 	let numWA = 0;

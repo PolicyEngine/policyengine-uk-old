@@ -21,7 +21,7 @@ class SituationResults extends React.Component {
 		}
 		submission["situation"] = this.state.situation;
 		this.setState({ waiting: true }, () => {
-			fetch("https://uk-policy-engine.uw.r.appspot.com/situation-reform", {
+			fetch("/api/situation-reform", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

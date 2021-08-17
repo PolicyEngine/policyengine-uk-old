@@ -1,10 +1,12 @@
+"""
+Functions to convert JSON web app parameters into OpenFisca reform objects.
+"""
+
 from openfisca_core import periods
 from openfisca_core.model_api import *
 from openfisca_uk import BASELINE_VARIABLES
 from openfisca_uk.entities import *
 from openfisca_uk.tools.general import *
-
-#
 
 
 def change_param(param, value, bracket=None, threshold=False):
@@ -66,7 +68,16 @@ def neutralizer_reform(variable):
     return reform
 
 
-def create_reform(params, return_names=False):
+def create_reform(parameters: dict, return_names=False):
+    params = {}
+    for key, value in parameters.items():
+        components = key.split("_")
+        if components[0] == "policy":
+            name = "_".join(components[1:])
+            try:
+                params[name] = float(value)
+            except:
+                params[name] = value
     reforms = []
     names = []
     if "basic_rate" in params:

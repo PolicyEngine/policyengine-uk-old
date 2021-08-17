@@ -8,7 +8,7 @@ import Situation from "./pages/situation";
 import PopulationResults from "./pages/population-results";
 import SituationResults from "./pages/situation-results";
 import {
-	HashRouter as Router,
+	BrowserRouter as Router,
 	Switch,
 	Route,
 	Link,
@@ -30,7 +30,7 @@ import "antd/dist/antd.css";
 function getPolicyFromURL() {
 	let plan = DEFAULT_POLICY;
 	if (document.location.hash.includes("?")) {
-		const searchParams = new URLSearchParams(document.location.hash.toString().slice(document.location.hash.indexOf("?")));
+		const searchParams = new URLSearchParams(document.location);
 		for (const key of searchParams.keys()) {
 			plan[key].value = +searchParams.get(key);
 		}

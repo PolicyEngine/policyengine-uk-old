@@ -17,16 +17,14 @@ class PopulationResults extends React.Component {
 	simulate() {
 		const submission = {};
 		for (const key in this.state.plan) {
-			submission[key] = this.state.plan[key].value;
+			if(this.state.plan[key].value !== this.state.plan[key].default) {
+				submission["policy_" + key] = this.state.plan[key].value;
+			}
 		}
+		let url = new URL("http://127.0.0.1:5000/api/population-reform");
+		url.search = new URLSearchParams(submission).toString();
 		this.setState({ waiting: true }, () => {
-			fetch("https://uk-policy-engine.uw.r.appspot.com/reform", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(submission),
-			}).then((res) => res.json()).then((json) => {
+			fetch(url).then((res) => res.json()).then((json) => {
 				this.setState({ results: json, waiting: false });
 			});
 		});
