@@ -5,6 +5,7 @@ from flask_cors import CORS
 import logging
 from time import time
 from openfisca_uk import Microsimulation, IndividualSim
+from pathlib import Path
 
 from server.simulation.situations import create_situation
 from server.simulation.reforms import create_reform
@@ -64,6 +65,9 @@ def not_found(e):
         return population_reform()
     if request.path.startswith("/api/situation-reform"):
         return situation_reform()
+    path = Path("server/static/" + request.path)
+    if path.exists():
+        return send_from_directory(path.parent, path.name)
     return send_from_directory("static", "index.html")
 
 @app.route("/api/situation-reform", methods=["GET", "POST"])
