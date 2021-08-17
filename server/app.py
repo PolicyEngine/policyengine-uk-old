@@ -1,6 +1,6 @@
 import json
 from typing import Any
-from flask import Flask, request, make_response, send_from_directory
+from flask import Flask, request, redirect, make_response, send_from_directory
 from flask_cors import CORS
 import logging
 from time import time
@@ -34,6 +34,7 @@ def load(key):
 app = Flask(__name__, static_url_path='')
 logging.getLogger('werkzeug').disabled = True
 CORS(app)
+
 
 @app.route("/", methods=["GET"])
 def home():

@@ -146,7 +146,7 @@ def waterfall_chart(reform, components, baseline, **kwargs):
             color="Type",
             barmode="stack",
             color_discrete_map={"Revenue": BLUE, "Spending": GRAY, "": WHITE},
-        ).update_layout(yaxis_tickprefix="£"),
+        ).update_layout(title="Funding breakdown", legend_title="", yaxis_tickprefix="£"),
         show=False,
     )
     fig = add_zero_line(fig)

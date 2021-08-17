@@ -35,7 +35,6 @@ function Chart(props) {
 }
 
 export function PopulationResultsPane(props) {
-	console.log(props);
 	return (
 		<>
 			<Divider>Population results</Divider>
@@ -78,8 +77,10 @@ export function PopulationResultsPane(props) {
 			<Row>
 				<Chart plot={props.results.decile_chart} />
 				<Chart plot={props.results.poverty_chart} />
-				<Chart plot={props.results.age_chart} />
 				{/*<Chart plot={props.results.mtr_plot} />*/}
+			</Row>
+			<Row>
+				<Chart plot={props.results.age_chart} md={12}/>
 			</Row>
 		</>
 	);

@@ -65,10 +65,14 @@ def create_situation(params: dict):
                         family_members[str(i + 1)] = []
                     adoptive_family = family_names[i]
                 family_members[adoptive_family] += [person]
-        people[list(people.keys())[0]]["is_household_head"] = True
-        people[list(people.keys())[0]]["is_benunit_head"] = True
+        i = 0
         for person_id, person in people.items():
-            sim.add_person(**person, name=person_id)
+            if i == 0:
+                id_vars = dict(is_household_head=True, is_benunit_head=True)
+                i += 1
+            else:
+                id_vars = dict()
+            sim.add_person(**person, **id_vars, name=person_id)
         for family_id, family in families.items():
             sim.add_benunit(**family, adults=list(filter(is_adult, family_members[family_id])), children=list(filter(is_child, family_members[family_id])))
         sim.add_household(**household, adults=list(filter(is_adult, people)), children=list(filter(is_child, people)))
