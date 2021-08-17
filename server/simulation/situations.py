@@ -20,12 +20,18 @@ def create_situation(params: dict):
                     value = float(params[key])
                 except:
                     value = params[key]
+                if value == "true":
+                    value = True
+                elif value == "false":
+                    value = False
                 if variable not in BASELINE_VARIABLES and variable != "family":
                     print(f"Skipping variable {variable}")
                 if variable == "family" or BASELINE_VARIABLES[variable].entity.key == "person":
                     if entity_id not in people:
                         people[entity_id] = {}
                     if variable == "family":
+                        if isinstance(value, float):
+                            value = str(int(value))
                         if value not in family_members:
                             family_members[value] = []
                         family_members[value] += [entity_id]
@@ -59,12 +65,13 @@ def create_situation(params: dict):
                         family_members[str(i + 1)] = []
                     adoptive_family = family_names[i]
                 family_members[adoptive_family] += [person]
+        people[list(people.keys())[0]]["is_household_head"] = True
+        people[list(people.keys())[0]]["is_benunit_head"] = True
         for person_id, person in people.items():
             sim.add_person(**person, name=person_id)
         for family_id, family in families.items():
             sim.add_benunit(**family, adults=list(filter(is_adult, family_members[family_id])), children=list(filter(is_child, family_members[family_id])))
         sim.add_household(**household, adults=list(filter(is_adult, people)), children=list(filter(is_child, people)))
-        
         return sim
 
     return situation

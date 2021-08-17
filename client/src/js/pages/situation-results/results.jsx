@@ -38,8 +38,7 @@ function ChangedHeadlineFigure(props) {
 function Chart(props) {
 	return (
 		<>
-			<Col md={3} />
-			<Col md={6} >
+			<Col>
 				<Plot
 					data={props.plot.data}
 					layout={props.plot.layout}

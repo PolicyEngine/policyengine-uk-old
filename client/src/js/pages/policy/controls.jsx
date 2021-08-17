@@ -2,8 +2,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import "antd/dist/antd.css";
 import {
-	InputNumber, Divider, Switch, Slider,
+	InputNumber, Divider, Switch, Slider, Select
 } from "antd";
+
+const { Option } = Select;
 
 function Parameter(props) {
 	let formatter = null;
@@ -21,43 +23,53 @@ function Parameter(props) {
 		formatter = (value) => `£${value}/month`;
 		parser = (value) => value.replace("£", "").replace("/month", "");
 	}
+	let component;
+	if(props.param.type == "bool") {
+		component = (
+			<Switch
+				onChange={(value) => {
+					props.onChange(props.name, value);
+				}}
+				checked={props.param.value}
+			/>
+		);
+	} else if(props.param.type == "category") {
+		component = (
+			<Select placeholder={props.param.default}>
+				{props.param.options.map(value => <Option key={value} value={value}>{value}</Option>)}
+			</Select>
+		);
+	} else {
+		component = (
+			<>
+				<Slider
+					value={props.param.value}
+					min={props.param.min || 0}
+					max={props.param.max || 100}
+					onChange={(value) => {
+						props.onChange(props.name, value);
+					}}
+					tooltipVisible={false}
+				/>
+				<InputNumber
+					value={props.param.value}
+					min={props.param.min ? props.min : null}
+					max={props.param.max ? props.max : null}
+					formatter={formatter}
+					parser={parser}
+					onChange={(value) => {
+						props.onChange(props.name, value);
+					}}
+					style={{ width: 175 }}
+				/>
+			</>
+		);
+	}
 	return (
 		<>
 			<Divider>{props.param.title}</Divider>
 			<p>{props.param.description}</p>
-			{props.param.type === "bool"
-				? (
-					<Switch
-						onChange={(value) => {
-							props.onChange(props.name, value);
-						}}
-						checked={props.param.value}
-					/>
-				)
-				: (
-					<>
-						<Slider
-							value={props.param.value}
-							min={props.param.min || 0}
-							max={props.param.max || 100}
-							onChange={(value) => {
-								props.onChange(props.name, value);
-							}}
-							tooltipVisible={false}
-						/>
-						<InputNumber
-							value={props.param.value}
-							min={props.param.min ? props.min : null}
-							max={props.param.max ? props.max : null}
-							formatter={formatter}
-							parser={parser}
-							onChange={(value) => {
-								props.onChange(props.name, value);
-							}}
-							style={{ width: 175 }}
-						/>
-					</>
-				)}
+			{component}
 		</>
 	);
 }

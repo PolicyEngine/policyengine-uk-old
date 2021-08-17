@@ -35,6 +35,7 @@ function Chart(props) {
 }
 
 export function PopulationResultsPane(props) {
+	console.log(props);
 	return (
 		<>
 			<Divider>Population results</Divider>
@@ -66,7 +67,7 @@ export function PopulationResultsPane(props) {
 				/>
 				<HeadlineFigure 
 					title="Inequality" 
-					value={props.results.inequality_change * 100} 
+					value={props.results.gini_change * 100} 
 					precision={1}
 					suffix="%"
 				/>
@@ -87,7 +88,7 @@ export function PopulationResultsPane(props) {
 export function LoadingResultsPane(props) {
 	return (
 		<Empty description={props.message}>
-			<Spin indicator={antIcon} />
+			{!props.noSpin ? <Spin indicator={antIcon} /> : <></>}
 		</Empty>
 	);
 }

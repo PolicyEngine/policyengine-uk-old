@@ -1,17 +1,25 @@
 import { ParameterGroup } from "../policy/controls";
-import { DEFAULT_HOUSEHOLD, DEFAULT_FAMILY, DEFAULT_PERSON } from "./default_situation";
+import { DEFAULT_HOUSEHOLD, DEFAULT_FAMILY, DEFAULT_ADULT, DEFAULT_CHILD } from "./default_situation";
 
 function SituationControls(props) {
 	const returnFunction = (key, value) => {props.onEnter(key, value, props.selected);};
-	if(props.selected.includes("person")) {
-		const family_number = +props.selected.split("-")[1];
-		const person_number = +props.selected.split("-")[3];
-		return <ParameterGroup onChange={returnFunction} policy={props.household.families[family_number].people[person_number]} names={Object.keys(DEFAULT_PERSON)} />;
+	if(props.selected.includes("child")) {
+		if(props.selected in props.situation.people) {
+			return <ParameterGroup onChange={returnFunction} policy={props.situation.people[props.selected]} names={Object.keys(DEFAULT_CHILD)} />;
+		} else {
+			return <></>;
+		}
+	} else if(props.selected == "head" || props.selected == "partner") {
+		if(props.selected in props.situation.people) {
+			return <ParameterGroup onChange={returnFunction} policy={props.situation.people[props.selected]} names={Object.keys(DEFAULT_ADULT)} />;
+		} else {
+			return <></>;
+		}
+		
 	} else if(props.selected.includes("family")) {
-		const family_number = +props.selected.split("-")[1];
-		return <ParameterGroup onChange={returnFunction} policy={props.household.families[family_number]} names={Object.keys(DEFAULT_FAMILY)} />;
+		return <ParameterGroup onChange={returnFunction} policy={props.situation.families[props.selected]} names={Object.keys(DEFAULT_FAMILY)} />;
 	} else {
-		return <ParameterGroup onChange={returnFunction} policy={props.household} names={Object.keys(DEFAULT_HOUSEHOLD)} />;
+		return <ParameterGroup onChange={returnFunction} policy={props.situation.household} names={Object.keys(DEFAULT_HOUSEHOLD)} />;
 	}
 }
 

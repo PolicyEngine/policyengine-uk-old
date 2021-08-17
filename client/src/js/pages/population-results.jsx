@@ -6,7 +6,7 @@ import { Row, Col } from "react-bootstrap";
 class PopulationResults extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {plan: this.props.policy, results: null, waiting: false};
+		this.state = {plan: this.props.policy, results: null, waiting: false, error: false};
 		this.simulate = this.simulate.bind(this);
 	}
 
@@ -24,9 +24,18 @@ class PopulationResults extends React.Component {
 		let url = new URL("http://127.0.0.1:5000/api/population-reform");
 		url.search = new URLSearchParams(submission).toString();
 		this.setState({ waiting: true }, () => {
-			fetch(url).then((res) => res.json()).then((json) => {
-				this.setState({ results: json, waiting: false });
-			});
+			fetch(url)
+				.then((res) => {
+					if (res.ok) {
+						return res.json();
+					} else {
+						throw res;
+					}
+				}).then((json) => {
+					this.setState({ results: json, waiting: false, error: false });
+				}).catch(e => {
+					this.setState({waiting: false, error: true});
+				});
 		});
 	}
 
@@ -35,15 +44,19 @@ class PopulationResults extends React.Component {
 			<Row>
 				<Col xl={9}>
 					{
-						!this.state.results ?
+						(this.state.waiting || (!this.state.results && !this.state.error)) ?
 							<div className="d-flex justify-content-center align-items-center" style={{minHeight: 400}}>
-								<LoadingResultsPane message="Simulating your results on the UK population"/>
+								<LoadingResultsPane message="Simulating your results on the UK population (this usually takes about 10 seconds)"/>
 							</div> :
-							<PopulationResultsPane results={this.state.results} />
+							this.state.error ?
+								<div className="d-flex justify-content-center align-items-center" style={{minHeight: 400}}>
+									<LoadingResultsPane noSpin message="An error occurred"/>
+								</div> :
+								<PopulationResultsPane results={this.state.results} />
 					}
 				</Col>
 				<Col xl={3} style={{paddingLeft: 50}}>
-					<PolicySituationOverview policy={this.props.policy} household={this.props.situation.household}/>
+					<PolicySituationOverview policy={this.props.policy} situation={this.props.situation}/>
 				</Col>
 			</Row>
 		);

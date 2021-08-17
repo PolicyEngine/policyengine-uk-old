@@ -29,11 +29,9 @@ import "antd/dist/antd.css";
 
 function getPolicyFromURL() {
 	let plan = DEFAULT_POLICY;
-	if (document.location.hash.includes("?")) {
-		const searchParams = new URLSearchParams(document.location);
-		for (const key of searchParams.keys()) {
-			plan[key].value = +searchParams.get(key);
-		}
+	const { searchParams } = new URL(document.location);
+	for (const key of searchParams.keys()) {
+		plan[key].value = +searchParams.get(key);
 	}
 	return plan;
 }
@@ -43,8 +41,9 @@ function getPolicyFromURL() {
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {policy: getPolicyFromURL(), situation: {household: DEFAULT_SITUATION}};
+		this.state = {policy: getPolicyFromURL(), situation: DEFAULT_SITUATION};
 	}
+
 	render() {
 		return (
 			<Router basename="/">
