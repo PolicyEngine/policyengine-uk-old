@@ -27,6 +27,7 @@ import "../css/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/antd.css";
 
+
 function getPolicyFromURL() {
 	let plan = DEFAULT_POLICY;
 	const { searchParams } = new URL(document.location);
@@ -47,28 +48,26 @@ class App extends React.Component {
 	render() {
 		return (
 			<Router basename="/">
-				<Analytics id="G-Z3LK7EQ4V6">
-					<Container fluid style={{paddingBottom: 50}}>
-						<Switch>
-							<Route path="/" exact>
-								<Header step={0}/>
-								<Policy policy={this.state.policy} onSubmit={policy => {this.setState({policy: policy});}}/>
-							</Route>
-							<Route path="/situation">
-								<Header step={1}/>
-								<Situation policy={this.state.policy} onSubmit={situation =>{this.setState({situation: situation});}} situation={this.state.situation} />
-							</Route>
-							<Route path="/population-results">
-								<Header step={2}/>
-								<PopulationResults policy={this.state.policy} situation={this.state.situation}/>
-							</Route>
-							<Route path="/situation-results">
-								<Header step={3}/>
-								<SituationResults policy={this.state.policy} situation={this.state.situation}/>
-							</Route>
-						</Switch>
-					</Container>
-				</Analytics>
+				<Container fluid style={{paddingBottom: 50}}>
+					<Switch>
+						<Route path="/" exact>
+							<Header step={0}/>
+							<Policy policy={this.state.policy} onSubmit={policy => {this.setState({policy: policy});}}/>
+						</Route>
+						<Route path="/situation">
+							<Header step={1}/>
+							<Situation policy={this.state.policy} onSubmit={situation =>{this.setState({situation: situation});}} situation={this.state.situation} />
+						</Route>
+						<Route path="/population-results">
+							<Header step={2}/>
+							<PopulationResults policy={this.state.policy} situation={this.state.situation}/>
+						</Route>
+						<Route path="/situation-results">
+							<Header step={3}/>
+							<SituationResults policy={this.state.policy} situation={this.state.situation}/>
+						</Route>
+					</Switch>
+				</Container>
 			</Router>
 		);
 	}
