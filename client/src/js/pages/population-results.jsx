@@ -46,7 +46,7 @@ class PopulationResults extends React.Component {
 					{
 						(this.state.waiting || (!this.state.results && !this.state.error)) ?
 							<div className="d-flex justify-content-center align-items-center" style={{minHeight: 400}}>
-								<LoadingResultsPane message="Simulating your results on the UK population (this usually takes about 10 seconds)"/>
+								<LoadingResultsPane message="Simulating your results on the UK population (this usually takes about 20 seconds)"/>
 							</div> :
 							this.state.error ?
 								<div className="d-flex justify-content-center align-items-center" style={{minHeight: 400}}>
