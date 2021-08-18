@@ -9,33 +9,60 @@ from ubicenter.plotly import GRAY, BLUE
 WHITE = "#FFF"
 
 
-def budget_chart(reform, situation):
-    graph = graphs.budget_chart(reform, situation_function=situation)
+def budget_chart(baseline, reformed):
+    df = pd.DataFrame({
+        "Employment income": baseline.calc("employment_income").sum(axis=0),
+        "Baseline": baseline.calc("net_income").sum(axis=0),
+        "Reform": reformed.calc("net_income").sum(axis=0)
+    })
+    graph = px.line(
+        df, 
+        x="Employment income", 
+        y=["Baseline", "Reform"],
+        color_discrete_map={"Baseline": GRAY, "Reform": BLUE}
+    )
     return json.loads(
         format_fig(graph, show=False)
         .update_layout(
             title="Net income by employment income",
             xaxis_title="Employment income",
-            yaxis_title="Yearly amount",
+            yaxis_title="Household net income",
             yaxis_tickprefix="£",
-            showlegend=False,
+            xaxis_tickprefix="£",
+            legend_title="Policy"
         )
-        .update_traces(marker_color="#1890ff")
         .to_json()
     )
 
 
-def mtr_chart(reform, situation):
-    graph = graphs.mtr_chart(reform, situation_function=situation)
+def mtr_chart(baseline, reformed):
+    earnings = baseline.calc("employment_income").sum(axis=0)
+    baseline_net = baseline.calc("net_income").sum(axis=0)
+    reform_net = reformed.calc("net_income").sum(axis=0)
+    get_mtr = lambda x, y: 1 - ((y[1:] - y[:-1]) / (x[1:] - x[:-1]))
+    baseline_mtr = get_mtr(earnings, baseline_net)
+    reform_mtr = get_mtr(earnings, reform_net)
+    df = pd.DataFrame({
+        "Employment income": earnings[:-1],
+        "Baseline": baseline_mtr,
+        "Reform": reform_mtr
+    })
+    graph = px.line(
+        df, 
+        x="Employment income", 
+        y=["Baseline", "Reform"],
+        color_discrete_map={"Baseline": GRAY, "Reform": BLUE}
+    )
     return json.loads(
         format_fig(graph, show=False)
         .update_layout(
             title="Effective marginal tax rate by employment income",
             xaxis_title="Employment income",
+            xaxis_tickprefix="£",
+            yaxis_tickformat="%",
             yaxis_title="Effective MTR",
-            showlegend=False,
+            legend_title="Policy"
         )
-        .update_traces(marker_color="#1890ff")
         .to_json()
     )
 

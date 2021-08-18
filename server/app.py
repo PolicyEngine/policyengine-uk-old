@@ -94,11 +94,19 @@ def situation_reform():
     reform = create_reform(params)
     baseline = situation(IndividualSim())
     reformed = situation(IndividualSim(reform))
+    headlines = headline_figures(baseline, reformed)
+    waterfall = budget_waterfall_chart(baseline, reformed)
+    baseline_varying = situation(IndividualSim())
+    baseline_varying.vary("employment_income")
+    reformed_varying = situation(IndividualSim(reform))
+    reformed_varying.vary("employment_income")
+    budget = budget_chart(baseline_varying, reformed_varying)
+    mtr = mtr_chart(baseline_varying, reformed_varying)
     result = dict(
-        **headline_figures(baseline, reformed),
-        waterfall_chart=budget_waterfall_chart(baseline, reformed),
-        budget_chart=budget_chart(reform, situation),
-        mtr_chart=mtr_chart(reform, situation),
+        **headlines,
+        waterfall_chart=waterfall,
+        budget_chart=budget,
+        mtr_chart=mtr,
     )
     duration = time() - start_time
     app.logger.info(f"Situation reform completed ({round(duration, 2)}s)")
