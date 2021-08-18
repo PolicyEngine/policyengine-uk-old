@@ -10,16 +10,20 @@ WHITE = "#FFF"
 
 
 def budget_chart(baseline, reformed):
-    df = pd.DataFrame({
-        "Employment income": baseline.calc("employment_income").sum(axis=0),
-        "Baseline": baseline.calc("net_income").sum(axis=0),
-        "Reform": reformed.calc("net_income").sum(axis=0)
-    })
+    df = pd.DataFrame(
+        {
+            "Employment income": baseline.calc("employment_income").sum(
+                axis=0
+            ),
+            "Baseline": baseline.calc("net_income").sum(axis=0),
+            "Reform": reformed.calc("net_income").sum(axis=0),
+        }
+    )
     graph = px.line(
-        df, 
-        x="Employment income", 
+        df,
+        x="Employment income",
         y=["Baseline", "Reform"],
-        color_discrete_map={"Baseline": GRAY, "Reform": BLUE}
+        color_discrete_map={"Baseline": GRAY, "Reform": BLUE},
     )
     return json.loads(
         format_fig(graph, show=False)
@@ -29,7 +33,7 @@ def budget_chart(baseline, reformed):
             yaxis_title="Household net income",
             yaxis_tickprefix="£",
             xaxis_tickprefix="£",
-            legend_title="Policy"
+            legend_title="Policy",
         )
         .to_json()
     )
@@ -42,16 +46,18 @@ def mtr_chart(baseline, reformed):
     get_mtr = lambda x, y: 1 - ((y[1:] - y[:-1]) / (x[1:] - x[:-1]))
     baseline_mtr = get_mtr(earnings, baseline_net)
     reform_mtr = get_mtr(earnings, reform_net)
-    df = pd.DataFrame({
-        "Employment income": earnings[:-1],
-        "Baseline": baseline_mtr,
-        "Reform": reform_mtr
-    })
+    df = pd.DataFrame(
+        {
+            "Employment income": earnings[:-1],
+            "Baseline": baseline_mtr,
+            "Reform": reform_mtr,
+        }
+    )
     graph = px.line(
-        df, 
-        x="Employment income", 
+        df,
+        x="Employment income",
         y=["Baseline", "Reform"],
-        color_discrete_map={"Baseline": GRAY, "Reform": BLUE}
+        color_discrete_map={"Baseline": GRAY, "Reform": BLUE},
     )
     return json.loads(
         format_fig(graph, show=False)
@@ -61,7 +67,7 @@ def mtr_chart(baseline, reformed):
             xaxis_tickprefix="£",
             yaxis_tickformat="%",
             yaxis_title="Effective MTR",
-            legend_title="Policy"
+            legend_title="Policy",
         )
         .to_json()
     )
