@@ -103,12 +103,12 @@ const DEFAULT_POLICY = {
 		type: "weekly",
 	},
 	adult_UBI: {
-		title: "Adult UBI",
-		description: "Basic income for adults is given to individuals aged over 18 but under State Pension age.",
+		title: "Working-age adult UBI",
+		description: "Basic income for working-age adults is given to individuals aged over 18 but under State Pension age.",
 		default: 0,
 		value: 0,
 		max: 250,
-		summary: "Give a basic income of £@/week to adults",
+		summary: "Give a basic income of £@/week to working-age adults",
 		type: "weekly",
 	},
 	senior_UBI: {
