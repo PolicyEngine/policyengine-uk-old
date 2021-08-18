@@ -51,28 +51,32 @@ export const DEFAULT_ADULT = {
 		description: "Income from employment (gross)",
 		default: 0,
 		value: 0,
-		max: 80000
+		max: 80000,
+		type: "yearly"
 	},
 	pension_income: {
 		title: "Pension income",
 		description: "Income from pensions (excluding the State Pension)",
 		default: 0,
 		value: 0,
-		max: 150000
+		max: 150000,
+		type: "yearly"
 	},
 	savings_interest_income: {
 		title: "Savings interest income",
 		description: "Income from savings interest (including ISAs)",
 		default: 0,
 		value: 0,
-		max: 5000
+		max: 5000,
+		type: "yearly"
 	},
 	dividend_income: {
 		title: "Dividend income",
 		description: "Income from dividends",
 		default: 0,
 		value: 0,
-		max: 5000
+		max: 5000,
+		type: "yearly"
 	},
 };
 
@@ -90,7 +94,8 @@ export const DEFAULT_CHILD = {
 		description: "Income from employment (gross)",
 		default: 0,
 		value: 0,
-		max: 80000
+		max: 80000,
+		type: "yearly"
 	},
 };
 
