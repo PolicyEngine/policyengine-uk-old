@@ -10,6 +10,7 @@
     "antd": "^4.15.6",
     "bootstrap": "^4.6.0",
     "framer-motion": "^4.1.17",
+    "ga-4-react": "^0.1.281",
     "grommet": "^2.17.2",
     "js-yaml-loader": "^1.2.2",
     "plotly.js": "^1.58.4",

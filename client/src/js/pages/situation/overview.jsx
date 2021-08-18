@@ -5,23 +5,19 @@ import { SimulateButton } from "../policy/overview";
 const { Step } = Steps;
 
 function SituationOverview(props) {
-	console.log(props.household);
-	const isSingleFamily = props.household.families.length < 2;
+	const isSingleFamily = true;
 	let numPensioners = 0;
 	let numWA = 0;
 	let numChildren = 0;
-
 	let age;
-	for(let i = 0; i < props.household.families.length; i++) {
-		for(let j = 0; j < props.household.families[i].people.length; j++) {
-			age = props.household.families[i].people[j].age.value;
-			if(age < 18) {
-				numChildren++;
-			} else if(age < 65) {
-				numWA++;
-			} else {
-				numPensioners++;
-			}
+	for(let person in props.situation.people) {
+		age = props.situation.people[person].age.value;
+		if(age < 18) {
+			numChildren++;
+		} else if(age < 65) {
+			numWA++;
+		} else {
+			numPensioners++;
 		}
 	}
 
@@ -61,7 +57,6 @@ function SituationOverview(props) {
 		</>
 	);
 }
-
 
 
 export default SituationOverview;

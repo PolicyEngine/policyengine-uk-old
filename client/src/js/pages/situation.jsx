@@ -2,57 +2,60 @@ import React from "react";
 import SituationMenu from "./situation/menu";
 import { Row, Col } from "react-bootstrap";
 import SituationControls from "./situation/controls";
-import { DEFAULT_FAMILY, DEFAULT_PERSON } from "./situation/default_situation";
+import { DEFAULT_FAMILY, DEFAULT_HOUSEHOLD, DEFAULT_ADULT, DEFAULT_CHILD } from "./situation/default_situation";
 import SituationOverview from "./situation/overview";
 
 class Situation extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {household: this.props.situation.household, selected: "household"};
-		this.updateSituation = this.updateSituation.bind(this);
+		this.state = {situation: this.props.situation, selected: "household"};
+		this.addPartner = this.addPartner.bind(this);
+		this.addChild = this.addChild.bind(this);
+		this.onEnter = this.onEnter.bind(this);
 	}
 
-	updateSituation(key, value, selected) {
-		let household = this.state.household;
-		if(selected.includes("family")) {
-			const family_number = +selected.split("-")[1];
-			if(selected.includes("person")) {
-				const person_number = +selected.split("-")[3];
-				household.families[family_number].people[person_number][key].value = value;
-			} else {
-				household.families[family_number][key].value = value;
+	addPartner() {
+		let situation = this.state.situation;
+		situation.people["partner"] = JSON.parse(JSON.stringify(DEFAULT_ADULT));
+		this.props.onSubmit(situation);
+	}
+
+	addChild() {
+		let situation = this.state.situation;
+		let numChildren = 0;
+		for(let name in this.props.situation.people) {
+			if(this.props.situation.people[name].age.value < 18) {
+				numChildren++;
 			}
+		}
+		situation.people["child_" + (numChildren + 1)] = JSON.parse(JSON.stringify(DEFAULT_CHILD));
+		this.props.onSubmit(situation);
+	}
+
+	onEnter(key, value, selected) {
+		let situation = this.state.situation;
+		if(selected in situation.people) {
+			situation.people[selected][key].value = value;
+		} else if(selected in situation.families) {
+			situation.families[selected][key].value = value;
 		} else {
-			household[key].value = value;
+			situation.household[key].value = value;
 		}
-		while(household.num_families.value > household.families.length) {
-			household.families.push({ ...JSON.parse(JSON.stringify(DEFAULT_FAMILY)), people: []});
-		}
-		while(household.num_families.value < household.families.length) {
-			household.families.pop();
-		}
-		for(let i = 0; i < household.families.length; i++) {
-			while(household.families[i].num_people.value > household.families[i].people.length) {
-				household.families[i].people.push({...JSON.parse(JSON.stringify(DEFAULT_PERSON))});
-			}
-			while(household.families[i].num_people.value < household.families[i].people.length) {
-				household.families[i].people.pop();
-			}
-		}
-		this.setState({household: household});
+		this.setState({situation: situation});
+		this.props.onSubmit(situation);
 	}
 
 	render() {
 		return (
 			<Row>
 				<Col xl={3}>
-					<SituationMenu household={this.state.household} onSelect={name => {this.setState({selected: name});}}/>
+					<SituationMenu situation={this.state.situation} addPartner={this.addPartner} addChild={this.addChild} onSelect={name => {this.setState({selected: name});}}/>
 				</Col>
 				<Col xl={6}>
-					<SituationControls selected={this.state.selected} household={this.state.household} onEnter={this.updateSituation}/>
+					<SituationControls selected={this.state.selected} situation={this.state.situation} onEnter={this.onEnter}/>
 				</Col>
 				<Col xl={3}>
-					<SituationOverview policy={this.props.policy} household={this.state.household} onSubmit={() => {this.props.onSubmit({household: this.state.household});}}/>
+					<SituationOverview policy={this.props.policy} situation={this.state.situation} onSubmit={() => {this.props.onSubmit(this.state.situation);}}/>
 				</Col>
 			</Row>
 		);

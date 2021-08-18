@@ -66,19 +66,21 @@ export function PopulationResultsPane(props) {
 				/>
 				<HeadlineFigure 
 					title="Inequality" 
-					value={props.results.inequality_change * 100} 
+					value={props.results.gini_change * 100} 
 					precision={1}
 					suffix="%"
 				/>
 			</Row>
 			<Row>
-				<Chart plot={props.results.waterfall} md={12} />
+				<Chart plot={props.results.waterfall_chart} md={12} />
 			</Row>
 			<Row>
-				<Chart plot={props.results.decile_plot} />
-				<Chart plot={props.results.poverty_plot} />
-				<Chart plot={props.results.age} />
-				<Chart plot={props.results.mtr_plot} />
+				<Chart plot={props.results.decile_chart} />
+				<Chart plot={props.results.poverty_chart} />
+				{/*<Chart plot={props.results.mtr_plot} />*/}
+			</Row>
+			<Row>
+				<Chart plot={props.results.age_chart} md={12}/>
 			</Row>
 		</>
 	);
@@ -87,7 +89,7 @@ export function PopulationResultsPane(props) {
 export function LoadingResultsPane(props) {
 	return (
 		<Empty description={props.message}>
-			<Spin indicator={antIcon} />
+			{!props.noSpin ? <Spin indicator={antIcon} /> : <></>}
 		</Empty>
 	);
 }
