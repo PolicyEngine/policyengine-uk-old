@@ -53,11 +53,12 @@ CORS(app)
 def static_site():
     return send_from_directory("static", "index.html")
 
+
 STATIC_SITE_ROUTES = (
     "/",
     "/situation",
     "/population-results",
-    "/situation/results"
+    "/situation/results",
 )
 
 for route in STATIC_SITE_ROUTES:
@@ -77,7 +78,7 @@ def population_reform():
         age_chart=age_chart(baseline, reformed),
         poverty_chart=poverty_chart(baseline, reformed),
         waterfall_chart=waterfall_chart(reform, components, baseline),
-        intra_decile_chart=intra_decile_chart(baseline, reformed)
+        intra_decile_chart=intra_decile_chart(baseline, reformed),
     )
     duration = time() - start_time
     app.logger.info(f"Population reform completed ({round(duration, 2)}s)")
