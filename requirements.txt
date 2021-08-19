@@ -4,3 +4,4 @@ plotly
 flask
 flask_cors
 rdbl
+kaleido
