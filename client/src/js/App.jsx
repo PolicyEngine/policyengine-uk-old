@@ -42,7 +42,7 @@ function getPolicyFromURL() {
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {policy: getPolicyFromURL(), situation: DEFAULT_SITUATION};
+		this.state = {policy: getPolicyFromURL(), situation: DEFAULT_SITUATION, situationEntered: false};
 	}
 
 	render() {
@@ -51,19 +51,19 @@ class App extends React.Component {
 				<Container fluid style={{paddingBottom: 15, minWidth: 300}}>
 					<Switch>
 						<Route path="/" exact>
-							<Header step={0}/>
+							<Header step={0} situationEntered={this.state.situationEntered}/>
 							<Policy policy={this.state.policy} onSubmit={policy => {this.setState({policy: policy});}}/>
 						</Route>
 						<Route path="/situation">
-							<Header step={1}/>
-							<Situation policy={this.state.policy} onSubmit={situation =>{this.setState({situation: situation});}} situation={this.state.situation} />
+							<Header step={1} situationEntered={this.state.situationEntered}/>
+							<Situation policy={this.state.policy} onSubmit={situation =>{this.setState({situationEntered: true, situation: situation});}} situation={this.state.situation} />
 						</Route>
 						<Route path="/population-results">
-							<Header step={2}/>
+							<Header step={2} situationEntered={this.state.situationEntered}/>
 							<PopulationResults policy={this.state.policy} situation={this.state.situation}/>
 						</Route>
 						<Route path="/situation-results">
-							<Header step={3}/>
+							<Header step={3} situationEntered={this.state.situationEntered}/>
 							<SituationResults policy={this.state.policy} situation={this.state.situation}/>
 						</Route>
 					</Switch>

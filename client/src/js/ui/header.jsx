@@ -1,6 +1,7 @@
 import { Row, Col, Container } from "react-bootstrap";
 import React from "react";
 import { Steps, PageHeader, Badge, Tag } from "antd";
+import { MinusCircleOutlined } from "@ant-design/icons";
 
 import "../../css/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -69,7 +70,11 @@ function Header(props) {
 	];
 	let steps = [];
 	for(let i = 0; i < TITLES.length; i++) {
-		steps.push(<Step key={i} title={TITLES[i]} description={DESCRIPTIONS[i]} style={{minWidth: 200}}/>);
+		if (i == 1 && props.step > 1 && !props.situationEntered) {
+			steps.push(<Step key={i} title={TITLES[i]} icon={<MinusCircleOutlined />} description={DESCRIPTIONS[i]} style={{minWidth: 200}}/>);
+		} else {
+			steps.push(<Step key={i} title={TITLES[i]} description={DESCRIPTIONS[i]} style={{minWidth: 200}}/>);
+		}
 	}
 	return (
 		<>
