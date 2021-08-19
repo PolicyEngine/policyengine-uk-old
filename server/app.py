@@ -50,12 +50,21 @@ logging.getLogger("werkzeug").disabled = True
 CORS(app)
 
 
-@app.route("/", methods=["GET"])
-def home():
+def static_site():
     return send_from_directory("static", "index.html")
 
+STATIC_SITE_ROUTES = (
+    "/",
+    "/situation",
+    "/population-results",
+    "/situation/results"
+)
 
-@app.route("/api/population-reform", methods=["GET"])
+for route in STATIC_SITE_ROUTES:
+    static_site = app.route(route)(static_site)
+
+
+@app.route("/api/population-reform")
 def population_reform():
     start_time = time()
     app.logger.info("Population reform request received")
@@ -73,18 +82,6 @@ def population_reform():
     duration = time() - start_time
     app.logger.info(f"Population reform completed ({round(duration, 2)}s)")
     return result
-
-
-@app.errorhandler(404)
-def not_found(e):
-    if request.path.startswith("/api/population-reform"):
-        return population_reform()
-    if request.path.startswith("/api/situation-reform"):
-        return situation_reform()
-    path = Path("server/static/" + request.path)
-    if path.exists():
-        return send_from_directory(path.parent, path.name)
-    return send_from_directory("static", "index.html")
 
 
 @app.route("/api/situation-reform", methods=["GET", "POST"])
