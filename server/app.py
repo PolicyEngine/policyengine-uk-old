@@ -13,6 +13,7 @@ from server.simulation.reforms import create_reform
 from server.populations.metrics import headline_metrics
 from server.populations.charts import (
     decile_chart,
+    intra_decile_chart,
     poverty_chart,
     age_chart,
     waterfall_chart,
@@ -67,6 +68,7 @@ def population_reform():
         age_chart=age_chart(baseline, reformed),
         poverty_chart=poverty_chart(baseline, reformed),
         waterfall_chart=waterfall_chart(reform, components, baseline),
+        intra_decile_chart=intra_decile_chart(baseline, reformed)
     )
     duration = time() - start_time
     app.logger.info(f"Population reform completed ({round(duration, 2)}s)")
