@@ -1,8 +1,9 @@
-import { Divider, Empty, Spin, Card, Statistic } from "antd";
+import { Divider, Empty, Spin, Card, Statistic, Collapse } from "antd";
 import Plot from "react-plotly.js";
-import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined, WarningFilled } from "@ant-design/icons";
 import { Row, Col } from "react-bootstrap";
 
+const { Panel } = Collapse;
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 function ChangedHeadlineFigure(props) {
@@ -51,6 +52,17 @@ function Chart(props) {
 	);
 }
 
+function SituationResultsCaveats() {
+	return (
+		<Collapse defaultActiveKey={["1"]} ghost>
+			<Panel header={<><WarningFilled style={{color:"orange"}} />  Warning</>} key="1">
+				<p>These results may not match exact benefit entitlement, due to other factors in your specific situation. To find out exactly which benefits and taxes are applicable, visit <a href="https://gov.uk/">gov.uk</a> or benefits calculators such as <a href="https://www.entitledto.co.uk/">entitledto.co.uk</a>.</p>
+			</Panel>
+		</Collapse>
+	);
+}
+
+
 export function SituationResultsPane(props) {
 	const NAMES = ["Tax", "Income Tax", "National Insurance", "Universal Credit", "Benefits", "Household disposable income"];
 	const KEYS = ["tax", "income_tax", "national_insurance", "universal_credit", "benefits", "household_net_income"];
@@ -68,6 +80,7 @@ export function SituationResultsPane(props) {
 	}
 	return (
 		<>
+			<SituationResultsCaveats />
 			<Divider>Your situation results</Divider>
 			<Row>
 				{headlineFigures}

@@ -35,11 +35,11 @@ function Chart(props) {
 	);
 }
 
-function PopulationResultsCaveats(props) {
+function PopulationResultsCaveats() {
 	return (
 		<Collapse defaultActiveKey={["1"]} ghost>
 			<Panel header={<><WarningFilled style={{color:"orange"}} />  Warning</>} key="1">
-				<p>Figures calculated here are based on the Family Resources Survey, uprated from 2018-19, using the OpenFisca-UK tax-benefit microsimulation model. Results may differ from actual results due to under-reporting of incomes and benefit receipts, and policy not covered by the model. See the <a href="https://github.com/PSLmodels/openfisca-uk/issues">repository</a> for more information.</p>
+				<p>Figures calculated here are based on the Family Resources Survey, uprated to 2021 from 2018-19, using the OpenFisca-UK tax-benefit microsimulation model. Results may differ from actual results due to under-reporting of incomes and benefit receipts, and policy not covered by the model. See the <a href="https://github.com/PSLmodels/openfisca-uk">repository</a> for more information.</p>
 			</Panel>
 		</Collapse>
 	);

@@ -1,7 +1,6 @@
 import { Row, Col, Container } from "react-bootstrap";
 import React from "react";
-import { Steps, PageHeader } from "antd";
-import { Link } from "react-router-dom";
+import { Steps, PageHeader, Badge, Tag } from "antd";
 
 import "../../css/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -29,6 +28,8 @@ function TopHeader() {
 				<PageHeader
 					title="UK Policy Engine"
 					subTitle="by the UBI Center"
+					style={{minHeight: 40}}
+					tags={[<Tag key="beta" color="processing">ALPHA</Tag>]}
 				/>
 			</div>
 			<div className="d-md-none">
@@ -36,6 +37,7 @@ function TopHeader() {
 					<PageHeader
 						title="UK Policy Engine"
 						style={{paddingBottom: 8}}
+						tags={[<Tag key="beta" color="processing">ALPHA</Tag>]}
 					/>
 				</div>
 				<div className="d-flex justify-content-center">
