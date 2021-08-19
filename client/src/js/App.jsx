@@ -48,7 +48,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<Router basename="/">
-				<Container fluid style={{paddingBottom: 50}}>
+				<Container fluid style={{paddingBottom: 50, minWidth: 300}}>
 					<Switch>
 						<Route path="/" exact>
 							<Header step={0}/>
