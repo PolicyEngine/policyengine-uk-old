@@ -1,6 +1,6 @@
 import { Divider, Empty, Spin, Card, Statistic, Collapse } from "antd";
 import Plot from "react-plotly.js";
-import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined, WarningFilled } from "@ant-design/icons";
+import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { Row, Col } from "react-bootstrap";
 
 const { Panel } = Collapse;
@@ -38,8 +38,8 @@ function Chart(props) {
 function PopulationResultsCaveats() {
 	return (
 		<Collapse defaultActiveKey={["1"]} ghost>
-			<Panel header={<><WarningFilled style={{color:"orange"}} />  Warning</>} key="1">
-				<p>Figures calculated here are based on the Family Resources Survey, uprated to 2021 from 2018-19, using the OpenFisca-UK tax-benefit microsimulation model. Results may differ from actual results due to under-reporting of incomes and benefit receipts, and policy not covered by the model. See the <a href="https://github.com/PSLmodels/openfisca-uk">repository</a> for more information.</p>
+			<Panel header={<><ExclamationCircleOutlined />  Disclaimer</>} key="1">
+				<p>Results are calculated using the OpenFisca-UK tax-benefit microsimulation model, and assume no behavioural or macroeconomic effects. See the <a href="https://github.com/PSLmodels/openfisca-uk">repository</a> for more information.</p>
 			</Panel>
 		</Collapse>
 	);

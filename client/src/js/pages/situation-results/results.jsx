@@ -55,7 +55,7 @@ function Chart(props) {
 function SituationResultsCaveats() {
 	return (
 		<Collapse defaultActiveKey={["1"]} ghost>
-			<Panel header={<><WarningFilled style={{color:"orange"}} />  Warning</>} key="1">
+			<Panel header={<><ExclamationCircleOutlined />  Disclaimer</>} key="1">
 				<p>These results may not match exact benefit entitlement, due to other factors in your specific situation. To find out exactly which benefits and taxes are applicable, visit <a href="https://gov.uk/">gov.uk</a> or benefits calculators such as <a href="https://www.entitledto.co.uk/">entitledto.co.uk</a>.</p>
 			</Panel>
 		</Collapse>
