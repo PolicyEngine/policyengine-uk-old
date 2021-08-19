@@ -152,22 +152,6 @@ const DEFAULT_POLICY = {
 		summary: "Abolish National Insurance",
 		type: "bool"
 	},
-	abolish_UC: {
-		title: "Abolish Universal Credit",
-		description: "Universal Credit is the main means-tested benefit, currently being rolled out across the country.",
-		default: false,
-		value: false,
-		summary: "Abolish Universal Credit",
-		type: "bool"
-	},
-	abolish_CB: {
-		title: "Abolish Child Benefit",
-		description: "Child Benefit is a universal allowance to parents of children, with a means test embedded in Income Tax.",
-		default: false,
-		value: false,
-		summary: "Abolish Child Benefit",
-		type: "bool"
-	},
 };
 
 export default DEFAULT_POLICY;

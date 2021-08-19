@@ -125,8 +125,10 @@ function PolicyControls(props) {
 			"adult_UBI",
 			"senior_UBI",
 		],
-		universal_credit: ["abolish_UC"],
-		cb: ["abolish_CB"]
+		universal_credit: ["abolish_UC", "UC_phaseout_rate"],
+		cb: ["abolish_CB"],
+		ctc: ["abolish_CTC", "TC_phaseout_rate"],
+		wtc: ["abolish_WTC", "TC_phaseout_rate"]
 	};
 	const names = controlSet[props.selected];
 	if (!(props.selected in controlSet)) {
