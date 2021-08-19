@@ -1,6 +1,7 @@
 .main-menu::-webkit-scrollbar {
     display: none
 }
+svg { margin-bottom: 5px;}
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
