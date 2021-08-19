@@ -133,10 +133,9 @@ def after_request_func(response):
             response.headers.add("Access-Control-Allow-Origin", origin)
         response.headers[
             "Cache-Control"
-        ] = "no-cache, no-store, must-revalidate"
+        ] = "no-cache, no-store, must-revalidate, public, max-age=0"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["Cache-Control"] = "public, max-age=0"
 
     return response
 
