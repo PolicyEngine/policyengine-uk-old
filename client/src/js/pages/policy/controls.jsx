@@ -33,6 +33,16 @@ function Parameter(props) {
 				checked={props.param.value}
 			/>
 		);
+	} else if(props.param.type == "abolish") {
+		component = (
+			<Switch
+				onChange={(value) => {
+					props.onChange(props.name, value);
+				}}
+				checked={props.param.value}
+				className="switch-red"
+			/>
+		);
 	} else if(props.param.type == "category") {
 		component = (
 			<Select placeholder={props.param.default}>

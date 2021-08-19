@@ -134,7 +134,7 @@ const DEFAULT_POLICY = {
 		default: false,
 		value: false,
 		summary: "Abolish the Dividend Allowance",
-		type: "bool"
+		type: "abolish"
 	},
 	abolish_income_tax: {
 		title: "Income Tax",
@@ -150,7 +150,7 @@ const DEFAULT_POLICY = {
 		default: false,
 		value: false,
 		summary: "Abolish National Insurance",
-		type: "bool"
+		type: "abolish"
 	},
 };
 
