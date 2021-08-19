@@ -238,13 +238,16 @@ def intra_decile_graph_data(baseline, reformed):
         l.append(all_row)
     return pd.concat(l).reset_index()
 
-
+DARK_GRAY = "#616161"
+LIGHT_GRAY = "#F5F5F5"
+LIGHT_GREEN = "#C5E1A5"
+DARK_GREEN = "#558B2F"
 INTRA_DECILE_COLORS = (
-    "#616161",
+    DARK_GRAY,
     GRAY,
-    "#F5F5F5",
-    "#C5E1A5",
-    "#558B2F",
+    LIGHT_GRAY,
+    LIGHT_GREEN,
+    DARK_GREEN,
 )[::-1]
 
 
