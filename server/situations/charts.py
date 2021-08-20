@@ -79,15 +79,15 @@ COMPONENTS = (
     "pension_income",
     "savings_interest_income",
     "dividend_income",
+    "income_tax",
+    "national_insurance",
     "universal_credit",
     "child_benefit",
     "UBI",
-    "income_tax",
-    "national_insurance",
     "net_income",
 )
 
-IS_POSITIVE = [True] * 8 + [False] * 2 + [True]
+IS_POSITIVE = [True] * 5 + [False] * 2 + [True] * 4
 
 
 def get_variables(sim, variables=COMPONENTS):
