@@ -10,3 +10,5 @@ start-client:
 deploy-server: openfisca_uk openfisca_data
 	cp server/gcp ./gcp -r
 	gcloud app deploy
+test:
+	pytest tests
