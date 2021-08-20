@@ -6,6 +6,7 @@ import logging
 from time import time
 from openfisca_uk import Microsimulation, IndividualSim
 from pathlib import Path
+from google.cloud import storage
 
 from server.simulation.situations import create_situation
 from server.simulation.reforms import create_reform
@@ -26,24 +27,13 @@ from server.situations.charts import (
     budget_chart,
 )
 
+VERSION = "0.0.1"
 logging.getLogger("werkzeug").disabled = True
 
+client = storage.Client()
+bucket = client.get_bucket("uk-policy-engine.appspot.com")
 
 baseline = Microsimulation()
-
-STORAGE = {}
-
-
-def save(key, data):
-    STORAGE[key] = data
-
-
-def load(key):
-    try:
-        return STORAGE[key]
-    except:
-        return None
-
 
 app = Flask(__name__, static_url_path="")
 logging.getLogger("werkzeug").disabled = True
@@ -58,7 +48,7 @@ STATIC_SITE_ROUTES = (
     "/",
     "/situation",
     "/population-results",
-    "/situation/results",
+    "/situation-results",
 )
 
 for route in STATIC_SITE_ROUTES:
@@ -69,7 +59,13 @@ for route in STATIC_SITE_ROUTES:
 def population_reform():
     start_time = time()
     app.logger.info("Population reform request received")
-    params = request.args
+    params = {**request.args, **(request.json or {})}
+    request_id = "population-" + dict_to_string(params) + "-" + VERSION
+    blob = bucket.blob(request_id + ".json")
+    if blob.exists():
+        app.logger.info("Returning cached response")
+        result = json.loads(blob.download_as_string())
+        return result
     reform, components = create_reform(params, return_names=True)
     reformed = Microsimulation(reform)
     result = dict(
@@ -80,9 +76,14 @@ def population_reform():
         waterfall_chart=waterfall_chart(reform, components, baseline),
         intra_decile_chart=intra_decile_chart(baseline, reformed),
     )
+    blob.upload_from_string(json.dumps(result))
     duration = time() - start_time
     app.logger.info(f"Population reform completed ({round(duration, 2)}s)")
     return result
+
+
+def dict_to_string(d):
+    return "_".join(["_".join((x, y)) for x, y in d.items()])
 
 
 @app.route("/api/situation-reform", methods=["GET", "POST"])
@@ -90,6 +91,12 @@ def situation_reform():
     start_time = time()
     app.logger.info("Situation reform request received")
     params = {**request.args, **(request.json or {})}
+    request_id = "situation-" + dict_to_string(params) + "-" + VERSION
+    blob = bucket.blob(request_id + ".json")
+    if blob.exists():
+        app.logger.info("Returning cached response")
+        result = json.loads(blob.download_as_string())
+        return result
     situation = create_situation(params)
     reform = create_reform(params)
     baseline = situation(IndividualSim())
@@ -108,6 +115,7 @@ def situation_reform():
         budget_chart=budget,
         mtr_chart=mtr,
     )
+    blob.upload_from_string(json.dumps(result))
     duration = time() - start_time
     app.logger.info(f"Situation reform completed ({round(duration, 2)}s)")
     return result

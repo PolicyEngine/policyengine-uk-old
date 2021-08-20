@@ -5,3 +5,4 @@ flask
 flask_cors
 rdbl
 kaleido
+google-cloud-storage>=1.42.0
