@@ -1,6 +1,6 @@
 format:
 	black . -l 79
-deploy: openfisca_data openfisca_uk
+deploy: openfisca_data openfisca_uk test
 	rm -rf server/static
 	cd client; npm run build
 	cp -r client/build server/static
