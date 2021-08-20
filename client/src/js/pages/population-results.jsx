@@ -21,7 +21,7 @@ class PopulationResults extends React.Component {
 				submission["policy_" + key] = this.state.plan[key].value;
 			}
 		}
-		let url = new URL("https://uk.policyengine.org/api/population-reform");
+		let url = new URL("http://localhost:5000/api/population-reform");
 		url.search = new URLSearchParams(submission).toString();
 		this.setState({ waiting: true }, () => {
 			fetch(url)

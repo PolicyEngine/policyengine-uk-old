@@ -9,7 +9,7 @@ class PolicyMenu extends React.Component {
 			<Menu
 				onClick={(e) => {this.props.onClick(e.key);}}
 				mode="inline"
-				defaultOpenKeys={["tax", "income_tax", "national_insurance"]}
+				defaultOpenKeys={["tax", "income_tax", "national_insurance", "benefits"]}
 				defaultSelectedKeys={["main_rates"]}
 			>
 				<SubMenu key="tax" title="Tax">
@@ -23,7 +23,10 @@ class PolicyMenu extends React.Component {
 						<Menu.Item key="ni_alt">Structural</Menu.Item>
 					</SubMenu>
 				</SubMenu>
-				<Menu.Item key="basic_income">Basic income</Menu.Item>
+				<SubMenu key="benefits" title="Benefits">
+					<Menu.Item key="universal_credit">Universal Credit</Menu.Item>
+					<Menu.Item key="basic_income">Basic income</Menu.Item>
+				</SubMenu>
 			</Menu>
 		);
 	}

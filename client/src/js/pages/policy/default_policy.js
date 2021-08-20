@@ -142,7 +142,7 @@ const DEFAULT_POLICY = {
 		default: false,
 		value: false,
 		summary: "Abolish Income Tax",
-		type: "bool"
+		type: "abolish"
 	},
 	abolish_NI: {
 		title: "National Insurance",
@@ -150,6 +150,14 @@ const DEFAULT_POLICY = {
 		default: false,
 		value: false,
 		summary: "Abolish National Insurance",
+		type: "abolish"
+	},
+	abolish_UC: {
+		title: "Universal Credit",
+		description: "This switch abolishes Universal Credit",
+		default: false,
+		value: false,
+		summary: "Abolish Universal Credit",
 		type: "abolish"
 	},
 };
