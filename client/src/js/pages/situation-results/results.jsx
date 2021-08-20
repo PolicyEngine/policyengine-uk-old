@@ -1,6 +1,6 @@
 import { Divider, Empty, Spin, Card, Statistic, Collapse } from "antd";
 import Plot from "react-plotly.js";
-import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined, WarningFilled } from "@ant-design/icons";
+import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { Row, Col } from "react-bootstrap";
 
 const { Panel } = Collapse;
@@ -14,11 +14,14 @@ function ChangedHeadlineFigure(props) {
 	const gain = props.newValue > props.oldValue;
 	const loss = props.newValue < props.oldValue;
 	let changeColor = "black";
-	if(gain) {
+	if((gain && !props.inverted) || (loss && props.inverted)) {
 		changeColor = "green";
-		prefix = <ArrowUpOutlined style={{color: changeColor}} />;
-	} else if(loss) {
+	} else if((loss && !props.inverted) || (gain && props.inverted)) {
 		changeColor = "red";
+	}
+	if(gain) {
+		prefix = <ArrowUpOutlined style={{color: changeColor}} />;
+	} else {
 		prefix = <ArrowDownOutlined style={{color: changeColor}}/>;
 	}
 
@@ -66,6 +69,7 @@ function SituationResultsCaveats() {
 export function SituationResultsPane(props) {
 	const NAMES = ["Tax", "Income Tax", "National Insurance", "Universal Credit", "Benefits", "Household disposable income"];
 	const KEYS = ["tax", "income_tax", "national_insurance", "universal_credit", "benefits", "household_net_income"];
+	const INVERTED = [true, true, true, false, false, false];
 	let headlineFigures = [];
 	for(let i = 0; i < KEYS.length; i++) {
 		headlineFigures.push(
@@ -74,6 +78,7 @@ export function SituationResultsPane(props) {
 				title={NAMES[i]}
 				oldValue={props.results[KEYS[i]].old}
 				newValue={props.results[KEYS[i]].new}
+				inverted={INVERTED[i]}
 				gbp
 			/>
 		);
