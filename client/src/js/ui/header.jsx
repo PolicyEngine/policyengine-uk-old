@@ -27,7 +27,7 @@ function TopHeader() {
 		<>
 			<div className="d-none d-md-block">
 				<PageHeader
-					title="UK Policy Engine"
+					title={<>PolicyEngine<sub style={{fontSize: "50%"}}>UK</sub></>}
 					subTitle="by the UBI Center"
 					style={{minHeight: 40}}
 					tags={[<Tag key="beta" color="processing">ALPHA</Tag>]}
@@ -36,7 +36,7 @@ function TopHeader() {
 			<div className="d-md-none">
 				<div className="d-flex justify-content-center">
 					<PageHeader
-						title="UK Policy Engine"
+						title={<>PolicyEngine<sub style={{fontSize: "50%"}}>UK</sub></>}
 						style={{paddingBottom: 8}}
 						tags={[<Tag key="beta" color="processing">ALPHA</Tag>]}
 					/>

@@ -1,6 +1,6 @@
 import { Divider, Empty, Spin, Card, Statistic, Collapse } from "antd";
 import Plot from "react-plotly.js";
-import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined, ExclamationCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { Row, Col } from "react-bootstrap";
 
 const { Panel } = Collapse;
