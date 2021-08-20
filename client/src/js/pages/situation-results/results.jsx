@@ -117,7 +117,7 @@ export function SituationResultsPane(props) {
 			<Row>
 				<Col>
 					<div className="d-flex justify-content-center align-items-center">
-						<p style={{fontSize: 30}}> Your annual net income would {isGain ? <span style={{color: "green"}}>rise</span>: !isLoss ? <span>not change</span> : <span style={{color: "darkred"}}>fall</span>}{(isGain || isLoss) ? ` by ${difference} (${percentageChange})`: ""}.</p>
+						<p style={{fontSize: 30}}> Your annual net income would {isGain ? <span style={{color: "green"}}>rise</span>: !isLoss ? <span>not change</span> : <span style={{color: "darkred"}}>fall</span>}{(isGain || isLoss) ? ` by ${difference} (${percentageChange})`: ""}</p>
 					</div>
 				</Col>
 			</Row>
