@@ -113,7 +113,7 @@ export function SituationResultsPane(props) {
 	return (
 		<>
 			<SituationResultsCaveats />
-			<Divider>Your situation results</Divider>
+			<Divider />
 			<Row>
 				<Col>
 					<div className="d-flex justify-content-center align-items-center">
