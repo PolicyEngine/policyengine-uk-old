@@ -1,22 +1,41 @@
-import { Divider, Empty, Spin, Card, Statistic, Collapse } from "antd";
+import { Divider, Switch, Card, Statistic, Collapse, Tree } from "antd";
 import Plot from "react-plotly.js";
-import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined, ExclamationCircleOutlined, QuestionCircleOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { Row, Col } from "react-bootstrap";
+import React from "react";
+import VARIABLES from "./variables";
 
 const { Panel } = Collapse;
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
+
+function Explainer(props) {
+	return (
+		<Tree 
+			defaultExpandAll
+			treeData={!props.explainers ? [] : props.explainers.map(name => {return {
+				title: `${VARIABLES[name].name}: ${props.formatter(props.results[name].old)} ➔ ${props.formatter(props.results[name].new)}`,
+				key: name
+			};})}
+		/>
+	);
+}
+
+
 function ChangedHeadlineFigure(props) {
+	console.log(props);
+	const data = props.results[props.name];
+	const variable = VARIABLES[props.name];
 	const formatNumber = num => (props.gbp ? "£" : "") + num.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-	const oldV = formatNumber(props.oldValue);
-	const newV = formatNumber(props.newValue);
+	const oldV = formatNumber(data.old);
+	const newV = formatNumber(data.new);
 	let prefix = null;
-	const gain = props.newValue > props.oldValue;
-	const loss = props.newValue < props.oldValue;
+	const gain = data.new > data.old;
+	const loss = data.new < data.old;
 	let changeColor = "black";
-	if((gain && !props.inverted) || (loss && props.inverted)) {
+	if((gain && !variable.inverted) || (loss && variable.inverted)) {
 		changeColor = "green";
-	} else if((loss && !props.inverted) || (gain && props.inverted)) {
+	} else if((loss && !variable.inverted) || (gain && variable.inverted)) {
 		changeColor = "red";
 	}
 	if(gain) {
@@ -29,11 +48,17 @@ function ChangedHeadlineFigure(props) {
 		<Col style={{ padding: 10, margin: 10 }}>
 			<Card style={{ minWidth: 300 }}>
 				<Statistic
-					title={props.title}
-					value={[oldV, newV, props.oldValue, props.newValue]}
+					style={{paddingLeft: 40}}
+					title={variable.name}
+					value={[oldV, newV, data.old, data.new]}
 					formatter={x => x[0] !== x[1] ? <><s style={{color: "grey"}}>{x[0]}</s><br /><div style={{color: changeColor}}>{x[1]}<br />({prefix}{formatNumber(x[3] - x[2])})</div></> : x[0]}
 					suffix={props.suffix}
 				/>
+				<Collapse ghost>
+					<Panel header={<><QuestionCircleOutlined/>  Explanation</>} key="1">
+						<Explainer formatter={formatNumber} name={props.name} results={props.results} explainers={VARIABLES[props.name].explainers}/>
+					</Panel>
+				</Collapse>
 			</Card>
 		</Col>
 	);
@@ -67,28 +92,34 @@ function SituationResultsCaveats() {
 
 
 export function SituationResultsPane(props) {
-	const NAMES = ["Tax", "Income Tax", "National Insurance", "Universal Credit", "Benefits", "Household disposable income"];
 	const KEYS = ["tax", "income_tax", "national_insurance", "universal_credit", "benefits", "household_net_income"];
-	const INVERTED = [true, true, true, false, false, false];
 	let headlineFigures = [];
 	for(let i = 0; i < KEYS.length; i++) {
 		headlineFigures.push(
 			<ChangedHeadlineFigure 
 				key={i}
-				title={NAMES[i]}
-				oldValue={props.results[KEYS[i]].old}
-				newValue={props.results[KEYS[i]].new}
-				inverted={INVERTED[i]}
+				name={KEYS[i]}
+				results={props.results}
 				gbp
 			/>
 		);
 	}
+	const netIncome = props.results["household_net_income"];
+	const isGain = netIncome.new > netIncome.old;
+	const isLoss = netIncome.new < netIncome.old;
+	const formatNumber = num => "£" + num.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+	const difference = formatNumber(Math.abs(netIncome.new - netIncome.old));
+	const percentageChange = Math.round(Math.abs((netIncome.new - netIncome.old) / netIncome.old) * 100) + "%";
 	return (
 		<>
 			<SituationResultsCaveats />
 			<Divider>Your situation results</Divider>
 			<Row>
-				{headlineFigures}
+				<Col>
+					<div className="d-flex justify-content-center align-items-center">
+						<p style={{fontSize: 30}}> Your annual net income would {isGain ? <span style={{color: "green"}}>rise</span>: !isLoss ? <span>not change</span> : <span style={{color: "darkred"}}>fall</span>}{(isGain || isLoss) ? ` by ${difference} (${percentageChange})`: ""}.</p>
+					</div>
+				</Col>
 			</Row>
 			<Row>
 				<Chart plot={props.results.waterfall_chart} />
