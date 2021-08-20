@@ -44,7 +44,7 @@ class SituationResults extends React.Component {
 				submission[variableName] = variable.value;
 			}
 		}*/
-		let url = new URL("http://localhost:5000/api/situation-reform");
+		let url = new URL("https://uk.policyengine.org/api/situation-reform");
 		url.search = new URLSearchParams(submission).toString();
 		this.setState({ waiting: true }, () => {
 			fetch(url)
