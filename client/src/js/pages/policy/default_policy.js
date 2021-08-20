@@ -103,12 +103,12 @@ const DEFAULT_POLICY = {
 		type: "weekly",
 	},
 	adult_UBI: {
-		title: "Adult UBI",
-		description: "Basic income for adults is given to individuals aged over 18 but under State Pension age.",
+		title: "Working-age adult UBI",
+		description: "Basic income for working-age adults is given to individuals aged over 18 but under State Pension age.",
 		default: 0,
 		value: 0,
 		max: 250,
-		summary: "Give a basic income of £@/week to adults",
+		summary: "Give a basic income of £@/week to working-age adults",
 		type: "weekly",
 	},
 	senior_UBI: {
@@ -134,7 +134,7 @@ const DEFAULT_POLICY = {
 		default: false,
 		value: false,
 		summary: "Abolish the Dividend Allowance",
-		type: "bool"
+		type: "abolish"
 	},
 	abolish_income_tax: {
 		title: "Income Tax",
@@ -150,23 +150,7 @@ const DEFAULT_POLICY = {
 		default: false,
 		value: false,
 		summary: "Abolish National Insurance",
-		type: "bool"
-	},
-	abolish_UC: {
-		title: "Abolish Universal Credit",
-		description: "Universal Credit is the main means-tested benefit, currently being rolled out across the country.",
-		default: false,
-		value: false,
-		summary: "Abolish Universal Credit",
-		type: "bool"
-	},
-	abolish_CB: {
-		title: "Abolish Child Benefit",
-		description: "Child Benefit is a universal allowance to parents of children, with a means test embedded in Income Tax.",
-		default: false,
-		value: false,
-		summary: "Abolish Child Benefit",
-		type: "bool"
+		type: "abolish"
 	},
 };
 

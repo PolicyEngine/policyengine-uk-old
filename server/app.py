@@ -13,6 +13,7 @@ from server.simulation.reforms import create_reform
 from server.populations.metrics import headline_metrics
 from server.populations.charts import (
     decile_chart,
+    intra_decile_chart,
     poverty_chart,
     age_chart,
     waterfall_chart,
@@ -49,12 +50,22 @@ logging.getLogger("werkzeug").disabled = True
 CORS(app)
 
 
-@app.route("/", methods=["GET"])
-def home():
+def static_site():
     return send_from_directory("static", "index.html")
 
 
-@app.route("/api/population-reform", methods=["GET"])
+STATIC_SITE_ROUTES = (
+    "/",
+    "/situation",
+    "/population-results",
+    "/situation/results",
+)
+
+for route in STATIC_SITE_ROUTES:
+    static_site = app.route(route)(static_site)
+
+
+@app.route("/api/population-reform")
 def population_reform():
     start_time = time()
     app.logger.info("Population reform request received")
@@ -67,22 +78,11 @@ def population_reform():
         age_chart=age_chart(baseline, reformed),
         poverty_chart=poverty_chart(baseline, reformed),
         waterfall_chart=waterfall_chart(reform, components, baseline),
+        intra_decile_chart=intra_decile_chart(baseline, reformed),
     )
     duration = time() - start_time
     app.logger.info(f"Population reform completed ({round(duration, 2)}s)")
     return result
-
-
-@app.errorhandler(404)
-def not_found(e):
-    if request.path.startswith("/api/population-reform"):
-        return population_reform()
-    if request.path.startswith("/api/situation-reform"):
-        return situation_reform()
-    path = Path("server/static/" + request.path)
-    if path.exists():
-        return send_from_directory(path.parent, path.name)
-    return send_from_directory("static", "index.html")
 
 
 @app.route("/api/situation-reform", methods=["GET", "POST"])
@@ -131,6 +131,11 @@ def after_request_func(response):
         response.headers.add("Access-Control-Allow-Credentials", "true")
         if origin:
             response.headers.add("Access-Control-Allow-Origin", origin)
+        response.headers[
+            "Cache-Control"
+        ] = "no-cache, no-store, must-revalidate, public, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
 
     return response
 

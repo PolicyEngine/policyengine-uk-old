@@ -33,6 +33,16 @@ function Parameter(props) {
 				checked={props.param.value}
 			/>
 		);
+	} else if(props.param.type == "abolish") {
+		component = (
+			<Switch
+				onChange={(value) => {
+					props.onChange(props.name, value);
+				}}
+				checked={props.param.value}
+				className="switch-red"
+			/>
+		);
 	} else if(props.param.type == "category") {
 		component = (
 			<Select placeholder={props.param.default}>
@@ -125,8 +135,10 @@ function PolicyControls(props) {
 			"adult_UBI",
 			"senior_UBI",
 		],
-		universal_credit: ["abolish_UC"],
-		cb: ["abolish_CB"]
+		universal_credit: ["abolish_UC", "UC_phaseout_rate"],
+		cb: ["abolish_CB"],
+		ctc: ["abolish_CTC", "TC_phaseout_rate"],
+		wtc: ["abolish_WTC", "TC_phaseout_rate"]
 	};
 	const names = controlSet[props.selected];
 	if (!(props.selected in controlSet)) {

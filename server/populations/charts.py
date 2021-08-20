@@ -1,6 +1,7 @@
 from server.populations.metrics import poverty_rate, pct_change
 from server.utils.formatting import format_fig, BLUE, GRAY
 import plotly.express as px
+from plotly.subplots import make_subplots
 import json
 import numpy as np
 from openfisca_uk import Microsimulation
@@ -182,4 +183,112 @@ def age_chart(baseline, reformed):
         y1=0,
         line=dict(color="grey", width=1, dash="dash"),
     )
+    return json.loads(fig.to_json())
+
+
+NAMES = (
+    "Gain more than 5%",
+    "Gain less than 5%",
+    "No change",
+    "Lose less than 5%",
+    "Lose more than 5%",
+)
+
+
+def intra_decile_graph_data(baseline, reformed):
+    l = []
+    income = baseline.calc("equiv_household_net_income", map_to="person")
+    decile = income.decile_rank()
+    gain = reformed.calc(
+        "household_net_income", map_to="person"
+    ) - baseline.calc("household_net_income", map_to="person")
+    rel_gain = (
+        gain / baseline.calc("household_net_income", map_to="person")
+    ).dropna()
+    bands = (None, 0.05, 1e-3, -1e-3, -0.05, None)
+    for upper, lower, name in zip(bands[:-1], bands[1:], NAMES):
+        fractions = []
+        for j in range(1, 11):
+            subset = rel_gain[decile == j]
+            if lower is not None:
+                subset = subset[rel_gain > lower]
+            if upper is not None:
+                subset = subset[rel_gain <= upper]
+            fractions += [subset.count() / rel_gain[decile == j].count()]
+        tmp = pd.DataFrame(
+            {
+                "fraction": fractions,
+                "decile": list(map(str, range(1, 11))),
+                "Outcome": name,
+            }
+        )
+        l.append(tmp)
+        subset = rel_gain
+        if lower is not None:
+            subset = subset[rel_gain > lower]
+        if upper is not None:
+            subset = subset[rel_gain <= upper]
+        all_row = pd.DataFrame(
+            {
+                "fraction": [subset.count() / rel_gain.count()],
+                "decile": "All",
+                "Outcome": name,
+            }
+        )
+        l.append(all_row)
+    return pd.concat(l).reset_index()
+
+
+DARK_GRAY = "#616161"
+LIGHT_GRAY = "#F5F5F5"
+LIGHT_GREEN = "#C5E1A5"
+DARK_GREEN = "#558B2F"
+INTRA_DECILE_COLORS = (
+    DARK_GRAY,
+    GRAY,
+    LIGHT_GRAY,
+    LIGHT_GREEN,
+    DARK_GREEN,
+)[::-1]
+
+
+def intra_decile_chart(baseline, reformed):
+    df = intra_decile_graph_data(baseline, reformed)
+    fig1 = px.bar(
+        df[df.decile != "All"],
+        x="fraction",
+        y="decile",
+        color="Outcome",
+        color_discrete_sequence=INTRA_DECILE_COLORS,
+        orientation="h",
+    )
+    fig2 = px.bar(
+        df[df.decile == "All"],
+        x="fraction",
+        y="decile",
+        color="Outcome",
+        color_discrete_sequence=INTRA_DECILE_COLORS,
+        orientation="h",
+    )
+    fig = make_subplots(
+        rows=2,
+        cols=1,
+        shared_xaxes=True,
+        row_heights=[1, 10],
+        vertical_spacing=0.05,
+        x_title="Outcome distribution",
+        y_title="Income decile",
+    )
+    fig.update_xaxes(showgrid=False)
+    f = fig2.full_figure_for_development(warn=False)
+    fig.add_traces(fig2.data, 1, 1)
+    fig.add_traces(fig1.data, 2, 1)
+    fig.update_layout(barmode="stack")
+    fig = format_fig(fig, show=False).update_layout(
+        title="Intra-decile outcomes",
+        xaxis_tickformat="%",
+    )
+    fig.update_xaxes(tickformat="%")
+    for i in range(5):
+        fig.data[i].showlegend = False
     return json.loads(fig.to_json())

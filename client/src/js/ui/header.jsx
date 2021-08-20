@@ -1,7 +1,7 @@
 import { Row, Col, Container } from "react-bootstrap";
 import React from "react";
-import { Steps, PageHeader } from "antd";
-import { Link } from "react-router-dom";
+import { Steps, PageHeader, Badge, Tag } from "antd";
+import { MinusCircleOutlined } from "@ant-design/icons";
 
 import "../../css/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -29,6 +29,8 @@ function TopHeader() {
 				<PageHeader
 					title="UK Policy Engine"
 					subTitle="by the UBI Center"
+					style={{minHeight: 40}}
+					tags={[<Tag key="beta" color="processing">ALPHA</Tag>]}
 				/>
 			</div>
 			<div className="d-md-none">
@@ -36,6 +38,7 @@ function TopHeader() {
 					<PageHeader
 						title="UK Policy Engine"
 						style={{paddingBottom: 8}}
+						tags={[<Tag key="beta" color="processing">ALPHA</Tag>]}
 					/>
 				</div>
 				<div className="d-flex justify-content-center">
@@ -67,7 +70,11 @@ function Header(props) {
 	];
 	let steps = [];
 	for(let i = 0; i < TITLES.length; i++) {
-		steps.push(<Step key={i} title={TITLES[i]} description={DESCRIPTIONS[i]} style={{minWidth: 200}}/>);
+		if (i == 1 && props.step > 1 && !props.situationEntered) {
+			steps.push(<Step key={i} title={TITLES[i]} icon={<MinusCircleOutlined />} description={DESCRIPTIONS[i]} style={{minWidth: 200}}/>);
+		} else {
+			steps.push(<Step key={i} title={TITLES[i]} description={DESCRIPTIONS[i]} style={{minWidth: 200}}/>);
+		}
 	}
 	return (
 		<>

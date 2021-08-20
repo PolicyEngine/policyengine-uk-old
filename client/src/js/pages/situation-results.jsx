@@ -70,7 +70,7 @@ class SituationResults extends React.Component {
 					{
 						(this.state.waiting || (!this.state.results && !this.state.error)) ?
 							<div className="d-flex justify-content-center align-items-center" style={{minHeight: 400}}>
-								<LoadingResultsPane message="Simulating the reform on your situation (this usually takes about 10 seconds)"/>
+								<LoadingResultsPane message="Simulating the reform on your situation (this usually takes about 40 seconds)"/>
 							</div> :
 							this.state.error ?
 								<div className="d-flex justify-content-center align-items-center" style={{minHeight: 400}}>

@@ -1,8 +1,9 @@
-import { Divider, Empty, Spin, Card, Statistic } from "antd";
+import { Divider, Empty, Spin, Card, Statistic, Collapse } from "antd";
 import Plot from "react-plotly.js";
-import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, ArrowDownOutlined, LoadingOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { Row, Col } from "react-bootstrap";
 
+const { Panel } = Collapse;
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 function HeadlineFigure(props) {
@@ -34,10 +35,21 @@ function Chart(props) {
 	);
 }
 
+function PopulationResultsCaveats() {
+	return (
+		<Collapse defaultActiveKey={["1"]} ghost>
+			<Panel header={<><ExclamationCircleOutlined />  Disclaimer</>} key="1">
+				<p>Results are calculated using the OpenFisca-UK tax-benefit microsimulation model, and assume no behavioural or macroeconomic effects. See the <a href="https://github.com/PSLmodels/openfisca-uk">repository</a> for more information.</p>
+			</Panel>
+		</Collapse>
+	);
+}
+
 export function PopulationResultsPane(props) {
 	return (
 		<>
 			<Divider>Population results</Divider>
+			<PopulationResultsCaveats />
 			<Row>
 				<HeadlineFigure 
 					title="Net cost" 
@@ -77,10 +89,12 @@ export function PopulationResultsPane(props) {
 			<Row>
 				<Chart plot={props.results.decile_chart} />
 				<Chart plot={props.results.poverty_chart} />
-				{/*<Chart plot={props.results.mtr_plot} />*/}
 			</Row>
 			<Row>
 				<Chart plot={props.results.age_chart} md={12}/>
+			</Row>
+			<Row>
+				<Chart plot={props.results.intra_decile_chart} md={12}/>
 			</Row>
 		</>
 	);
