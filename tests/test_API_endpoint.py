@@ -2,6 +2,7 @@ from pathlib import Path
 
 REPO = Path(__file__).parent.parent
 
+
 def in_text_files(folder: Path, text: str):
     for child in folder.iterdir():
         if child.is_dir():
@@ -15,6 +16,7 @@ def in_text_files(folder: Path, text: str):
                         return True, child
                 except:
                     pass
+
 
 def test_localhost_included():
     assert not in_text_files(REPO / "client" / "src", "localhost")
