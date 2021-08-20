@@ -1,5 +1,5 @@
 from openfisca_uk import graphs, IndividualSim
-from server.utils.formatting import format_fig
+from server.utils.formatting import DARK_BLUE, format_fig
 import json
 import plotly.express as px
 import pandas as pd
@@ -135,6 +135,7 @@ def variable_key_to_label(key):
 def get_budget_waterfall_data(sim, label="Baseline", variables=COMPONENTS):
     df = get_variables(sim, variables=variables)
     net_income = df[df.variable == "net_income"].copy()
+    net_income.type = ["Final"]
     df = df[df.variable != "net_income"].reset_index(drop=True)
     base = pd.Series([0] + list(df.value.cumsum()))
     for i in range(1, len(base)):
@@ -180,7 +181,12 @@ def budget_waterfall_chart(baseline, reformed):
         y="value",
         color="type",
         animation_frame="Policy",
-        color_discrete_map={"Gain": BLUE, "Loss": GRAY, "": WHITE},
+        color_discrete_map={
+            "Gain": BLUE,
+            "Loss": GRAY,
+            "": WHITE,
+            "Final": DARK_BLUE,
+        },
     )
     variable_sums = df.groupby(["variable", "Policy"]).value.sum()
     fig.update_layout(

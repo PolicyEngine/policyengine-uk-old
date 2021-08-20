@@ -7,6 +7,7 @@ from time import time
 from openfisca_uk import Microsimulation, IndividualSim
 from pathlib import Path
 from google.cloud import storage
+import os
 
 from server.simulation.situations import create_situation
 from server.simulation.reforms import create_reform
@@ -27,7 +28,8 @@ from server.situations.charts import (
     budget_chart,
 )
 
-VERSION = "0.0.1"
+VERSION = "0.0.2"
+USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 
 client = storage.Client()
@@ -62,7 +64,7 @@ def population_reform():
     params = {**request.args, **(request.json or {})}
     request_id = "population-" + dict_to_string(params) + "-" + VERSION
     blob = bucket.blob(request_id + ".json")
-    if blob.exists():
+    if blob.exists() and USE_CACHE:
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
@@ -76,7 +78,8 @@ def population_reform():
         waterfall_chart=waterfall_chart(reform, components, baseline),
         intra_decile_chart=intra_decile_chart(baseline, reformed),
     )
-    blob.upload_from_string(json.dumps(result))
+    if USE_CACHE:
+        blob.upload_from_string(json.dumps(result))
     duration = time() - start_time
     app.logger.info(f"Population reform completed ({round(duration, 2)}s)")
     return result
@@ -93,7 +96,7 @@ def situation_reform():
     params = {**request.args, **(request.json or {})}
     request_id = "situation-" + dict_to_string(params) + "-" + VERSION
     blob = bucket.blob(request_id + ".json")
-    if blob.exists():
+    if blob.exists() and USE_CACHE:
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
@@ -115,7 +118,8 @@ def situation_reform():
         budget_chart=budget,
         mtr_chart=mtr,
     )
-    blob.upload_from_string(json.dumps(result))
+    if USE_CACHE:
+        blob.upload_from_string(json.dumps(result))
     duration = time() - start_time
     app.logger.info(f"Situation reform completed ({round(duration, 2)}s)")
     return result
