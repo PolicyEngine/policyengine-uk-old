@@ -23,6 +23,7 @@ def budget_chart(baseline, reformed):
         df,
         x="Employment income",
         y=["Baseline", "Reform"],
+        labels={"variable": "Policy", "value": "Net income"},
         color_discrete_map={"Baseline": GRAY, "Reform": BLUE},
     )
     return json.loads(
@@ -57,6 +58,7 @@ def mtr_chart(baseline, reformed):
         df,
         x="Employment income",
         y=["Baseline", "Reform"],
+        labels={"variable": "Policy", "value": "Effective MTR"},
         color_discrete_map={"Baseline": GRAY, "Reform": BLUE},
     )
     return json.loads(
@@ -176,10 +178,16 @@ def budget_waterfall_chart(baseline, reformed):
         ]
     )
     fig = px.bar(
-        df,
-        x="variable",
-        y="value",
-        color="type",
+        df.rename(
+            columns={
+                "type": "Type",
+                "value": "Amount",
+                "variable": "Component",
+            }
+        ),
+        x="Component",
+        y="Amount",
+        color="Type",
         animation_frame="Policy",
         color_discrete_map={
             "Gain": BLUE,

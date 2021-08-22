@@ -14,10 +14,10 @@ def decile_chart(baseline, reformed):
     income = baseline.calc("household_net_income", map_to="person")
     equiv_income = baseline.calc("equiv_household_net_income", map_to="person")
     gain = reformed.calc("household_net_income", map_to="person") - income
+    changes = gain.groupby(equiv_income.decile_rank()).mean()
+    df = pd.DataFrame({"Decile": changes.index, "Change": changes.values})
     fig = (
-        format_fig(
-            px.bar(gain.groupby(equiv_income.decile_rank()).mean()), show=False
-        )
+        format_fig(px.bar(df, x="Decile", y="Change"), show=False)
         .update_layout(
             title="Impact on net income by decile",
             xaxis_title="Equivalised disposable income decile",
@@ -46,10 +46,17 @@ def poverty_chart(baseline, reform):
     person = pct_change(
         poverty_rate(baseline, "people"), poverty_rate(reform, "people")
     )
+    df = pd.DataFrame(
+        {
+            "Group": ["Child", "Working-age", "Retired", "All"],
+            "Poverty rate change": [child, adult, senior, person],
+        }
+    )
     fig = format_fig(
         px.bar(
-            x=["Child", "Working-age", "Retired", "All"],
-            y=[child, adult, senior, person],
+            df,
+            x="Group",
+            y="Poverty rate change",
         ),
         show=False,
     )
@@ -162,8 +169,9 @@ def age_chart(baseline, reformed):
     income = baseline.calc("household_net_income", map_to="person")
     gain = reformed.calc("household_net_income", map_to="person") - income
     values = gain.groupby(baseline.calc("age")).mean().rolling(3).median()
+    df = pd.DataFrame({"Age": values.index, "Change": values.values})
     fig = (
-        format_fig(px.line(values), show=False)
+        format_fig(px.line(df, x="Age", y="Change"), show=False)
         .update_layout(
             title="Impact on net income by age",
             xaxis_title="Age",
@@ -217,8 +225,8 @@ def intra_decile_graph_data(baseline, reformed):
             fractions += [subset.count() / rel_gain[decile == j].count()]
         tmp = pd.DataFrame(
             {
-                "fraction": fractions,
-                "decile": list(map(str, range(1, 11))),
+                "Fraction": fractions,
+                "Decile": list(map(str, range(1, 11))),
                 "Outcome": name,
             }
         )
@@ -230,8 +238,8 @@ def intra_decile_graph_data(baseline, reformed):
             subset = subset[rel_gain <= upper]
         all_row = pd.DataFrame(
             {
-                "fraction": [subset.count() / rel_gain.count()],
-                "decile": "All",
+                "Fraction": [subset.count() / rel_gain.count()],
+                "Decile": "All",
                 "Outcome": name,
             }
         )
@@ -255,17 +263,17 @@ INTRA_DECILE_COLORS = (
 def intra_decile_chart(baseline, reformed):
     df = intra_decile_graph_data(baseline, reformed)
     fig1 = px.bar(
-        df[df.decile != "All"],
-        x="fraction",
-        y="decile",
+        df[df.Decile != "All"],
+        x="Fraction",
+        y="Decile",
         color="Outcome",
         color_discrete_sequence=INTRA_DECILE_COLORS,
         orientation="h",
     )
     fig2 = px.bar(
-        df[df.decile == "All"],
-        x="fraction",
-        y="decile",
+        df[df.Decile == "All"],
+        x="Fraction",
+        y="Decile",
         color="Outcome",
         color_discrete_sequence=INTRA_DECILE_COLORS,
         orientation="h",
