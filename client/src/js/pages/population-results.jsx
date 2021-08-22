@@ -50,7 +50,7 @@ class PopulationResults extends React.Component {
 							</div> :
 							this.state.error ?
 								<div className="d-flex justify-content-center align-items-center" style={{minHeight: 400}}>
-									<LoadingResultsPane noSpin message="An error occurred"/>
+									<LoadingResultsPane noSpin message="Something went wrong (try navigating back and returning to this page)"/>
 								</div> :
 								<PopulationResultsPane results={this.state.results} />
 					}
