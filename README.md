@@ -3,7 +3,7 @@
 A user interface for OpenFisca-UK showing population- and individual-level policy impacts.
 
 To develop:
-- Run the client on port 3000 in debug mode with `cd client; npm start`
+- Run the client on port 3000 in debug mode with `cd client; npm install; npm start`
   - Change the API URLs from "https://uk.policyengine.org/..." to "http://localhost:5000/..."
 - To run the server:
   - Install dependencies with `pip install -r requirements.txt`
