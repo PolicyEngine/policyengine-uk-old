@@ -44,7 +44,7 @@ class SituationResults extends React.Component {
 				submission[variableName] = variable.value;
 			}
 		}*/
-		let url = new URL("http://uk.policyengine.org/api/situation-reform");
+		let url = new URL("https://uk.policyengine.org/api/situation-reform");
 		url.search = new URLSearchParams(submission).toString();
 		this.setState({ waiting: true }, () => {
 			fetch(url)
@@ -74,7 +74,7 @@ class SituationResults extends React.Component {
 							</div> :
 							this.state.error ?
 								<div className="d-flex justify-content-center align-items-center" style={{minHeight: 400}}>
-									<LoadingResultsPane noSpin message="An error occurred"/>
+									<LoadingResultsPane noSpin message="Something went wrong (try navigating back and returning to this page)"/>
 								</div> :
 								<SituationResultsPane results={this.state.results} />
 					}
