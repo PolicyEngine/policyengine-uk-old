@@ -8,6 +8,15 @@ from ubicenter.plotly import GRAY, BLUE
 
 WHITE = "#FFF"
 
+COLOR_MAP = {
+    "Baseline": GRAY,
+    "Reform": BLUE,
+    "Gain": BLUE,
+    "Loss": GRAY,
+    "": WHITE,
+    "Final": DARK_BLUE,
+}
+
 
 def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     """Produces line chart with employment income on the x axis and net income
@@ -34,7 +43,7 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         x="Employment income",
         y=["Baseline", "Reform"],
         labels={"variable": "Policy", "value": "Net income"},
-        color_discrete_map={"Baseline": GRAY, "Reform": BLUE},
+        color_discrete_map=COLOR_MAP,
     )
     return json.loads(
         format_fig(graph, show=False)
@@ -44,7 +53,7 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
             yaxis_title="Household net income",
             yaxis_tickprefix="£",
             xaxis_tickprefix="£",
-            legend_title="Policy",
+            legend_title="",
         )
         .to_json()
     )
@@ -83,7 +92,7 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         x="Employment income",
         y=["Baseline", "Reform"],
         labels={"variable": "Policy", "value": "Effective MTR"},
-        color_discrete_map={"Baseline": GRAY, "Reform": BLUE},
+        color_discrete_map=COLOR_MAP,
     )
     return json.loads(
         format_fig(graph, show=False)
@@ -93,7 +102,7 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
             xaxis_tickprefix="£",
             yaxis_tickformat="%",
             yaxis_title="Effective MTR",
-            legend_title="Policy",
+            legend_title="",
         )
         .to_json()
     )
@@ -221,15 +230,14 @@ def budget_waterfall_chart(
         string.
     :rtype: str
     """
-    baseline_variable_df = get_variables(baseline)
-    baseline_variables = baseline_variable_df.variable[
-        baseline_variable_df.value != 0
-    ].unique()
-    reform_variable_df = get_variables(reformed)
-    reform_variables = reform_variable_df.variable[
-        reform_variable_df.value != 0
-    ].unique()
-    variables = list(set(list(baseline_variables) + list(reform_variables)))
+
+    def nonzero_variables(sim):
+        var_df = get_variables(sim)
+        return var_df[var_df.value != 0].variable.unique().tolist()
+
+    variables = list(
+        set(nonzero_variables(baseline) + nonzero_variables(reformed))
+    )
     df = pd.concat(
         [
             get_budget_waterfall_data(
@@ -250,12 +258,7 @@ def budget_waterfall_chart(
         y="Amount",
         color="Type",
         animation_frame="Policy",
-        color_discrete_map={
-            "Gain": BLUE,
-            "Loss": GRAY,
-            "": WHITE,
-            "Final": DARK_BLUE,
-        },
+        color_discrete_map=COLOR_MAP,
     )
     variable_sums = df.groupby(["variable", "Policy"]).value.sum()
     fig.update_layout(
