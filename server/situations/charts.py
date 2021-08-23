@@ -9,7 +9,17 @@ from ubicenter.plotly import GRAY, BLUE
 WHITE = "#FFF"
 
 
-def budget_chart(baseline, reformed):
+def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
+    """Produces line chart with employment income on the x axis and net income
+    on the y axis, for baseline and reform simulations.
+
+    :param baseline: Baseline simulation.
+    :type baseline: IndividualSim
+    :param reformed: Reform simulation.
+    :type reformed: IndividualSim
+    :return: Representation of the budget plotly chart as a JSON string.
+    :rtype: str
+    """
     df = pd.DataFrame(
         {
             "Employment income": baseline.calc("employment_income").sum(
@@ -40,7 +50,18 @@ def budget_chart(baseline, reformed):
     )
 
 
-def mtr_chart(baseline, reformed):
+def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
+    """Produces line chart with employment income on the x axis and marginal
+    tax rate on the y axis, for baseline and reform simulations.
+
+    :param baseline: Baseline simulation.
+    :type baseline: IndividualSim
+    :param reformed: Reform simulation.
+    :type reformed: IndividualSim
+    :return: Representation of the marginal tax rate plotly chart as a JSON
+        string.
+    :rtype: str
+    """
     earnings = baseline.calc("employment_income").sum(axis=0)
     baseline_net = baseline.calc("net_income").sum(axis=0)
     reform_net = reformed.calc("net_income").sum(axis=0)
@@ -130,7 +151,22 @@ KEY_TO_LABEL = dict(
 )
 
 
-def get_budget_waterfall_data(sim, label="Baseline", variables=COMPONENTS):
+def get_budget_waterfall_data(
+    sim: IndividualSim, label: str = "Baseline", variables: list = COMPONENTS
+) -> pd.DataFrame:
+    """Returns a dataframe with the budget breakdown for a given simulation.
+
+    :param sim: Simulation.
+    :type sim: IndividualSim
+    :param label: Value of Policy column in returned DataFrame, defaults to
+        "Baseline"
+    :type label: str, optional
+    :param variables: List of variables to produce waterfall chart of,
+        defaults to COMPONENTS
+    :type variables: list, optional
+    :return: DataFrame with budget breakdown.
+    :rtype: pd.DataFrame
+    """
     df = get_variables(sim, variables=variables)
     net_income = df[df.variable == "net_income"].copy()
     net_income.type = ["Final"]
@@ -155,7 +191,23 @@ def get_budget_waterfall_data(sim, label="Baseline", variables=COMPONENTS):
     return df
 
 
-def budget_waterfall_chart(baseline, reformed):
+def budget_waterfall_chart(
+    baseline: IndividualSim, reformed: IndividualSim
+) -> str:
+    """Returns a chart with the budget breakdown for a given simulation.
+
+    :param sim: Simulation.
+    :type sim: IndividualSim
+    :param label: Value of Policy column in returned DataFrame, defaults to
+        "Baseline"
+    :type label: str, optional
+    :param variables: List of variables to produce waterfall chart of,
+        defaults to COMPONENTS
+    :type variables: list, optional
+    :return: Representation of the budget waterfall plotly chart as a JSON
+        string.
+    :rtype: str
+    """
     baseline_variable_df = get_variables(baseline)
     baseline_variables = baseline_variable_df.variable[
         baseline_variable_df.value != 0
