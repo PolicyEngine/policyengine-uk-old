@@ -53,7 +53,7 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
             yaxis_title="Household net income",
             yaxis_tickprefix="£",
             xaxis_tickprefix="£",
-            legend_title="",
+            legend_title=None,
         )
         .to_json()
     )
@@ -102,7 +102,7 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
             xaxis_tickprefix="£",
             yaxis_tickformat="%",
             yaxis_title="Effective MTR",
-            legend_title="",
+            legend_title=None,
         )
         .to_json()
     )
@@ -263,10 +263,10 @@ def budget_waterfall_chart(
     variable_sums = df.groupby(["variable", "Policy"]).value.sum()
     fig.update_layout(
         title="Budget breakdown",
-        xaxis_title="",
+        xaxis_title=None,
         yaxis_title="Yearly amount",
         yaxis_tickprefix="£",
-        legend_title="",
+        legend_title=None,
         yaxis_range=(min(variable_sums.min(), 0), variable_sums.max()),
     )
     fig = format_fig(fig, show=False)
