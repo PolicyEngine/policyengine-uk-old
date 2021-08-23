@@ -99,41 +99,51 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     )
 
 
-COMPONENTS = (
-    "employment_income",
-    "self_employment_income",
-    "pension_income",
-    "savings_interest_income",
-    "dividend_income",
-    "income_tax",
-    "national_insurance",
-    "universal_credit",
-    "child_benefit",
-    "UBI",
-    "net_income",
+COMPONENT_SIGN = dict(
+    employment_income=True,
+    self_employment_income=True,
+    pension_income=True,
+    savings_interest_income=True,
+    dividend_income=True,
+    income_tax=False,
+    national_insurance=False,
+    universal_credit=True,
+    child_benefit=True,
+    UBI=True,
+    net_income=True,
 )
 
-IS_POSITIVE = [True] * 5 + [False] * 2 + [True] * 4
 
+def get_variables(
+    sim: IndividualSim, variables: dict = COMPONENT_SIGN
+) -> pd.DataFrame:
+    """Creates DataFrame of total amount of each variable for an individual
+    simulation.
 
-def get_variables(sim, variables=COMPONENTS):
+    :param sim: Simulation.
+    :type sim: IndividualSim
+    :param variables: List of variables to sum, defaults to COMPONENT_SIGN
+    :type variables: dict, optional
+    :return: DataFrame with one row per variable and columns for value,
+        type (Gain or Loss), and is_value (always True).
+    :rtype: pd.DataFrame
+    """
     amounts = []
-    for variable in COMPONENTS:
+    for variable in COMPONENT_SIGN.keys():
         try:
             amounts += [sim.calc(variable).sum()]
         except:
             amounts += [0]
     df = pd.DataFrame(
         dict(
-            variable=COMPONENTS,
+            variable=COMPONENT_SIGN.keys(),
             value=amounts,
-            type=np.where(IS_POSITIVE, "Gain", "Loss"),
+            type=np.where(list(COMPONENT_SIGN.values()), "Gain", "Loss"),
             is_value=True,
         )
     )
-    df.value *= np.where(IS_POSITIVE, 1, -1)
-    df = df[df.variable.isin(variables)].reset_index(drop=True)
-    return df
+    df.value *= np.where(list(COMPONENT_SIGN.values()), 1, -1)
+    return df[df.variable.isin(variables)].reset_index(drop=True)
 
 
 KEY_TO_LABEL = dict(
