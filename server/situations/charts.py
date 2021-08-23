@@ -1,4 +1,4 @@
-from openfisca_uk import graphs, IndividualSim
+from openfisca_uk import IndividualSim
 from server.utils.formatting import DARK_BLUE, format_fig
 import json
 import plotly.express as px
@@ -108,67 +108,61 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     )
 
 
-COMPONENT_SIGN = dict(
-    employment_income=True,
-    self_employment_income=True,
-    pension_income=True,
-    savings_interest_income=True,
-    dividend_income=True,
-    income_tax=False,
-    national_insurance=False,
-    universal_credit=True,
-    child_benefit=True,
-    UBI=True,
-    net_income=True,
-)
+# Create metadata on each variable.
+COMPONENTS = pd.DataFrame(columns=["is_positive", "label"])
+COMPONENTS.index.name = "variable"
+COMPONENTS.loc["employment_income"] = [True, "Employment income"]
+COMPONENTS.loc["self_employment_income"] = [True, "Self-employment income"]
+COMPONENTS.loc["pension_income"] = [True, "Pension income"]
+COMPONENTS.loc["savings_interest_income"] = [True, "Savings income"]
+COMPONENTS.loc["dividend_income"] = [True, "Dividend income"]
+COMPONENTS.loc["income_tax"] = [False, "Income tax"]
+COMPONENTS.loc["national_insurance"] = [False, "National Insurance"]
+COMPONENTS.loc["universal_credit"] = [True, "Universal Credit"]
+COMPONENTS.loc["child_benefit"] = [True, "Child Benefit"]
+COMPONENTS.loc["UBI"] = [True, "Basic income"]
+COMPONENTS.loc["net_income"] = [True, "Net income"]
 
 
-def get_variables(sim: IndividualSim, variables: dict = None) -> pd.DataFrame:
+def safe_calc_sum(sim: IndividualSim, var: str) -> float:
+    """Calculates the sum of a variable in a simulation, but returns 0 if
+    it's not there.
+    :param sim: Simulation object.
+    :type sim: IndividualSim
+    :param var: Variable name.
+    :type var: str
+    :return: Value of the variable, or 0 if the variable is not in the
+        simulation.
+    :rtype: float
+    """
+    try:
+        return sim.calc(var).sum()
+    except KeyError:
+        return 0
+
+
+def get_variables(sim: IndividualSim, variables: list = None) -> pd.DataFrame:
     """Creates DataFrame of total amount of each variable for an individual
     simulation.
 
     :param sim: Simulation.
     :type sim: IndividualSim
-    :param variables: Dict of variables to sum and whether they are positive
-        or negative. Defaults to COMPONENT_SIGN.
-    :type variables: dict, optional
+    :param variables: List of variables to get. Defaults to None (all in
+        COMPONENTS).
+    :type variables: list, optional
     :return: DataFrame with one row per variable and columns for value,
         type (Gain or Loss), and is_value (always True).
     :rtype: pd.DataFrame
     """
     if variables is None:
-        variables = COMPONENT_SIGN
-    amounts = []
-    for variable in COMPONENT_SIGN.keys():
-        try:
-            amounts += [sim.calc(variable).sum()]
-        except:
-            amounts += [0]
-    df = pd.DataFrame(
-        dict(
-            variable=COMPONENT_SIGN.keys(),
-            value=amounts,
-            type=np.where(list(COMPONENT_SIGN.values()), "Gain", "Loss"),
-            is_value=True,
-        )
+        variables = COMPONENTS.index
+    df = COMPONENTS.loc[variables].copy()
+    df["value"] = df.index.map(lambda x: safe_calc_sum(sim, x)) * np.where(
+        df.is_positive, 1, -1
     )
-    df.value *= np.where(list(COMPONENT_SIGN.values()), 1, -1)
-    return df[df.variable.isin(variables)].reset_index(drop=True)
-
-
-KEY_TO_LABEL = dict(
-    net_income="Net income",
-    employment_income="Employment income",
-    self_employment_income="Self-employment income",
-    pension_income="Pension income",
-    savings_interest_income="Savings income",
-    dividend_income="Dividend income",
-    universal_credit="Universal Credit",
-    child_benefit="Child Benefit",
-    UBI="UBI",
-    income_tax="Income Tax",
-    national_insurance="NI",
-)
+    df["type"] = np.where(df.is_positive, "Gain", "Loss")
+    df["is_value"] = True
+    return df.reset_index()
 
 
 def get_budget_waterfall_data(
@@ -182,13 +176,11 @@ def get_budget_waterfall_data(
         "Baseline"
     :type label: str, optional
     :param variables: List of variables to produce waterfall chart of,
-        defaults to COMPONENT_SIGN
+        defaults to None (all).
     :type variables: list, optional
     :return: DataFrame with budget breakdown.
     :rtype: pd.DataFrame
     """
-    if variables is None:
-        variables = COMPONENT_SIGN
     df = get_variables(sim, variables=variables)
     net_income = df[df.variable == "net_income"].copy()
     net_income.type = ["Final"]
@@ -207,8 +199,10 @@ def get_budget_waterfall_data(
         ]
     )
     df = pd.concat([df, net_income])
-    df = df[~df.variable.isna()]
-    df.variable = df.variable.map(KEY_TO_LABEL).fillna("")
+    df = df[~df.variable.isna()].merge(
+        COMPONENTS[["label"]].reset_index(), on="variable", how="left"
+    )
+    df.variable.fillna("", inplace=True)
     df["Policy"] = label
     return df
 
@@ -216,16 +210,13 @@ def get_budget_waterfall_data(
 def budget_waterfall_chart(
     baseline: IndividualSim, reformed: IndividualSim
 ) -> str:
-    """Returns a chart with the budget breakdown for a given simulation.
+    """Returns a chart with the budget breakdown comparing baseline and
+    reformed simulations.
 
-    :param sim: Simulation.
-    :type sim: IndividualSim
-    :param label: Value of Policy column in returned DataFrame, defaults to
-        "Baseline"
-    :type label: str, optional
-    :param variables: List of variables to produce waterfall chart of,
-        defaults to COMPONENTS
-    :type variables: list, optional
+    :param baseline: Baseline simulation.
+    :type baseline: IndividualSim
+    :param reformed: Reformed simulation.
+    :type reformed: IndividualSim
     :return: Representation of the budget waterfall plotly chart as a JSON
         string.
     :rtype: str
