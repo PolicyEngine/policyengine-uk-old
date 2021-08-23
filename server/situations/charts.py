@@ -193,8 +193,7 @@ def get_budget_waterfall_data(
     base_df = pd.DataFrame(
         dict(variable=df.variable, value=base, type="", is_value=False)
     )
-    df = pd.concat([base_df, df])
-    df = pd.concat([df, net_income])
+    df = pd.concat([base_df, df, net_income])
     df["Policy"] = label
     return df[~df.variable.isna()]
 
