@@ -44,7 +44,10 @@ def mtr_chart(baseline, reformed):
     earnings = baseline.calc("employment_income").sum(axis=0)
     baseline_net = baseline.calc("net_income").sum(axis=0)
     reform_net = reformed.calc("net_income").sum(axis=0)
-    get_mtr = lambda x, y: 1 - ((y[1:] - y[:-1]) / (x[1:] - x[:-1]))
+
+    def get_mtr(x, y):
+        return 1 - ((y[1:] - y[:-1]) / (x[1:] - x[:-1]))
+
     baseline_mtr = get_mtr(earnings, baseline_net)
     reform_mtr = get_mtr(earnings, reform_net)
     df = pd.DataFrame(
