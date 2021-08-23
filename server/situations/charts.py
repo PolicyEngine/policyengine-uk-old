@@ -114,20 +114,21 @@ COMPONENT_SIGN = dict(
 )
 
 
-def get_variables(
-    sim: IndividualSim, variables: dict = COMPONENT_SIGN
-) -> pd.DataFrame:
+def get_variables(sim: IndividualSim, variables: dict = None) -> pd.DataFrame:
     """Creates DataFrame of total amount of each variable for an individual
     simulation.
 
     :param sim: Simulation.
     :type sim: IndividualSim
-    :param variables: List of variables to sum, defaults to COMPONENT_SIGN
+    :param variables: Dict of variables to sum and whether they are positive
+        or negative. Defaults to COMPONENT_SIGN.
     :type variables: dict, optional
     :return: DataFrame with one row per variable and columns for value,
         type (Gain or Loss), and is_value (always True).
     :rtype: pd.DataFrame
     """
+    if variables is None:
+        variables = COMPONENT_SIGN
     amounts = []
     for variable in COMPONENT_SIGN.keys():
         try:
@@ -162,7 +163,7 @@ KEY_TO_LABEL = dict(
 
 
 def get_budget_waterfall_data(
-    sim: IndividualSim, label: str = "Baseline", variables: list = COMPONENTS
+    sim: IndividualSim, label: str = "Baseline", variables: list = None
 ) -> pd.DataFrame:
     """Returns a dataframe with the budget breakdown for a given simulation.
 
@@ -172,11 +173,13 @@ def get_budget_waterfall_data(
         "Baseline"
     :type label: str, optional
     :param variables: List of variables to produce waterfall chart of,
-        defaults to COMPONENTS
+        defaults to COMPONENT_SIGN
     :type variables: list, optional
     :return: DataFrame with budget breakdown.
     :rtype: pd.DataFrame
     """
+    if variables is None:
+        variables = COMPONENT_SIGN
     df = get_variables(sim, variables=variables)
     net_income = df[df.variable == "net_income"].copy()
     net_income.type = ["Final"]
