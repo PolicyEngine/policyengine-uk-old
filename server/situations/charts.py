@@ -190,21 +190,13 @@ def get_budget_waterfall_data(
         if base[i] < base[i - 1]:
             base[i - 1] = base[i]
     df.value = df.value.abs()
-    df = pd.concat(
-        [
-            pd.DataFrame(
-                dict(variable=df.variable, value=base, type="", is_value=False)
-            ),
-            df,
-        ]
+    base_df = pd.DataFrame(
+        dict(variable=df.variable, value=base, type="", is_value=False)
     )
+    df = pd.concat([base_df, df])
     df = pd.concat([df, net_income])
-    df = df[~df.variable.isna()].merge(
-        COMPONENTS[["label"]].reset_index(), on="variable", how="left"
-    )
-    df.variable.fillna("", inplace=True)
     df["Policy"] = label
-    return df
+    return df[~df.variable.isna()]
 
 
 def budget_waterfall_chart(
@@ -229,21 +221,16 @@ def budget_waterfall_chart(
     variables = list(
         set(nonzero_variables(baseline) + nonzero_variables(reformed))
     )
-    df = pd.concat(
-        [
-            get_budget_waterfall_data(
-                baseline, "Baseline", variables=variables
-            ),
-            get_budget_waterfall_data(reformed, "Reform", variables=variables),
-        ]
+    baseline_df = get_budget_waterfall_data(
+        baseline, "Baseline", variables=variables
     )
+    reformed_df = get_budget_waterfall_data(
+        reformed, "Reform", variables=variables
+    )
+    df = pd.concat([baseline_df, reformed_df]).fillna("")
     fig = px.bar(
         df.rename(
-            columns={
-                "type": "Type",
-                "value": "Amount",
-                "variable": "Component",
-            }
+            columns={"type": "Type", "value": "Amount", "label": "Component"}
         ),
         x="Component",
         y="Amount",
