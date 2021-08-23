@@ -115,7 +115,7 @@ def get_variables(sim, variables=COMPONENTS):
     return df
 
 
-key_to_label = dict(
+KEY_TO_LABEL = dict(
     net_income="Net income",
     employment_income="Employment income",
     self_employment_income="Self-employment income",
@@ -128,13 +128,6 @@ key_to_label = dict(
     income_tax="Income Tax",
     national_insurance="NI",
 )
-
-
-def variable_key_to_label(key):
-    try:
-        return key_to_label[key]
-    except:
-        return ""
 
 
 def get_budget_waterfall_data(sim, label="Baseline", variables=COMPONENTS):
@@ -157,7 +150,7 @@ def get_budget_waterfall_data(sim, label="Baseline", variables=COMPONENTS):
     )
     df = pd.concat([df, net_income])
     df = df[~df.variable.isna()]
-    df.variable = df.variable.apply(variable_key_to_label)
+    df.variable = df.variable.map(KEY_TO_LABEL).fillna("")
     df["Policy"] = label
     return df
 
