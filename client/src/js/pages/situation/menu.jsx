@@ -15,7 +15,7 @@ function SituationMenu(props) {
 			mode="inline"
 			onClick={e => props.onSelect(e.key)}
 			defaultOpenKeys={["family"]}
-			defaultSelectedKeys={["household"]}
+			defaultSelectedKeys={["head"]}
 			triggerSubMenuAction="hover"
 		>
 			<Menu.Item key="household">Your household</Menu.Item>

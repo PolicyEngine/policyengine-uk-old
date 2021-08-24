@@ -14,30 +14,31 @@ export function SimulateButton(props) {
 		}
 	}
 	const url = `${props.target || "/situation"}?${searchParams.toString()}`;
+	if(props.hidden) {return <></>;}
 	return (
-		<div>
-			<Link to={url}><Button type={props.primary ? "primary" : null} onClick={props.onClick}>{props.text || "Simulate"}</Button></Link>
+		<div style={{marginBottom: 20}}>
+			<Link to={url}><Button disabled={props.disabled} type={props.primary ? "primary" : null} onClick={props.onClick}>{props.text || "Simulate"}</Button></Link>
 		</div>
 	);
 }
 
 function PolicyOverview(props) {
+	let plan = Object.keys(props.policy).map((key, i) => (
+		props.policy[key].value !== props.policy[key].default
+			? <Step key={key} status="finish" title={props.policy[key].title} description={props.policy[key].summary.replace("@", props.policy[key].value)} />
+			: null
+	));
 	return (
 		<>
 			<Divider>Your plan</Divider>
 			<Steps progressDot direction="vertical">
-				{
-					Object.keys(props.policy).map((key, i) => (
-						props.policy[key].value !== props.policy[key].default
-							? <Step key={key} status="finish" title={props.policy[key].title} description={props.policy[key].summary.replace("@", props.policy[key].value)} />
-							: null
-					))
-				}
+				{plan}
 			</Steps>
 			<Empty description="" image={null}>
-				<SimulateButton primary policy={props.policy} onClick={props.onSubmit} text="Describe your situation"/>
-				<div style={{paddingTop: 30}} />
-				<SimulateButton text="Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
+				<SimulateButton hidden text="Select your reform" target="/" policy={props.policy} onClick={props.onSubmit} />
+				<SimulateButton primary text="Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
+				<SimulateButton text="Skip to your household" target="/situation" policy={props.policy} onClick={props.onSubmit} />
+				<SimulateButton disabled text="See your results" target="/situation-results" policy={props.policy} onClick={props.onSubmit} />
 			</Empty>
 		</>
 	);

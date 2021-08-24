@@ -1,5 +1,5 @@
 import React from "react";
-import PolicySituationOverview from "./population-results/overview";
+import PolicySituationOverview from "./situation/overview";
 import { SituationResultsPane } from "./situation-results/results";
 import { LoadingResultsPane } from "./population-results/results";
 import { Row, Col } from "react-bootstrap";

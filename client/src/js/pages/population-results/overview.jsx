@@ -34,26 +34,13 @@ function PolicySituationOverview(props) {
 					))
 				}
 			</Steps>
-			{!props.noSituation ?
-				<>
-					<Divider>Your situation</Divider>
-					<Steps progressDot direction="vertical">
-						{
-							<>
-								<Step status="finish" title={isSingleFamily ? "Single-family household" : "Multi-family household"} description="This affects benefit entitlements" />
-								<Step status="finish" title={(numWA == 0 ? "No " : numWA) + " working-age adult" + (numWA == 1 ? "" : "s")}/>
-								<Step status="finish" title={(numChildren == 0 ? "No " : numChildren) + " child" + (numChildren == 1 ? "" : "ren")}/>
-								<Step status="finish" title={(numPensioners == 0 ? "No " : numPensioners) + " pensioner" + (numPensioners == 1 ? "" : "s")}/>
-							</>
-						}
-					</Steps>
-				</> :
-				<></>
-			}
 			{
 				!props.noButton ?
 					<Empty description="" image={null}>
-						<SimulateButton primary text="See your results" target="/situation-results" policy={props.policy} onClick={props.onSubmit}/>
+						<SimulateButton text="🠔 Change the policy reform" target="/" policy={props.policy} onClick={props.onSubmit} />
+						<SimulateButton hidden text="🠔 Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
+						<SimulateButton primary text="Describe your household" target="/situation" policy={props.policy} onClick={props.onSubmit} />
+						<SimulateButton disabled text="See your results" target="/situation-results" policy={props.policy} onClick={props.onSubmit} />
 					</Empty> :
 					null
 			}
