@@ -65,7 +65,7 @@ function Header(props) {
 	const DESCRIPTIONS = [
 		"Specify changes to tax and benefit policy",
 		"Simulate the changes on the UK government and households",
-		"Describe your household to calculate the effects on you and your family",
+		"Describe the members and properties of your household",
 		"Simulate the changes on your household"
 	];
 	let steps = [];

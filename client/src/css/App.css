@@ -25,3 +25,7 @@ body {
 .svg-container .user-select-none {
     margin: 0px !important;
 }
+
+.ant-steps-horizontal:not(.ant-steps-label-vertical) .ant-steps-item-description {
+    max-width: 200px !important;
+}

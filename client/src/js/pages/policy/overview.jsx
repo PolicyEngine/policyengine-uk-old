@@ -28,12 +28,16 @@ function PolicyOverview(props) {
 			? <Step key={key} status="finish" title={props.policy[key].title} description={props.policy[key].summary.replace("@", props.policy[key].value)} />
 			: null
 	));
+	let isEmpty = plan.every(element => element === null);
 	return (
 		<>
 			<Divider>Your plan</Divider>
-			<Steps progressDot direction="vertical">
-				{plan}
-			</Steps>
+			{!isEmpty ?
+				<Steps progressDot direction="vertical">
+					{plan}
+				</Steps> :
+				<Empty description="No plan provided" />
+			}
 			<Empty description="" image={null}>
 				<SimulateButton hidden text="Select your reform" target="/" policy={props.policy} onClick={props.onSubmit} />
 				<SimulateButton primary text="Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
