@@ -1,8 +1,8 @@
 runtime: python37
 instance_class: F4_1G
-basic_scaling:
+automatic_scaling:
+  min_instances: 0
   max_instances: 3
-  idle_timeout: 15m
 handlers:
 - url: /.*
   script: auto
