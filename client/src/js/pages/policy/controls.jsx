@@ -105,7 +105,6 @@ function PolicyControls(props) {
 	const controlSet = {
 		main_rates: [
 			"basic_rate",
-			"basic_threshold",
 			"higher_rate",
 			"higher_threshold",
 			"add_rate",

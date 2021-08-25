@@ -23,15 +23,6 @@ const DEFAULT_POLICY = {
 		summary: "Change the additional rate to @%",
 		type: "rate",
 	},
-	basic_threshold: {
-		title: "Basic rate threshold",
-		description: "Lower threshold for the basic rate, on income after allowances (including the personal allowance) have been deducted.",
-		default: 0,
-		value: 0,
-		max: 100000,
-		summary: "Change the basic rate to £@/year",
-		type: "yearly",
-	},
 	higher_threshold: {
 		title: "Higher rate threshold",
 		description: "The lower threshold for the higher rate of income tax (and therefore the upper threshold of the basic rate).",
