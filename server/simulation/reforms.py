@@ -29,19 +29,39 @@ def change_param(param, value, bracket=None, threshold=False):
 
     return reform
 
-
-def basic_income(child, adult, senior):
+def add_empty_UBI():
+    def add_age_params(parameters: ParameterNode):
+        parameters.benefit.add_child("UBI", ParameterNode(data={
+            "child": {
+                "values": {
+                    "0000-01-01": 0.00
+                }
+            },
+            "WA_adult": {
+                "values": {
+                    "0000-01-01": 0.00
+                }
+            },
+            "senior": {
+                "values": {
+                    "0000-01-01": 0.00
+                }
+            },
+        }))
+        return parameters
+    
     class UBI(Variable):
         entity = Person
         definition_period = YEAR
         label = "UBI"
         value_type = float
 
-        def formula(person, period):
+        def formula(person, period, parameters):
+            UBI_params = parameters(period).benefit.UBI
             basic_income = (
-                person("is_child", period) * child * 52
-                + person("is_WA_adult", period) * adult * 52
-                + person("is_SP_age", period) * senior * 52
+                person("is_child", period) * UBI_params.child
+                + person("is_WA_adult", period) * UBI_params.WA_adult
+                + person("is_SP_age", period) * UBI_params.senior
             )
             return basic_income
 
@@ -52,12 +72,13 @@ def basic_income(child, adult, senior):
             )
             return original_benefits + person("UBI", period)
 
-    class basic_income(Reform):
+    class add_UBI(Reform):
         def apply(self):
+            self.modify_parameters(add_age_params)
             self.add_variable(UBI)
             self.update_variable(benefits)
 
-    return basic_income
+    return add_UBI
 
 
 def neutralizer_reform(variable):
@@ -80,6 +101,28 @@ def create_reform(parameters: dict, return_names=False):
                 params[name] = value
     reforms = []
     names = []
+    added_UBI = False
+    if "child_UBI" in params:
+        names += ["Child UBI"]
+        if not added_UBI:
+            reforms += [(add_empty_UBI(), change_param("benefit.UBI.child", 52 * params["child_UBI"]))]
+            added_UBI = True
+        else:
+            reforms += [change_param("benefit.UBI.child", 52 * params["child_UBI"])]
+    if "adult_UBI" in params:
+        names += ["WA Adult UBI"]
+        if not added_UBI:
+            reforms += [(add_empty_UBI(), change_param("benefit.UBI.WA_adult", 52 * params["adult_UBI"]))]
+            added_UBI = True
+        else:
+            reforms += [change_param("benefit.UBI.WA_adult", 52 * params["adult_UBI"])]
+    if "senior_UBI" in params:
+        names += ["Senior UBI"]
+        if not added_UBI:
+            reforms += [(add_empty_UBI(), change_param("benefit.UBI.senior", 52 * params["senior_UBI"]))]
+            added_UBI = True
+        else:
+            reforms += [change_param("benefit.UBI.senior", 52 * params["senior_UBI"])]
     if "basic_rate" in params:
         reforms += [
             change_param(
@@ -180,21 +223,38 @@ def create_reform(parameters: dict, return_names=False):
             )
         ]
         names += ["NI UEL"]
-    if "child_UBI" in params:
-        child_UBI = params["child_UBI"]
-    else:
-        child_UBI = 0
-    if "adult_UBI" in params:
-        adult_UBI = params["adult_UBI"]
-    else:
-        adult_UBI = 0
-    if "senior_UBI" in params:
-        senior_UBI = params["senior_UBI"]
-    else:
-        senior_UBI = 0
-    if adult_UBI + child_UBI + senior_UBI > 0:
-        reforms += [basic_income(child_UBI, adult_UBI, senior_UBI)]
-        names += ["UBI"]
+    if "NI_LPL" in params:
+        reforms += [
+            change_param(
+                "tax.national_insurance.class_4.thresholds.lower_profits_limit",
+                params["NI_LPL"],
+            )
+        ]
+        names += ["NI LPL"]
+    if "NI_UPL" in params:
+        reforms += [
+            change_param(
+                "tax.national_insurance.class_4.thresholds.upper_profits_limit",
+                params["NI_UPL"],
+            )
+        ]
+        names += ["NI UPL"]
+    if "NI_class_4_main_rate" in params:
+        reforms += [
+            change_param(
+                "tax.national_insurance.class_4.rates.main",
+                params["NI_class_4_main_rate"] / 100,
+            )
+        ]
+        names += ["NI Self-emp main"]
+    if "NI_class_4_add_rate" in params:
+        reforms += [
+            change_param(
+                "tax.national_insurance.class_4.rates.additional",
+                params["NI_class_4_add_rate"] / 100,
+            )
+        ]
+        names += ["NI Self-emp add."]
     ABOLITIONS = (
         "savings_allowance",
         "dividend_allowance",
@@ -202,14 +262,22 @@ def create_reform(parameters: dict, return_names=False):
         "NI",
         "UC",
         "CB",
+        "CTC",
+        "WTC",
+        "HB",
+        "SP",
     )
     ABOLITION_NAMES = (
         "Savings Allowance",
         "Dividend Allowance",
-        "Income Tax abolition",
-        "NI abolition",
-        "UC abolition",
-        "CB abolition",
+        "Income Tax",
+        "National Insurance",
+        "Universal Credit",
+        "Child Benefit",
+        "Child Tax Credit",
+        "Working Tax Credit",
+        "Housing Benefit",
+        "State Pension",
     )
     ABOLITION_VARS = (
         "savings_allowance",
@@ -218,6 +286,10 @@ def create_reform(parameters: dict, return_names=False):
         "national_insurance",
         "universal_credit",
         "child_benefit",
+        "child_tax_credit",
+        "working_tax_credit",
+        "housing_benefit",
+        "state_pension",
     )
     for variable, var, name in zip(
         ABOLITIONS, ABOLITION_VARS, ABOLITION_NAMES

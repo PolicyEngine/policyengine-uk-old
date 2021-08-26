@@ -104,10 +104,19 @@ def waterfall_chart(reform, components, baseline, **kwargs):
         [0] + get_partial_funding(reform, baseline, **kwargs)
     )
     spending = partial_funding[1:] - partial_funding[:-1]
+    spending_order = np.argsort(-spending)
+    spending = spending[spending_order]
+    components = np.array(components)[spending_order]
+    descending_spending = np.argsort(-spending[spending > 0])
+    spending[spending > 0] = spending[spending > 0][descending_spending]
+    components[spending > 0] = components[spending > 0][descending_spending]
+    descending_revenue = np.argsort(spending[spending <= 0])
+    spending[spending <= 0] = spending[spending <= 0][descending_revenue]
+    components[spending <= 0] = components[spending <= 0][descending_revenue]
     final_spending = partial_funding[-1]
     df = pd.DataFrame(
         {
-            "Component": components,
+            "Reform": components,
             "Spending": spending,
             "Type": np.where(spending > 0, "Spending", "Revenue"),
             "is_value": True,
@@ -123,7 +132,7 @@ def waterfall_chart(reform, components, baseline, **kwargs):
         [
             pd.DataFrame(
                 dict(
-                    Component=df.Component,
+                    Reform=df.Reform,
                     Spending=base,
                     Type="",
                     is_value=False,
@@ -137,7 +146,7 @@ def waterfall_chart(reform, components, baseline, **kwargs):
             df,
             pd.DataFrame(
                 dict(
-                    Component=["Net cost"],
+                    Reform=["Net cost"],
                     Spending=[final_spending],
                     Type=np.where(
                         np.array([final_spending]) > 0, "Spending", "Revenue"
@@ -147,11 +156,11 @@ def waterfall_chart(reform, components, baseline, **kwargs):
             ),
         ]
     )
-    df = df[~df.Component.isna()]
+    df = df[~df.Reform.isna()]
     fig = format_fig(
         px.bar(
             df,
-            x="Component",
+            x="Reform",
             y="Spending",
             color="Type",
             barmode="stack",

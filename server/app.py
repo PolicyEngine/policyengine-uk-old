@@ -29,7 +29,7 @@ from server.situations.charts import (
 )
 
 VERSION = "0.0.1"
-USE_CACHE = True
+USE_CACHE = False
 logging.getLogger("werkzeug").disabled = True
 
 client = storage.Client()

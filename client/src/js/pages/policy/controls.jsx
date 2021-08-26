@@ -123,18 +123,37 @@ function PolicyControls(props) {
 			"NI_add_rate",
 			"NI_UEL",
 		],
+		self_emp: [
+			"NI_LPL",
+			"NI_class_4_main_rate",
+			"NI_UPL",
+			"NI_class_4_add_rate"
+		],
 		ni_alt: [
 			"abolish_NI"
 		],
 		allowances: [
 			"personal_allowance",
 		],
-		basic_income: [
+		UBI: [
 			"child_UBI",
 			"adult_UBI",
 			"senior_UBI",
 		],
-		universal_credit: ["abolish_UC"],
+		universal_credit: [
+			"abolish_UC"
+		],
+		legacy_benefits: [
+			"abolish_CTC",
+			"abolish_WTC",
+			"abolish_HB",
+		],
+		child_benefit: [
+			"abolish_CB",
+		],
+		state_pension: [
+			"abolish_SP",
+		]
 	};
 	const names = controlSet[props.selected];
 	if (!(props.selected in controlSet)) {

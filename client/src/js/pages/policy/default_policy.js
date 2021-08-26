@@ -84,6 +84,42 @@ const DEFAULT_POLICY = {
 		summary: "Change the UEL to £@/week",
 		type: "weekly",
 	},
+	NI_LPL: {
+		title: "NI Lower Profits Limit",
+		description: "The Lower Profits Limit is the threshold at which self-employed earners pay the main Class 4 rate.",
+		default: 9500,
+		value: 9500,
+		max: 20000,
+		summary: "Change the LPL to £@/year",
+		type: "yearly",
+	},
+	NI_UPL: {
+		title: "NI Upper Profits Limit",
+		description: "The Upper Profits Limit is the threshold at which self-employed earners pay the additional Class 4 rate.",
+		default: 50000,
+		value: 50000,
+		max: 100000,
+		summary: "Change the LPL to £@/year",
+		type: "yearly",
+	},
+	NI_class_4_main_rate: {
+		title: "NI Class 4 main rate",
+		description: "The main rate paid between the Lower and Upper Profits Limits",
+		default: 9,
+		value: 9,
+		max: 100,
+		summary: "Change the rate to @%",
+		type: "rate",
+	},
+	NI_class_4_add_rate: {
+		title: "NI Class 4 additional rate",
+		description: "The additional rate paid above the Upper Profits Limit",
+		default: 2,
+		value: 2,
+		max: 100,
+		summary: "Change the rate to @%",
+		type: "rate",
+	},
 	child_UBI: {
 		title: "Child UBI",
 		description: "A basic income for children is given to every child aged under 18, regardless of household income.",
@@ -149,6 +185,46 @@ const DEFAULT_POLICY = {
 		default: false,
 		value: false,
 		summary: "Abolish Universal Credit",
+		type: "abolish"
+	},
+	abolish_CB: {
+		title: "Child Benefit",
+		description: "This switch abolishes the Child Benefit",
+		default: false,
+		value: false,
+		summary: "Abolish Child Benefit",
+		type: "abolish"
+	},
+	abolish_CTC: {
+		title: "Child Tax Credit",
+		description: "This switch abolishes the Child Tax Credit",
+		default: false,
+		value: false,
+		summary: "Abolish Child Tax Credit",
+		type: "abolish"
+	},
+	abolish_WTC: {
+		title: "Child Tax Credit",
+		description: "This switch abolishes the Working Tax Credit",
+		default: false,
+		value: false,
+		summary: "Abolish Working Tax Credit",
+		type: "abolish"
+	},
+	abolish_HB: {
+		title: "Housing Benefit",
+		description: "This switch abolishes Housing Benefit",
+		default: false,
+		value: false,
+		summary: "Abolish Housing Benefit",
+		type: "abolish"
+	},
+	abolish_SP: {
+		title: "State Pension",
+		description: "This switch abolishes the State Pension",
+		default: false,
+		value: false,
+		summary: "Abolish State Pension",
 		type: "abolish"
 	},
 };
