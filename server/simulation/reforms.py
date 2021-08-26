@@ -29,27 +29,21 @@ def change_param(param, value, bracket=None, threshold=False):
 
     return reform
 
+
 def add_empty_UBI():
     def add_age_params(parameters: ParameterNode):
-        parameters.benefit.add_child("UBI", ParameterNode(data={
-            "child": {
-                "values": {
-                    "0000-01-01": 0.00
+        parameters.benefit.add_child(
+            "UBI",
+            ParameterNode(
+                data={
+                    "child": {"values": {"0000-01-01": 0.00}},
+                    "WA_adult": {"values": {"0000-01-01": 0.00}},
+                    "senior": {"values": {"0000-01-01": 0.00}},
                 }
-            },
-            "WA_adult": {
-                "values": {
-                    "0000-01-01": 0.00
-                }
-            },
-            "senior": {
-                "values": {
-                    "0000-01-01": 0.00
-                }
-            },
-        }))
+            ),
+        )
         return parameters
-    
+
     class UBI(Variable):
         entity = Person
         definition_period = YEAR
@@ -105,24 +99,51 @@ def create_reform(parameters: dict, return_names=False):
     if "child_UBI" in params:
         names += ["Child UBI"]
         if not added_UBI:
-            reforms += [(add_empty_UBI(), change_param("benefit.UBI.child", 52 * params["child_UBI"]))]
+            reforms += [
+                (
+                    add_empty_UBI(),
+                    change_param(
+                        "benefit.UBI.child", 52 * params["child_UBI"]
+                    ),
+                )
+            ]
             added_UBI = True
         else:
-            reforms += [change_param("benefit.UBI.child", 52 * params["child_UBI"])]
+            reforms += [
+                change_param("benefit.UBI.child", 52 * params["child_UBI"])
+            ]
     if "adult_UBI" in params:
         names += ["WA Adult UBI"]
         if not added_UBI:
-            reforms += [(add_empty_UBI(), change_param("benefit.UBI.WA_adult", 52 * params["adult_UBI"]))]
+            reforms += [
+                (
+                    add_empty_UBI(),
+                    change_param(
+                        "benefit.UBI.WA_adult", 52 * params["adult_UBI"]
+                    ),
+                )
+            ]
             added_UBI = True
         else:
-            reforms += [change_param("benefit.UBI.WA_adult", 52 * params["adult_UBI"])]
+            reforms += [
+                change_param("benefit.UBI.WA_adult", 52 * params["adult_UBI"])
+            ]
     if "senior_UBI" in params:
         names += ["Senior UBI"]
         if not added_UBI:
-            reforms += [(add_empty_UBI(), change_param("benefit.UBI.senior", 52 * params["senior_UBI"]))]
+            reforms += [
+                (
+                    add_empty_UBI(),
+                    change_param(
+                        "benefit.UBI.senior", 52 * params["senior_UBI"]
+                    ),
+                )
+            ]
             added_UBI = True
         else:
-            reforms += [change_param("benefit.UBI.senior", 52 * params["senior_UBI"])]
+            reforms += [
+                change_param("benefit.UBI.senior", 52 * params["senior_UBI"])
+            ]
     if "basic_rate" in params:
         reforms += [
             change_param(
