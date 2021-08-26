@@ -14,3 +14,7 @@ To develop:
 To deploy to GCP:
 - Build the static site and copy to the static folder with `make static-site`
 - Run `gcloud app deploy`
+
+## Contributing
+
+We're using ZenHub for project management - the public board is [here](https://app.zenhub.com/workspaces/uk-policy-engine-6122e05075f9f200146e2697/board).
