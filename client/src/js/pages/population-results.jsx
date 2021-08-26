@@ -33,9 +33,18 @@ class PopulationResults extends React.Component {
 					}
 				}).then((json) => {
 					this.setState({ results: json, waiting: false, error: false });
-				}).catch(e => {
-					this.setState({waiting: false, error: true});
-				});
+				}).catch(fetch(url)
+					.then((res) => {
+						if (res.ok) {
+							return res.json();
+						} else {
+							throw res;
+						}
+					}).then((json) => {
+						this.setState({ results: json, waiting: false, error: false });
+					}).catch(e => {
+						this.setState({waiting: false, error: true});
+					}));
 		});
 	}
 
