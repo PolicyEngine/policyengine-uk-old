@@ -18,18 +18,18 @@ from server.populations.charts import (
     intra_decile_chart,
     poverty_chart,
     age_chart,
-    waterfall_chart,
+    population_waterfall_chart,
 )
 
 from server.situations.metrics import headline_figures
 from server.situations.charts import (
-    budget_waterfall_chart,
+    household_waterfall_chart,
     mtr_chart,
     budget_chart,
 )
 
 VERSION = "0.0.1"
-USE_CACHE = True
+USE_CACHE = False
 logging.getLogger("werkzeug").disabled = True
 
 client = storage.Client()
@@ -75,7 +75,9 @@ def population_reform():
         decile_chart=decile_chart(baseline, reformed),
         age_chart=age_chart(baseline, reformed),
         poverty_chart=poverty_chart(baseline, reformed),
-        waterfall_chart=waterfall_chart(reform, components, baseline),
+        waterfall_chart=population_waterfall_chart(
+            reform, components, baseline, reformed
+        ),
         intra_decile_chart=intra_decile_chart(baseline, reformed),
     )
     if USE_CACHE:
@@ -101,11 +103,13 @@ def situation_reform():
         result = json.loads(blob.download_as_string())
         return result
     situation = create_situation(params)
-    reform = create_reform(params)
+    reform, subreform_labels = create_reform(params, return_names=True)
     baseline = situation(IndividualSim())
     reformed = situation(IndividualSim(reform))
     headlines = headline_figures(baseline, reformed)
-    waterfall = budget_waterfall_chart(baseline, reformed)
+    waterfall = household_waterfall_chart(
+        reform, subreform_labels, situation, baseline, reformed
+    )
     baseline_varying = situation(IndividualSim())
     baseline_varying.vary("employment_income")
     reformed_varying = situation(IndividualSim(reform))
