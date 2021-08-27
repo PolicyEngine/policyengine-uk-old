@@ -22,7 +22,7 @@ function getURLParamsFromPolicy(target, policy) {
 	return url;
 }
 
-function TopHeader() {
+export function TopHeader() {
 	return (
 		<>
 			<div className="d-none d-md-block">

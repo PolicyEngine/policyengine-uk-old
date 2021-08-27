@@ -3,10 +3,12 @@
 import React from "react";
 
 import Header from "./ui/header";
+import { TopHeader } from "./ui/header";
 import Policy from "./pages/policy";
 import Situation from "./pages/situation";
 import PopulationResults from "./pages/population-results";
 import SituationResults from "./pages/situation-results";
+import FAQ from "./pages/faq";
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -65,6 +67,10 @@ class App extends React.Component {
 					<Route path="/situation-results">
 						<Header step={3} situationEntered={this.state.situationEntered}/>
 						<SituationResults policy={this.state.policy} situation={this.state.situation}/>
+					</Route>
+					<Route path="/faq">
+						<TopHeader />
+						<FAQ />
 					</Route>
 				</Switch>
 				<Divider style={{marginTop: 50}} />
