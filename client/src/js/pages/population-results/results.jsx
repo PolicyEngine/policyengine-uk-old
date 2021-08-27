@@ -60,10 +60,10 @@ export function PopulationResultsPane(props) {
 			<Divider>Population results</Divider>
 			<PopulationResultsCaveats />
 			<Row style={{padding: 30}}>
-				<TakeAway>Reform produces <span style={{color: costColor}}>{cost}</span> net {isSurplus ? "surplus" : "cost"}</TakeAway>
-				<TakeAway>Poverty {isPovRise ? "rises" : "falls"} <span style={{color: povColor}}>{pov}%</span></TakeAway>
-				<TakeAway><span style={{color: winnerColor}}>{winners}%</span> of people come out ahead</TakeAway>
-				<TakeAway><span style={{color: loserColor}}>{losers}%</span> of people come out behind</TakeAway>
+				<TakeAway><p style={{textAlign: "center"}}>Reform produces <span style={{color: costColor}}>{cost}</span> net {isSurplus ? "surplus" : "cost"}</p></TakeAway>
+				<TakeAway><p style={{textAlign: "center"}}>Poverty {isPovRise ? "rises" : "falls"} <span style={{color: povColor}}>{pov}%</span></p></TakeAway>
+				<TakeAway><p style={{textAlign: "center"}}><span style={{color: winnerColor}}>{winners}%</span> of people come out ahead</p></TakeAway>
+				<TakeAway><p style={{textAlign: "center"}}><span style={{color: loserColor}}>{losers}%</span> of people come out behind</p></TakeAway>
 			</Row>
 			<Row>
 				<Chart plot={props.results.waterfall_chart} md={12} />
