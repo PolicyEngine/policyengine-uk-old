@@ -20,12 +20,16 @@ class PolicyMenu extends React.Component {
 					</SubMenu>
 					<SubMenu key="national_insurance" title="National Insurance">
 						<Menu.Item key="employee_side">Employees</Menu.Item>
+						<Menu.Item key="self_emp">Self-employed</Menu.Item>
 						<Menu.Item key="ni_alt">Structural</Menu.Item>
 					</SubMenu>
 				</SubMenu>
 				<SubMenu key="benefits" title="Benefits">
 					<Menu.Item key="universal_credit">Universal Credit</Menu.Item>
-					<Menu.Item key="basic_income">Basic income</Menu.Item>
+					<Menu.Item key="legacy_benefits">Legacy Benefits</Menu.Item>
+					<Menu.Item key="child_benefit">Child Benefit</Menu.Item>
+					<Menu.Item key="state_pension">State Pension</Menu.Item>
+					<Menu.Item key="UBI">UBI</Menu.Item>
 				</SubMenu>
 			</Menu>
 		);

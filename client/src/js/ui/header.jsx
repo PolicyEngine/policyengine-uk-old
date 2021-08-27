@@ -61,42 +61,30 @@ function Header(props) {
       the country.
 		</p>
 	);
-	const TITLES = ["Policy", "About you", "UK-wide effects", "Your results"];
+	const TITLES = ["Policy", "UK impact", "Your household", "Household impact"];
 	const DESCRIPTIONS = [
-		"Specify changes to the current taxes and benefit programmes",
-		"Describe your household to calculate the effects on you and your family",
-		"Simulate the changes on people, families and households in the UK",
-		"Simulate the reform, showing your finances before and after"
+		"Specify changes to tax and benefit policy",
+		"Simulate the changes on the UK government and households",
+		"Describe the members and properties of your household",
+		"Simulate the changes on your household"
 	];
 	let steps = [];
 	for(let i = 0; i < TITLES.length; i++) {
-		if (i == 1 && props.step > 1 && !props.situationEntered) {
-			steps.push(<Step key={i} title={TITLES[i]} icon={<MinusCircleOutlined />} description={DESCRIPTIONS[i]} style={{minWidth: 200}}/>);
-		} else {
-			steps.push(<Step key={i} title={TITLES[i]} description={DESCRIPTIONS[i]} style={{minWidth: 200}}/>);
-		}
+		steps.push(<Step key={i} title={TITLES[i]} description={DESCRIPTIONS[i]} style={{minWidth: 200}}/>);
 	}
 	return (
 		<>
 			<TopHeader />
 			<Container fluid>
-				<Row style={{ padding: 50 }} className="d-none d-xl-flex">
-					<Col md={4} style={{paddingRight: 40}}>{INTRO}</Col>
-					<Col md={8}>
-						<div className="d-flex justify-content-center">
-							<div>
-								<Steps current={props.step}>
-									{steps}
-								</Steps>
-							</div>
-						</div>
+				<Row style={{ padding: 50 }} className="d-none d-lg-flex">
+					<Col md={12}>
+						<Steps className="d-flex justify-content-center" current={props.step}>
+							{steps}
+						</Steps>
 					</Col>
 				</Row>
-				<Row style={{ padding: 10 }} className="d-xl-none">
-					<Col md={4} style={{ paddingBottom: 20 }}>
-						{INTRO}
-					</Col>
-					<Col md={8}>
+				<Row style={{ padding: 10 }} className="d-lg-none">
+					<Col md={12}>
 						<Steps current={props.step} direction="vertical">
 							{steps}
 						</Steps>

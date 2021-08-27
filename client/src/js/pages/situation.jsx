@@ -8,7 +8,7 @@ import SituationOverview from "./situation/overview";
 class Situation extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {situation: this.props.situation, selected: "household"};
+		this.state = {situation: this.props.situation, selected: "head"};
 		this.addPartner = this.addPartner.bind(this);
 		this.addChild = this.addChild.bind(this);
 		this.onEnter = this.onEnter.bind(this);
@@ -52,7 +52,7 @@ class Situation extends React.Component {
 					<SituationMenu situation={this.state.situation} addPartner={this.addPartner} addChild={this.addChild} onSelect={name => {this.setState({selected: name});}}/>
 				</Col>
 				<Col xl={6}>
-					<SituationControls selected={this.state.selected} situation={this.state.situation} onEnter={this.onEnter}/>
+					<SituationControls defaultEntity="head" selected={this.state.selected} situation={this.state.situation} onEnter={this.onEnter}/>
 				</Col>
 				<Col xl={3}>
 					<SituationOverview policy={this.props.policy} situation={this.state.situation} onSubmit={() => {this.props.onSubmit(this.state.situation);}}/>

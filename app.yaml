@@ -1,7 +1,12 @@
 runtime: python37
-instance_class: B4_1G
-manual_scaling:
-  instances: 1
+instance_class: F4_1G
+automatic_scaling:
+  max_instances: 4
+  min_instances: 1
+  target_cpu_utilization: 0.95
+  target_throughput_utilization: 0.95
+  max_concurrent_requests: 80
+  max_pending_latency: 15s
 handlers:
 - url: /.*
   script: auto
