@@ -46,7 +46,7 @@ export function PopulationResultsPane(props) {
 	const cost = isSurplus ? props.results.net_cost.slice(1) : props.results.net_cost;
 	const costColor = isSurplus ? "green" : "darkred";
 	const isPovRise = props.results.poverty_change[0] == "-";
-	let pov = isPovRise ? props.results.poverty_change.slice(1) : props.results.poverty_change;
+	let pov = !isPovRise ? +props.results.poverty_change.toString().slice(1) : +props.results.poverty_change;
 	pov = +Math.round(pov * 100);
 	const povColor = isPovRise ? "darkred" : "green";
 	const winnerSharePos = props.results.winner_share[0] !== "-";
