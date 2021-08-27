@@ -69,11 +69,10 @@ export function PopulationResultsPane(props) {
 				<Chart plot={props.results.waterfall_chart} md={12} />
 			</Row>
 			<Row>
-				<Chart plot={props.results.decile_chart} />
-				<Chart plot={props.results.poverty_chart} />
+				<Chart plot={props.results.poverty_chart} md={12} />
 			</Row>
 			<Row>
-				<Chart plot={props.results.age_chart} md={12}/>
+				<Chart plot={props.results.decile_chart} md={12}/>
 			</Row>
 			<Row>
 				<Chart plot={props.results.intra_decile_chart} md={12}/>
