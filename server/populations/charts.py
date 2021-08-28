@@ -100,38 +100,49 @@ def add_zero_line(fig):
 
 
 def waterfall(values, labels, gain_label="Spending", loss_label="Revenue"):
-    df = pd.DataFrame(
-        {
-            "Amount": values,
-            "Reform": labels,
-        }
-    )
-    df = df[df.Amount != 0]
-    order = np.where(
-        df.Amount >= 0, -np.log(df.Amount), 1e2 - np.log(-df.Amount)
-    )
-    df = df.set_index(order).sort_index().reset_index(drop=True)
-    df["Type"] = np.where(df.Amount >= 0, gain_label, loss_label)
-    base = np.array([0] + list(df.Amount.cumsum()[:-1]))
-    df = pd.concat(
-        [
-            pd.DataFrame(
-                {
-                    "Amount": base,
-                    "Reform": df.Reform,
-                    "Type": "",
-                }
-            ),
-            df,
-            pd.DataFrame(
-                {
-                    "Amount": [df.Amount.cumsum().values[-1]],
-                    "Reform": ["Final"],
-                    "Type": ["Final"],
-                }
-            ),
-        ]
-    )
+    final_color = DARK_BLUE
+    if len(labels) == 0:
+        df = pd.DataFrame(
+            {
+                "Amount": [],
+                "Reform": [],
+                "Type": [],
+            }
+        )
+    else:
+        df = pd.DataFrame({"Amount": values, "Reform": labels, "Type": ""})
+        df = df[df.Amount != 0]
+        if len(df) != 0:
+            order = np.where(
+                df.Amount >= 0, -np.log(df.Amount), 1e2 - np.log(-df.Amount)
+            )
+            df = df.set_index(order).sort_index().reset_index(drop=True)
+            df["Type"] = np.where(df.Amount >= 0, gain_label, loss_label)
+            base = np.array([0] + list(df.Amount.cumsum()[:-1]))
+            final_value = df.Amount.cumsum().values[-1]
+            if final_value >= 0:
+                final_color = DARK_BLUE
+            else:
+                final_color = DARK_GRAY
+            df = pd.concat(
+                [
+                    pd.DataFrame(
+                        {
+                            "Amount": base,
+                            "Reform": df.Reform,
+                            "Type": "",
+                        }
+                    ),
+                    df,
+                    pd.DataFrame(
+                        {
+                            "Amount": [final_value],
+                            "Reform": ["Final"],
+                            "Type": ["Final"],
+                        }
+                    ),
+                ]
+            )
     fig = px.bar(
         df,
         x="Reform",
@@ -142,7 +153,7 @@ def waterfall(values, labels, gain_label="Spending", loss_label="Revenue"):
             gain_label: BLUE,
             loss_label: GRAY,
             "": WHITE,
-            "Final": DARK_BLUE,
+            "Final": final_color,
         },
     )
     return format_fig(fig, show=False)
