@@ -106,16 +106,12 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
             reforms += [
                 (
                     add_empty_UBI(),
-                    change_param(
-                        "benefit.UBI.child", child_UBI
-                    ),
+                    change_param("benefit.UBI.child", child_UBI),
                 )
             ]
             added_UBI = True
         else:
-            reforms += [
-                change_param("benefit.UBI.child", child_UBI)
-            ]
+            reforms += [change_param("benefit.UBI.child", child_UBI)]
     if "adult_UBI" in params:
         names += ["WA Adult UBI"]
         WA_adult_UBI = 52 * params["adult_UBI"]
@@ -123,16 +119,12 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
             reforms += [
                 (
                     add_empty_UBI(),
-                    change_param(
-                        "benefit.UBI.WA_adult", WA_adult_UBI
-                    ),
+                    change_param("benefit.UBI.WA_adult", WA_adult_UBI),
                 )
             ]
             added_UBI = True
         else:
-            reforms += [
-                change_param("benefit.UBI.WA_adult", WA_adult_UBI)
-            ]
+            reforms += [change_param("benefit.UBI.WA_adult", WA_adult_UBI)]
     if "senior_UBI" in params:
         names += ["Senior UBI"]
         senior_UBI = 52 * params["senior_UBI"]
@@ -140,16 +132,12 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
             reforms += [
                 (
                     add_empty_UBI(),
-                    change_param(
-                        "benefit.UBI.senior", senior_UBI
-                    ),
+                    change_param("benefit.UBI.senior", senior_UBI),
                 )
             ]
             added_UBI = True
         else:
-            reforms += [
-                change_param("benefit.UBI.senior", senior_UBI)
-            ]
+            reforms += [change_param("benefit.UBI.senior", senior_UBI)]
     if "basic_rate" in params:
         reforms += [
             change_param(

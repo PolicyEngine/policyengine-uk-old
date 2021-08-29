@@ -36,6 +36,7 @@ client = storage.Client()
 bucket = client.get_bucket("uk-policy-engine.appspot.com")
 
 baseline = Microsimulation()
+baseline_microsim = baseline
 
 app = Flask(__name__, static_url_path="")
 logging.getLogger("werkzeug").disabled = True
@@ -106,7 +107,7 @@ def situation_reform():
         return result
     situation = create_situation(params)
     reform, subreform_labels = create_reform(
-        params, return_names=True, baseline=baseline
+        params, return_names=True, baseline=baseline_microsim
     )
     baseline = situation(IndividualSim())
     reformed = situation(IndividualSim(reform))
