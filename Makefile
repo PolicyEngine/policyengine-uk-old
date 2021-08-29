@@ -3,6 +3,7 @@ reset:
 	rm -rf openfisca_uk_data
 install: openfisca_uk openfisca_uk_data
 	pip install -r requirements.txt
+	cd client; npm install
 format:
 	black . -l 79
 debug-client:
