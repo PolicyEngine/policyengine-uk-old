@@ -96,53 +96,59 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
     reforms = []
     names = []
     added_UBI = False
+    child_UBI = 0
+    WA_adult_UBI = 0
+    senior_UBI = 0
     if "child_UBI" in params:
         names += ["Child UBI"]
+        child_UBI = 52 * params["child_UBI"]
         if not added_UBI:
             reforms += [
                 (
                     add_empty_UBI(),
                     change_param(
-                        "benefit.UBI.child", 52 * params["child_UBI"]
+                        "benefit.UBI.child", child_UBI
                     ),
                 )
             ]
             added_UBI = True
         else:
             reforms += [
-                change_param("benefit.UBI.child", 52 * params["child_UBI"])
+                change_param("benefit.UBI.child", child_UBI)
             ]
     if "adult_UBI" in params:
         names += ["WA Adult UBI"]
+        WA_adult_UBI = 52 * params["adult_UBI"]
         if not added_UBI:
             reforms += [
                 (
                     add_empty_UBI(),
                     change_param(
-                        "benefit.UBI.WA_adult", 52 * params["adult_UBI"]
+                        "benefit.UBI.WA_adult", WA_adult_UBI
                     ),
                 )
             ]
             added_UBI = True
         else:
             reforms += [
-                change_param("benefit.UBI.WA_adult", 52 * params["adult_UBI"])
+                change_param("benefit.UBI.WA_adult", WA_adult_UBI)
             ]
     if "senior_UBI" in params:
         names += ["Senior UBI"]
+        senior_UBI = 52 * params["senior_UBI"]
         if not added_UBI:
             reforms += [
                 (
                     add_empty_UBI(),
                     change_param(
-                        "benefit.UBI.senior", 52 * params["senior_UBI"]
+                        "benefit.UBI.senior", senior_UBI
                     ),
                 )
             ]
             added_UBI = True
         else:
             reforms += [
-                change_param("benefit.UBI.senior", 52 * params["senior_UBI"])
+                change_param("benefit.UBI.senior", senior_UBI)
             ]
     if "basic_rate" in params:
         reforms += [
@@ -330,9 +336,9 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
                 / baseline.calc("people").sum()
             )
             UBI_reform = (
-                change_param("benefit.UBI.child", amount),
-                change_param("benefit.UBI.WA_adult", amount),
-                change_param("benefit.UBI.senior", amount),
+                change_param("benefit.UBI.child", child_UBI + amount),
+                change_param("benefit.UBI.WA_adult", WA_adult_UBI + amount),
+                change_param("benefit.UBI.senior", senior_UBI + amount),
             )
             if not added_UBI:
                 reforms += [(add_empty_UBI(), *UBI_reform)]
