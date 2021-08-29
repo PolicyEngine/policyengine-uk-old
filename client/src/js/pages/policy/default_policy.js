@@ -147,6 +147,14 @@ const DEFAULT_POLICY = {
 		summary: "Give a basic income of £@/week to seniors",
 		type: "weekly",
 	},
+	surplus_UBI: {
+		title: "Surplus-funded UBI",
+		description: "Select this switch to pass additional revenue from this plan into a universal basic income for citizens.",
+		default: false,
+		value: false,
+		summary: "Spend any surplus on UBI",
+		type: "bool",
+	},
 	abolish_savings_allowance: {
 		title: "Personal Savings Allowance",
 		description: "The Personal Savings Allowance is the amount of taxable savings interest income disregarded for Income Tax purposes. It has different values at different Income Tax bands - this switch abolishes all of them.",

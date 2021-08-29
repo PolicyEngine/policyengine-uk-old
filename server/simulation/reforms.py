@@ -4,7 +4,7 @@ Functions to convert JSON web app parameters into OpenFisca reform objects.
 
 from openfisca_core import periods
 from openfisca_core.model_api import *
-from openfisca_uk import BASELINE_VARIABLES
+from openfisca_uk import BASELINE_VARIABLES, Microsimulation
 from openfisca_uk.entities import *
 from openfisca_uk.tools.general import *
 
@@ -83,7 +83,7 @@ def neutralizer_reform(variable):
     return reform
 
 
-def create_reform(parameters: dict, return_names=False):
+def create_reform(parameters: dict, return_names=False, baseline=None):
     params = {}
     for key, value in parameters.items():
         components = key.split("_")
@@ -319,6 +319,29 @@ def create_reform(parameters: dict, return_names=False):
             if params[f"abolish_{variable}"]:
                 reforms += [neutralizer_reform(var)]
                 names += [name]
+    if "surplus_UBI" in params:
+        if params["surplus_UBI"]:
+            amount = max(
+                0,
+                baseline.calc("net_income").sum()
+                - Microsimulation(tuple(reforms)).calc("net_income").sum()
+            ) / baseline.calc("people").sum()
+            UBI_reform = (
+                change_param(
+                    "benefit.UBI.child", amount
+                ),
+                change_param(
+                    "benefit.UBI.WA_adult", amount
+                ),
+                change_param(
+                    "benefit.UBI.senior", amount
+                ),
+            )
+            if not added_UBI:
+                reforms += [(add_empty_UBI(), *UBI_reform)]
+            else:
+                reforms += [UBI_reform]
+            names += ["Surplus-funded UBI"]
     if not return_names:
         return tuple(reforms)
     else:

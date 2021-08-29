@@ -139,6 +139,7 @@ function PolicyControls(props) {
 			"child_UBI",
 			"adult_UBI",
 			"senior_UBI",
+			"surplus_UBI",
 		],
 		universal_credit: [
 			"abolish_UC"
