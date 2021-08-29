@@ -23,7 +23,7 @@ client/yarn-debug.log*
 client/yarn-error.log*
 **/__pycache__
 
-openfisca_data/
+openfisca_uk_data/
 openfisca_uk/
 
 server/static/
