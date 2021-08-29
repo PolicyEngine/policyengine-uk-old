@@ -68,7 +68,9 @@ def population_reform():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, components = create_reform(params, return_names=True, baseline=baseline)
+    reform, components = create_reform(
+        params, return_names=True, baseline=baseline
+    )
     reformed = Microsimulation(reform)
     result = dict(
         **headline_metrics(baseline, reformed),
@@ -103,7 +105,9 @@ def situation_reform():
         result = json.loads(blob.download_as_string())
         return result
     situation = create_situation(params)
-    reform, subreform_labels = create_reform(params, return_names=True, baseline=baseline)
+    reform, subreform_labels = create_reform(
+        params, return_names=True, baseline=baseline
+    )
     baseline = situation(IndividualSim())
     reformed = situation(IndividualSim(reform))
     headlines = headline_figures(baseline, reformed)
