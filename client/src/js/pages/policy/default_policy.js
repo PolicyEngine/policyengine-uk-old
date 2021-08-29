@@ -140,7 +140,7 @@ const DEFAULT_POLICY = {
 	},
 	senior_UBI: {
 		title: "Senior UBI",
-		description: "A basic income for senior citizens is given to those over State Pension age.",
+		description: "A basic income for senior citizens is given to those at or above State Pension age.",
 		default: 0,
 		value: 0,
 		max: 250,
