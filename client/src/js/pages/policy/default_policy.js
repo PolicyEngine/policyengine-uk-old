@@ -204,7 +204,7 @@ const DEFAULT_POLICY = {
 		type: "abolish"
 	},
 	abolish_WTC: {
-		title: "Child Tax Credit",
+		title: "Working Tax Credit",
 		description: "This switch abolishes the Working Tax Credit",
 		default: false,
 		value: false,
