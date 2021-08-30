@@ -48,7 +48,7 @@ def poverty_chart(baseline, reform):
     )
     df = pd.DataFrame(
         {
-            "Group": ["Child", "Working-age", "Retired", "All"],
+            "Group": ["Child", "Working-age", "Senior", "All"],
             "Poverty rate change": [child, adult, senior, person],
         }
     )
