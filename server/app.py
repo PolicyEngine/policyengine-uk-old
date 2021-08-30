@@ -28,7 +28,7 @@ from server.situations.charts import (
     budget_chart,
 )
 
-VERSION = "0.0.3"
+VERSION = "0.0.4"
 USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 
@@ -56,6 +56,33 @@ STATIC_SITE_ROUTES = (
 
 for route in STATIC_SITE_ROUTES:
     static_site = app.route(route)(static_site)
+
+
+@app.route("/api/ubi")
+def ubi():
+    start_time = time()
+    app.logger.info("UBI size request received")
+    params = {**request.args, **(request.json or {})}
+    request_id = "ubi-" + dict_to_string(params) + "-" + VERSION
+    blob = bucket.blob(request_id + ".json")
+    if blob.exists() and USE_CACHE:
+        app.logger.info("Returning cached response")
+        result = json.loads(blob.download_as_string())
+        return result
+    reform, components = create_reform(
+        params, return_names=True, baseline=baseline
+    )
+    reformed = Microsimulation(reform)
+    revenue = (
+        baseline.calc("net_income").sum() - reformed.calc("net_income").sum()
+    )
+    UBI_amount = max(0, revenue / baseline.calc("people").sum())
+    result = {"UBI": float(UBI_amount)}
+    if USE_CACHE:
+        blob.upload_from_string(json.dumps(result))
+    duration = time() - start_time
+    app.logger.info(f"UBI size calculation completed ({round(duration, 2)}s)")
+    return result
 
 
 @app.route("/api/population-reform")

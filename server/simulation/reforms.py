@@ -313,26 +313,6 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
             if params[f"abolish_{variable}"]:
                 reforms += [neutralizer_reform(var)]
                 names += [name]
-    if "surplus_UBI" in params:
-        if params["surplus_UBI"]:
-            amount = (
-                max(
-                    0,
-                    baseline.calc("net_income").sum()
-                    - Microsimulation(tuple(reforms)).calc("net_income").sum(),
-                )
-                / baseline.calc("people").sum()
-            )
-            UBI_reform = (
-                change_param("benefit.UBI.child", child_UBI + amount),
-                change_param("benefit.UBI.WA_adult", WA_adult_UBI + amount),
-                change_param("benefit.UBI.senior", senior_UBI + amount),
-            )
-            if not added_UBI:
-                reforms += [(add_empty_UBI(), *UBI_reform)]
-            else:
-                reforms += [UBI_reform]
-            names += ["Surplus-funded UBI"]
     if not return_names:
         return tuple(reforms)
     else:
