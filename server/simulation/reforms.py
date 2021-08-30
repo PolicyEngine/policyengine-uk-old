@@ -4,7 +4,7 @@ Functions to convert JSON web app parameters into OpenFisca reform objects.
 
 from openfisca_core import periods
 from openfisca_core.model_api import *
-from openfisca_uk import BASELINE_VARIABLES
+from openfisca_uk import BASELINE_VARIABLES, Microsimulation
 from openfisca_uk.entities import *
 from openfisca_uk.tools.general import *
 
@@ -83,7 +83,7 @@ def neutralizer_reform(variable):
     return reform
 
 
-def create_reform(parameters: dict, return_names=False):
+def create_reform(parameters: dict, return_names=False, baseline=None):
     params = {}
     for key, value in parameters.items():
         components = key.split("_")
@@ -96,54 +96,48 @@ def create_reform(parameters: dict, return_names=False):
     reforms = []
     names = []
     added_UBI = False
+    child_UBI = 0
+    WA_adult_UBI = 0
+    senior_UBI = 0
     if "child_UBI" in params:
         names += ["Child UBI"]
+        child_UBI = 52 * params["child_UBI"]
         if not added_UBI:
             reforms += [
                 (
                     add_empty_UBI(),
-                    change_param(
-                        "benefit.UBI.child", 52 * params["child_UBI"]
-                    ),
+                    change_param("benefit.UBI.child", child_UBI),
                 )
             ]
             added_UBI = True
         else:
-            reforms += [
-                change_param("benefit.UBI.child", 52 * params["child_UBI"])
-            ]
+            reforms += [change_param("benefit.UBI.child", child_UBI)]
     if "adult_UBI" in params:
         names += ["WA Adult UBI"]
+        WA_adult_UBI = 52 * params["adult_UBI"]
         if not added_UBI:
             reforms += [
                 (
                     add_empty_UBI(),
-                    change_param(
-                        "benefit.UBI.WA_adult", 52 * params["adult_UBI"]
-                    ),
+                    change_param("benefit.UBI.WA_adult", WA_adult_UBI),
                 )
             ]
             added_UBI = True
         else:
-            reforms += [
-                change_param("benefit.UBI.WA_adult", 52 * params["adult_UBI"])
-            ]
+            reforms += [change_param("benefit.UBI.WA_adult", WA_adult_UBI)]
     if "senior_UBI" in params:
         names += ["Senior UBI"]
+        senior_UBI = 52 * params["senior_UBI"]
         if not added_UBI:
             reforms += [
                 (
                     add_empty_UBI(),
-                    change_param(
-                        "benefit.UBI.senior", 52 * params["senior_UBI"]
-                    ),
+                    change_param("benefit.UBI.senior", senior_UBI),
                 )
             ]
             added_UBI = True
         else:
-            reforms += [
-                change_param("benefit.UBI.senior", 52 * params["senior_UBI"])
-            ]
+            reforms += [change_param("benefit.UBI.senior", senior_UBI)]
     if "basic_rate" in params:
         reforms += [
             change_param(

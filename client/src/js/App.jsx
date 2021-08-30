@@ -75,7 +75,7 @@ class App extends React.Component {
 				</Switch>
 				<Divider style={{marginTop: 50}} />
 				<div className="d-flex justify-content-center">
-					<p>© 2021 The UBI Center. Let us know what you think! <a href="mailto:policyengine@ubicenter.org">Email us</a> or <a href="https://github.com/ubicenter/uk-policy-engine/issues/new">file an issue on GitHub</a>.</p>
+					<p>© 2021 <a href="https://ubicenter.org">The UBI Center</a>. Let us know what you think! <a href="mailto:policyengine@ubicenter.org">Email us</a> or <a href="https://github.com/ubicenter/uk-policy-engine/issues/new">file an issue on GitHub</a>.</p>
 				</div>
 			</Container>
 		);

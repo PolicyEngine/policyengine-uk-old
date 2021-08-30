@@ -30,7 +30,7 @@ export function TopHeader() {
 					title={<>PolicyEngine<sub style={{fontSize: "50%"}}>UK</sub></>}
 					subTitle="by the UBI Center"
 					style={{minHeight: 40}}
-					tags={[<Tag key="beta" color="processing">ALPHA</Tag>]}
+					tags={[<Tag key="beta" color="processing">BETA</Tag>]}
 				/>
 			</div>
 			<div className="d-md-none">
@@ -38,7 +38,7 @@ export function TopHeader() {
 					<PageHeader
 						title={<>PolicyEngine<sub style={{fontSize: "50%"}}>UK</sub></>}
 						style={{paddingBottom: 8}}
-						tags={[<Tag key="beta" color="processing">ALPHA</Tag>]}
+						tags={[<Tag key="beta" color="processing">BETA</Tag>]}
 					/>
 				</div>
 				<div className="d-flex justify-content-center">

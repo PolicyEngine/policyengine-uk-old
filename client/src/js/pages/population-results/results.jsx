@@ -6,22 +6,6 @@ import { Row, Col } from "react-bootstrap";
 const { Panel } = Collapse;
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
-function HeadlineFigure(props) {
-	return (
-		<Col style={{ padding: 10, margin: 10 }}>
-			<Card style={{ minWidth: 150 }}>
-				<Statistic
-					title={props.title}
-					value={props.value}
-					precision={props.precision}
-					prefix={(!props.noArrow && !props.nonNumeric) ? (props.value >= 0 ? <><ArrowUpOutlined /></> : <><ArrowDownOutlined /></>) : <></>}
-					suffix={props.suffix}
-				/>
-			</Card>
-		</Col>
-	);
-}
-
 function Chart(props) {
 	return (
 		<Col md={props.md ? props.md : 6}>
@@ -35,6 +19,10 @@ function Chart(props) {
 	);
 }
 
+function Center(props) {
+	return <div className="d-flex justify-content-center align-items-center">{props.children}</div>;
+}
+
 function PopulationResultsCaveats() {
 	return (
 		<Collapse defaultActiveKey={["1"]} ghost>
@@ -45,53 +33,46 @@ function PopulationResultsCaveats() {
 	);
 }
 
+function TakeAway(props) {
+	return <Col>
+		<div style={{padding: 10}} className="d-flex justify-content-center align-items-center">
+			<p style={{fontSize: 20, color: "gray"}}>{props.children}</p>
+		</div>
+	</Col>;
+}
+
 export function PopulationResultsPane(props) {
+	const isSurplus = props.results.net_cost[0] == "-";
+	const cost = isSurplus ? props.results.net_cost.slice(1) : props.results.net_cost;
+	const costColor = isSurplus ? "green" : "darkred";
+	const isPovRise = props.results.poverty_change[0] == "-";
+	let pov = !isPovRise ? +props.results.poverty_change.toString().slice(1) : +props.results.poverty_change;
+	pov = +Math.round(pov * 100);
+	const povColor = isPovRise ? "darkred" : "green";
+	const winnerSharePos = props.results.winner_share[0] !== "-";
+	const winners = Math.round(+props.results.winner_share * 100);
+	const winnerColor = winners > 0 ? "green" : (winners == 0 ? "grey" : "darkred");
+	const loserSharePos = props.results.loser_share[0] !== "-";
+	const losers = Math.round(+props.results.loser_share * 100);
+	const loserColor = losers > 0 ? "darkred" : (losers == 0 ? "grey" : "green");
 	return (
 		<>
 			<Divider>Population results</Divider>
 			<PopulationResultsCaveats />
-			<Row>
-				<HeadlineFigure 
-					title="Net cost" 
-					value={props.results.net_cost} 
-					nonNumeric
-				/>
-				<HeadlineFigure 
-					title="Poverty rate change" 
-					value={props.results.poverty_change * 100} 
-					precision={1}
-					suffix="%"
-				/>
-				<HeadlineFigure 
-					title="Winner share" 
-					value={props.results.winner_share * 100} 
-					precision={1}
-					suffix="%"
-					noArrow
-				/>
-				<HeadlineFigure 
-					title="Loser share" 
-					value={props.results.loser_share * 100} 
-					precision={1}
-					suffix="%"
-					noArrow
-				/>
-				<HeadlineFigure 
-					title="Inequality" 
-					value={props.results.gini_change * 100} 
-					precision={1}
-					suffix="%"
-				/>
+			<Row style={{padding: 30}}>
+				<TakeAway><p style={{textAlign: "center"}}>Reform produces <br /><span style={{color: costColor}}>{cost}</span> net {isSurplus ? "surplus" : "cost"}</p></TakeAway>
+				<TakeAway><p style={{textAlign: "center"}}>Poverty <br />{isPovRise ? "rises" : "falls"} <span style={{color: povColor}}>{pov}%</span></p></TakeAway>
+				<TakeAway><p style={{textAlign: "center"}}><span style={{color: winnerColor}}>{winners}%</span> of people <br />come out ahead</p></TakeAway>
+				<TakeAway><p style={{textAlign: "center"}}><span style={{color: loserColor}}>{losers}%</span> of people <br />come out behind</p></TakeAway>
 			</Row>
 			<Row>
 				<Chart plot={props.results.waterfall_chart} md={12} />
 			</Row>
 			<Row>
-				<Chart plot={props.results.decile_chart} />
-				<Chart plot={props.results.poverty_chart} />
+				<Chart plot={props.results.poverty_chart} md={12} />
 			</Row>
 			<Row>
-				<Chart plot={props.results.age_chart} md={12}/>
+				<Chart plot={props.results.decile_chart} md={12}/>
 			</Row>
 			<Row>
 				<Chart plot={props.results.intra_decile_chart} md={12}/>

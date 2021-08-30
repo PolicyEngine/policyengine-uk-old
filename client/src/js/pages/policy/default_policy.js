@@ -140,7 +140,7 @@ const DEFAULT_POLICY = {
 	},
 	senior_UBI: {
 		title: "Senior UBI",
-		description: "A basic income for senior citizens is given to those over State Pension age.",
+		description: "A basic income for senior citizens is given to those at or above State Pension age.",
 		default: 0,
 		value: 0,
 		max: 250,
@@ -204,7 +204,7 @@ const DEFAULT_POLICY = {
 		type: "abolish"
 	},
 	abolish_WTC: {
-		title: "Child Tax Credit",
+		title: "Working Tax Credit",
 		description: "This switch abolishes the Working Tax Credit",
 		default: false,
 		value: false,

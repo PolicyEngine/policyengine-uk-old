@@ -1,5 +1,5 @@
 from server.populations.metrics import poverty_rate, pct_change
-from server.utils.formatting import format_fig, BLUE, GRAY
+from server.utils.formatting import format_fig, BLUE, GRAY, DARK_BLUE
 import plotly.express as px
 from plotly.subplots import make_subplots
 import json
@@ -48,7 +48,7 @@ def poverty_chart(baseline, reform):
     )
     df = pd.DataFrame(
         {
-            "Group": ["Child", "Working-age", "Retired", "All"],
+            "Group": ["Child", "Working-age", "Senior", "All"],
             "Poverty rate change": [child, adult, senior, person],
         }
     )
@@ -99,78 +99,92 @@ def add_zero_line(fig):
     return fig
 
 
-def waterfall_chart(reform, components, baseline, **kwargs):
-    partial_funding = np.array(
-        [0] + get_partial_funding(reform, baseline, **kwargs)
-    )
-    spending = partial_funding[1:] - partial_funding[:-1]
-    spending_order = np.argsort(-spending)
-    spending = spending[spending_order]
-    components = np.array(components)[spending_order]
-    descending_spending = np.argsort(-spending[spending > 0])
-    spending[spending > 0] = spending[spending > 0][descending_spending]
-    components[spending > 0] = components[spending > 0][descending_spending]
-    descending_revenue = np.argsort(spending[spending <= 0])
-    spending[spending <= 0] = spending[spending <= 0][descending_revenue]
-    components[spending <= 0] = components[spending <= 0][descending_revenue]
-    final_spending = partial_funding[-1]
-    df = pd.DataFrame(
-        {
-            "Reform": components,
-            "Spending": spending,
-            "Type": np.where(spending > 0, "Spending", "Revenue"),
-            "is_value": True,
-        }
-    )
-    df = df[df.Spending != 0].reset_index(drop=True)
-    base = pd.Series([0] + list(df.Spending.cumsum()))
-    for i in range(1, len(base)):
-        if base[i] < base[i - 1]:
-            base[i - 1] = base[i]
-    df.Spending = df.Spending.abs()
-    df = pd.concat(
-        [
-            pd.DataFrame(
-                dict(
-                    Reform=df.Reform,
-                    Spending=base,
-                    Type="",
-                    is_value=False,
-                )
-            ),
-            df,
-        ]
-    )
-    df = pd.concat(
-        [
-            df,
-            pd.DataFrame(
-                dict(
-                    Reform=["Net cost"],
-                    Spending=[final_spending],
-                    Type=np.where(
-                        np.array([final_spending]) > 0, "Spending", "Revenue"
+def waterfall(values, labels, gain_label="Spending", loss_label="Revenue"):
+    final_color = DARK_BLUE
+    if len(labels) == 0:
+        df = pd.DataFrame(
+            {
+                "Amount": [],
+                "Reform": [],
+                "Type": [],
+            }
+        )
+    else:
+        df = pd.DataFrame({"Amount": values, "Reform": labels, "Type": ""})
+        df = df[df.Amount != 0]
+        if len(df) != 0:
+            order = np.where(
+                df.Amount >= 0, -np.log(df.Amount), 1e2 - np.log(-df.Amount)
+            )
+            df = df.set_index(order).sort_index().reset_index(drop=True)
+            df["Type"] = np.where(df.Amount >= 0, gain_label, loss_label)
+            base = np.array([0] + list(df.Amount.cumsum()[:-1]))
+            final_value = df.Amount.cumsum().values[-1]
+            if final_value >= 0:
+                final_color = DARK_BLUE
+            else:
+                final_color = DARK_GRAY
+            df = pd.concat(
+                [
+                    pd.DataFrame(
+                        {
+                            "Amount": base,
+                            "Reform": df.Reform,
+                            "Type": "",
+                        }
                     ),
-                    is_value=[True],
-                )
-            ),
-        ]
+                    df,
+                    pd.DataFrame(
+                        {
+                            "Amount": [final_value],
+                            "Reform": ["Final"],
+                            "Type": ["Final"],
+                        }
+                    ),
+                ]
+            )
+    fig = px.bar(
+        df,
+        x="Reform",
+        y="Amount",
+        color="Type",
+        barmode="stack",
+        color_discrete_map={
+            gain_label: BLUE,
+            loss_label: GRAY,
+            "": WHITE,
+            "Final": final_color,
+        },
     )
-    df = df[~df.Reform.isna()]
-    fig = format_fig(
-        px.bar(
-            df,
-            x="Reform",
-            y="Spending",
-            color="Type",
-            barmode="stack",
-            color_discrete_map={"Revenue": BLUE, "Spending": GRAY, "": WHITE},
-        ).update_layout(
-            title="Funding breakdown", legend_title="", yaxis_tickprefix="£"
-        ),
-        show=False,
+    return format_fig(fig, show=False)
+
+
+def population_waterfall_chart(reform, labels, baseline, reformed):
+    net_income = [baseline.calc("net_income").sum()]
+    for i in range(1, len(reform)):
+        partially_reformed = Microsimulation(reform[:i])
+        net_income += [partially_reformed.calc("net_income").sum()]
+    net_income += [reformed.calc("net_income").sum()]
+    net_income = np.array(net_income)
+    budget_effects = net_income[1:] - net_income[:-1]
+    fig = waterfall(budget_effects, labels)
+    fig.add_shape(
+        type="line",
+        xref="paper",
+        yref="y",
+        x0=0,
+        y0=0,
+        x1=1,
+        y1=0,
+        line=dict(color="grey", width=1, dash="dash"),
     )
-    fig = add_zero_line(fig)
+    fig.update_layout(
+        title="Budget breakdown",
+        xaxis_title="",
+        yaxis_title="Yearly amount",
+        yaxis_tickprefix="£",
+        legend_title="",
+    )
     return json.loads(fig.to_json())
 
 
