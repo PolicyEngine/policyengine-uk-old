@@ -1,14 +1,18 @@
 import ReactMarkdown from "react-markdown";
 import { Row, Col } from "react-bootstrap";
-import { Typography } from "antd";
+import { Typography, Divider } from "antd";
 import React from "react";
 
-function Title(props) {
-	return <h1>{props.children}</h1>;
+function Header(props) {
+	return <><h1>{props.children}</h1></>;
 }
 
-function Subtitle(props) {
-	return <h3>{props.children}</h3>;
+function Subheader(props) {
+	return <><Divider>{props.children}</Divider></>;
+}
+
+function Subsubheader(props) {
+	return <><h5><i>{props.children}</i></h5></>;
 }
 
 class FAQ extends React.Component {
@@ -22,14 +26,14 @@ class FAQ extends React.Component {
 	}
 
 	render() {
-		const components = {h1: Title, h2: Subtitle};
+		const components = {h1: Header, h2: Subheader, h3: Subsubheader};
 		return <Row style={{paddingTop: 30}}>
-			<Col md={1}>
+			<Col md={3}>
 			</Col>
 			<Col>
 				<ReactMarkdown components={components}>{this.state.text}</ReactMarkdown>
 			</Col>
-			<Col md={1}>
+			<Col md={3}>
 			</Col>
 		</Row>;
 	}
