@@ -1,6 +1,7 @@
 import { Steps, Divider, Empty, Button } from "antd";
 import { Link } from "react-router-dom";
 import { SimulateButton } from "../policy/overview";
+import { SharePolicyLinks } from "../policy/overview";
 
 const { Step } = Steps;
 
@@ -20,20 +21,21 @@ function PolicySituationOverview(props) {
 			numPensioners++;
 		}
 	}
-
-
+	let plan = Object.keys(props.policy).map((key, i) => (
+		props.policy[key].value !== props.policy[key].default
+			? <Step key={key} status="finish" title={props.policy[key].title} description={props.policy[key].summary.replace("@", props.policy[key].value)} />
+			: null
+	));
+	let isEmpty = plan.every(element => element === null);
 	return (
 		<>
 			<Divider>Your plan</Divider>
-			<Steps progressDot direction="vertical">
-				{
-					Object.keys(props.policy).map((key, i) => (
-						props.policy[key].value !== props.policy[key].default
-							? <Step key={key} status="finish" title={props.policy[key].title} description={props.policy[key].summary.replace("@", props.policy[key].value)} />
-							: null
-					))
-				}
-			</Steps>
+			{!isEmpty ?
+				<Steps progressDot direction="vertical">
+					{plan}
+				</Steps> :
+				<Empty description="No plan provided" />
+			}
 			{
 				!props.noButton ?
 					<Empty description="" image={null}>
@@ -44,6 +46,7 @@ function PolicySituationOverview(props) {
 					</Empty> :
 					null
 			}
+			<SharePolicyLinks policy={props.policy}/>
 			
 		</>
 	);
