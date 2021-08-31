@@ -60,12 +60,7 @@ export function SharePolicyLinks(props) {
 	const url = policyToURL("https://uk.policyengine.org/population-results", props.policy);
 	return (
 		<>
-			<Divider>Share this reform</Divider>
-			<div className="d-flex justify-content-center">
-				<Button style={{marginRight: 20, border: 0}} onClick={() => {navigator.clipboard.writeText("https://uk.policyengine.org" + url); message.info("Link copied!");}}><LinkOutlined /></Button>
-				<TwitterShareButton style={{marginRight: 20, border: 0}} title="I just simulated a reform to the tax and benefit system with @TheUBICenter's UK PolicyEngine. Check it out or make your own!" url={url}><TwitterOutlined /></TwitterShareButton>
-				{/**<FacebookShareButton quote="I just simulated a reform to the tax and benefit system with the UBI Center's UK PolicyEngine. Check it out or make your own! "><FacebookOutlined /></FacebookShareButton>**/}
-			</div>
+			<Divider>Share this reform<Button style={{marginRight: 20, border: 0}} onClick={() => {navigator.clipboard.writeText("https://uk.policyengine.org" + url); message.info("Link copied!");}}><LinkOutlined /></Button><TwitterShareButton style={{marginRight: 20, border: 0}} title="I just simulated a reform to the tax and benefit system with @TheUBICenter's UK PolicyEngine. Check it out or make your own!" url={url}><TwitterOutlined /></TwitterShareButton></Divider>
 		</>
 	);
 }
