@@ -1,7 +1,7 @@
 runtime: python37
 instance_class: F4_1G
 automatic_scaling:
-  max_instances: 4
+  max_instances: 16
   min_instances: 1
   target_cpu_utilization: 0.95
   target_throughput_utilization: 0.95
