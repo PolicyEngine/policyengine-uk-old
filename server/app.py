@@ -8,6 +8,7 @@ from openfisca_uk import Microsimulation, IndividualSim
 from pathlib import Path
 from google.cloud import storage
 import os
+import gc
 
 from server.simulation.situations import create_situation
 from server.simulation.reforms import create_reform
@@ -80,6 +81,7 @@ def ubi():
     result = {"UBI": float(UBI_amount)}
     if USE_CACHE:
         blob.upload_from_string(json.dumps(result))
+    gc.collect()
     duration = time() - start_time
     app.logger.info(f"UBI size calculation completed ({round(duration, 2)}s)")
     return result
@@ -110,8 +112,11 @@ def population_reform():
         ),
         intra_decile_chart=intra_decile_chart(baseline, reformed),
     )
+    del reformed
+    del reform
     if USE_CACHE:
         blob.upload_from_string(json.dumps(result))
+    gc.collect()
     duration = time() - start_time
     app.logger.info(f"Population reform completed ({round(duration, 2)}s)")
     return result
@@ -148,6 +153,10 @@ def situation_reform():
     reformed_varying.vary("employment_income")
     budget = budget_chart(baseline_varying, reformed_varying)
     mtr = mtr_chart(baseline_varying, reformed_varying)
+    del situation
+    del reform
+    del baseline
+    del reformed
     result = dict(
         **headlines,
         waterfall_chart=waterfall,
@@ -156,6 +165,7 @@ def situation_reform():
     )
     if USE_CACHE:
         blob.upload_from_string(json.dumps(result))
+    gc.collect()
     duration = time() - start_time
     app.logger.info(f"Situation reform completed ({round(duration, 2)}s)")
     return result
