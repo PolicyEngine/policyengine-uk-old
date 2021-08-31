@@ -1,7 +1,6 @@
 import { Row, Col, Container } from "react-bootstrap";
 import React from "react";
-import { Steps, PageHeader, Badge, Tag } from "antd";
-import { MinusCircleOutlined } from "@ant-design/icons";
+import { Steps, PageHeader, Button, Tag } from "antd";
 
 import "../../css/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -20,6 +19,12 @@ function getURLParamsFromPolicy(target, policy) {
 	}
 	const url = `${target || "/situation"}?${searchParams.toString()}`;
 	return url;
+}
+
+function NavEntry(props) {
+	return (
+		<a style={{paddingRight: 20}} href={props.to}>{props.text}</a>
+	);
 }
 
 export function TopHeader() {

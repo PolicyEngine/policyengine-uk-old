@@ -8,7 +8,7 @@ function Header(props) {
 }
 
 function Subheader(props) {
-	return <><Divider>{props.children}</Divider></>;
+	return <><h3 style={{paddingTop: 30}}>{props.children}</h3><Divider /></>;
 }
 
 function Subsubheader(props) {
@@ -28,12 +28,12 @@ class FAQ extends React.Component {
 	render() {
 		const components = {h1: Header, h2: Subheader, h3: Subsubheader};
 		return <Row style={{paddingTop: 30}}>
-			<Col md={3}>
+			<Col md={2}>
 			</Col>
 			<Col>
 				<ReactMarkdown components={components}>{this.state.text}</ReactMarkdown>
 			</Col>
-			<Col md={3}>
+			<Col md={2}>
 			</Col>
 		</Row>;
 	}

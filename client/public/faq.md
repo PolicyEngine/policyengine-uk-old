@@ -15,7 +15,7 @@ PolicyEngine is a product from the [UBI Center](http://ubicenter.org), a researc
 
 ### When will PolicyEngine be available in my country?
 
-Currently, PolicyEngine is only available in the UK, but we're working on bringing it to the US. Want to see PolicyEngine in your country? Let us know!
+Currently, PolicyEngine is only available in the UK, but we're working on bringing it to the US. Want to see PolicyEngine in your country? [Let us know](https://zej8fnylwn9.typeform.com/to/XFFu15Xq)!
 
 
 ### Where can I learn more about how PolicyEngine works?
@@ -33,8 +33,7 @@ Using and sharing PolicyEngine is already a great help to us! If you'd like to s
 
 ### Do you only simulate policies listed on this page?
 
-
-No, we simulate essentially the entire tax and benefit system, except for [capital gains tax](https://github.com/PSLmodels/openfisca-uk/issues/40) and [council tax benefit](https://github.com/PSLmodels/openfisca-uk/issues/150). For example, while we don't yet expose parameters on self-employment income tax rates, we do simulate self-employment income taxes.
+No, we simulate essentially the entire tax and benefit system, except for [capital gains tax](https://github.com/PSLmodels/openfisca-uk/issues/40) and [council tax benefit](https://github.com/PSLmodels/openfisca-uk/issues/150). For example, while we don't yet expose parameters on Income Support, we do simulate it for those who are eligible.
 
 
 ### Will you be adding more policy parameters?
@@ -47,12 +46,16 @@ Yes, we’re planning to add more tax and benefit parameter options, and other t
 For now, you'll have to change it back using the slider or text box, or reload the page to reset all policy parameters. We're working on a [better way](https://github.com/UBICenter/policyengine-uk/issues/23).
 
 
+### As of what date are policy parameters set?
+We simulate policy as of 2021-01-01, and assume that policy is active throughout 2021. We're working on [updating to the latest policy](https://github.com/UBICenter/policyengine-uk/issues/44).
+
+
 ## UK impact page
 
 
 ### What data do you use to estimate UK-wide impacts?
 
-We use the Family Resources Survey (FRS), the UK's standard survey for estimating poverty. The latest FRS is from 2018-19, and we extrapolate this to 2021 using growth factors published by x. We also adjust benefit receipt to reflect trends like the Universal Credit rollout.
+We use the Family Resources Survey (FRS), the UK's standard survey for estimating poverty. The latest FRS is from 2018-19, and we extrapolate this to 2021 using growth factors published by the ONS and OBR. We also adjust benefit receipt to reflect trends like the Universal Credit rollout.
 
 The FRS underestimates high incomes, so PolicyEngine accordingly will as well; for example, we'll underestimate the revenue from a reform that raises the Additional Rate. We're working on improving the data quality by [adjusting top incomes](https://github.com/PSLmodels/openfisca-uk/issues/103) to better match datasets that accurately capture that population segment.
 
