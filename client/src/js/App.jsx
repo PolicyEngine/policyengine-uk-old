@@ -3,10 +3,12 @@
 import React from "react";
 
 import Header from "./ui/header";
+import { TopHeader } from "./ui/header";
 import Policy from "./pages/policy";
 import Situation from "./pages/situation";
 import PopulationResults from "./pages/population-results";
 import SituationResults from "./pages/situation-results";
+import FAQ from "./pages/faq";
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -66,10 +68,20 @@ class App extends React.Component {
 						<Header step={3} situationEntered={this.state.situationEntered}/>
 						<SituationResults policy={this.state.policy} situation={this.state.situation}/>
 					</Route>
+					<Route path="/faq">
+						<TopHeader />
+						<FAQ />
+					</Route>
 				</Switch>
 				<Divider style={{marginTop: 50}} />
-				<div className="d-flex justify-content-center">
-					<p>© 2021 <a href="https://ubicenter.org">The UBI Center</a>. Let us know what you think! <a href="mailto:policyengine@ubicenter.org">Email us</a> or <a href="https://github.com/ubicenter/uk-policy-engine/issues/new">file an issue on GitHub</a>.</p>
+				<div className="d-none d-lg-block">
+					<div className="d-flex justify-content-center">
+						<p style={{textAlign: "center"}}><a href="https://ubicenter.org">UBI Center © 2021</a> | <a href="/faq">FAQ</a> | <a href="https://zej8fnylwn9.typeform.com/to/XFFu15Xq">Share your feedback</a> | <a href="https://www.ubicenter.org/donate/">Donate</a></p>
+					</div>
+				</div>
+				<div className="d-block d-lg-none">
+					<p style={{textAlign: "center"}}><a href="https://ubicenter.org">UBI Center © 2021</a> | <a href="/faq">FAQ</a></p>
+					<p style={{textAlign: "center"}}><a href="https://zej8fnylwn9.typeform.com/to/XFFu15Xq">Share your feedback</a> | <a href="https://www.ubicenter.org/donate/">Donate</a></p>
 				</div>
 			</Container>
 		);
