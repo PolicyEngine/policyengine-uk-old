@@ -1,5 +1,5 @@
 import React from "react";
-import PolicySituationOverview from "./situation/overview";
+import SituationOverview from "./situation-results/overview";
 import { SituationResultsPane } from "./situation-results/results";
 import { LoadingResultsPane } from "./population-results/results";
 import { Row, Col } from "react-bootstrap";
@@ -80,7 +80,7 @@ class SituationResults extends React.Component {
 					}
 				</Col>
 				<Col xl={3} style={{paddingLeft: 50}}>
-					<PolicySituationOverview policy={this.props.policy} situation={this.props.situation} noButton/>
+					<SituationOverview policy={this.props.policy} situation={this.props.situation}/>
 				</Col>
 			</Row>
 		);
