@@ -45,14 +45,12 @@ export function PopulationResultsPane(props) {
 	const isSurplus = props.results.net_cost[0] == "-";
 	const cost = isSurplus ? props.results.net_cost.slice(1) : props.results.net_cost;
 	const costColor = isSurplus ? "green" : "darkred";
-	const isPovRise = props.results.poverty_change[0] == "-";
-	let pov = !isPovRise ? +props.results.poverty_change.toString().slice(1) : +props.results.poverty_change;
-	pov = +Math.round(pov * 100);
-	const povColor = isPovRise ? "darkred" : "green";
-	const winnerSharePos = props.results.winner_share[0] !== "-";
+	const isPovRise = +props.results.poverty_change > 0;
+	const isPovFall = +props.results.poverty_change < 0;
+	let pov = Math.round(Math.abs(props.results.poverty_change) * 100);
+	const povColor = isPovRise ? "darkred" : (isPovFall ? "grey" : "green");
 	const winners = Math.round(+props.results.winner_share * 100);
 	const winnerColor = winners > 0 ? "green" : (winners == 0 ? "grey" : "darkred");
-	const loserSharePos = props.results.loser_share[0] !== "-";
 	const losers = Math.round(+props.results.loser_share * 100);
 	const loserColor = losers > 0 ? "darkred" : (losers == 0 ? "grey" : "green");
 	return (
