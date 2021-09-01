@@ -48,7 +48,7 @@ export function PopulationResultsPane(props) {
 	const isPovRise = +props.results.poverty_change > 0;
 	const isPovFall = +props.results.poverty_change < 0;
 	let pov = Math.round(Math.abs(props.results.poverty_change) * 100);
-	const povColor = isPovRise ? "darkred" : (isPovFall ? "grey" : "green");
+	const povColor = isPovRise ? "darkred" : (isPovFall ? "green" : "grey");
 	const winners = Math.round(+props.results.winner_share * 100);
 	const winnerColor = winners > 0 ? "green" : (winners == 0 ? "grey" : "darkred");
 	const losers = Math.round(+props.results.loser_share * 100);
