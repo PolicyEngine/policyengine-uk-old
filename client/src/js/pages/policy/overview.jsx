@@ -1,10 +1,11 @@
-import { Steps, Divider, Empty, Button } from "antd";
+import { Steps, Divider, Empty, Button, message } from "antd";
 import { Link } from "react-router-dom";
+import { LinkOutlined, TwitterOutlined, FacebookOutlined } from "@ant-design/icons";
+import { TwitterShareButton, FacebookShareButton, EmailShareButton } from "react-share";
 
 const { Step } = Steps;
 
-export function SimulateButton(props) {
-	const { policy } = props;
+function policyToURL(base, policy) {
 	let searchParams = new URLSearchParams(window.location.search);
 	for (const key in policy) {
 		if (policy[key].value !== policy[key].default) {
@@ -13,7 +14,13 @@ export function SimulateButton(props) {
 			searchParams.delete(key);
 		}
 	}
-	const url = `${props.target || "/situation"}?${searchParams.toString()}`;
+	const url = `${base}?${searchParams.toString()}`;
+	return url;
+}
+
+export function SimulateButton(props) {
+	const { policy } = props;
+	const url = policyToURL(props.target || "/situation", policy);
 	if(props.hidden) {return <></>;}
 	return (
 		<div style={{marginBottom: 20}}>
@@ -44,6 +51,16 @@ function PolicyOverview(props) {
 				<SimulateButton text="Skip to your household" target="/situation" policy={props.policy} onClick={props.onSubmit} />
 				<SimulateButton disabled text="See your results" target="/situation-results" policy={props.policy} onClick={props.onSubmit} />
 			</Empty>
+			<SharePolicyLinks policy={props.policy}/>
+		</>
+	);
+}
+
+export function SharePolicyLinks(props) {
+	const url = policyToURL("https://uk.policyengine.org/population-results", props.policy);
+	return (
+		<>
+			<Divider>Share this reform<Button style={{marginRight: 20, border: 0}} onClick={() => {navigator.clipboard.writeText("https://uk.policyengine.org" + url); message.info("Link copied!");}}><LinkOutlined /></Button><TwitterShareButton style={{marginRight: 20, border: 0}} title="I just simulated a reform to the tax and benefit system with @TheUBICenter's UK PolicyEngine. Check it out or make your own!" url={url}><TwitterOutlined /></TwitterShareButton></Divider>
 		</>
 	);
 }

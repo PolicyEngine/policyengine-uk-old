@@ -8,6 +8,7 @@ from openfisca_uk import Microsimulation, IndividualSim
 from pathlib import Path
 from google.cloud import storage
 import os
+import gc
 
 from server.simulation.situations import create_situation
 from server.simulation.reforms import create_reform
@@ -28,7 +29,7 @@ from server.situations.charts import (
     budget_chart,
 )
 
-VERSION = "0.0.1"
+VERSION = "0.0.5"
 USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 
@@ -36,6 +37,7 @@ client = storage.Client()
 bucket = client.get_bucket("uk-policy-engine.appspot.com")
 
 baseline = Microsimulation()
+baseline_microsim = baseline
 
 app = Flask(__name__, static_url_path="")
 logging.getLogger("werkzeug").disabled = True
@@ -48,6 +50,7 @@ def static_site():
 
 STATIC_SITE_ROUTES = (
     "/",
+    "/api",
     "/situation",
     "/population-results",
     "/situation-results",
@@ -55,6 +58,34 @@ STATIC_SITE_ROUTES = (
 
 for route in STATIC_SITE_ROUTES:
     static_site = app.route(route)(static_site)
+
+
+@app.route("/api/ubi")
+def ubi():
+    start_time = time()
+    app.logger.info("UBI size request received")
+    params = {**request.args, **(request.json or {})}
+    request_id = "ubi-" + dict_to_string(params) + "-" + VERSION
+    blob = bucket.blob(request_id + ".json")
+    if blob.exists() and USE_CACHE:
+        app.logger.info("Returning cached response")
+        result = json.loads(blob.download_as_string())
+        return result
+    reform, components = create_reform(
+        params, return_names=True, baseline=baseline
+    )
+    reformed = Microsimulation(reform)
+    revenue = (
+        baseline.calc("net_income").sum() - reformed.calc("net_income").sum()
+    )
+    UBI_amount = max(0, revenue / baseline.calc("people").sum())
+    result = {"UBI": float(UBI_amount)}
+    if USE_CACHE:
+        blob.upload_from_string(json.dumps(result))
+    gc.collect()
+    duration = time() - start_time
+    app.logger.info(f"UBI size calculation completed ({round(duration, 2)}s)")
+    return result
 
 
 @app.route("/api/population-reform")
@@ -68,7 +99,9 @@ def population_reform():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, components = create_reform(params, return_names=True)
+    reform, components = create_reform(
+        params, return_names=True, baseline=baseline
+    )
     reformed = Microsimulation(reform)
     result = dict(
         **headline_metrics(baseline, reformed),
@@ -80,8 +113,11 @@ def population_reform():
         ),
         intra_decile_chart=intra_decile_chart(baseline, reformed),
     )
+    del reformed
+    del reform
     if USE_CACHE:
         blob.upload_from_string(json.dumps(result))
+    gc.collect()
     duration = time() - start_time
     app.logger.info(f"Population reform completed ({round(duration, 2)}s)")
     return result
@@ -103,7 +139,9 @@ def situation_reform():
         result = json.loads(blob.download_as_string())
         return result
     situation = create_situation(params)
-    reform, subreform_labels = create_reform(params, return_names=True)
+    reform, subreform_labels = create_reform(
+        params, return_names=True, baseline=baseline_microsim
+    )
     baseline = situation(IndividualSim())
     reformed = situation(IndividualSim(reform))
     headlines = headline_figures(baseline, reformed)
@@ -116,6 +154,10 @@ def situation_reform():
     reformed_varying.vary("employment_income")
     budget = budget_chart(baseline_varying, reformed_varying)
     mtr = mtr_chart(baseline_varying, reformed_varying)
+    del situation
+    del reform
+    del baseline
+    del reformed
     result = dict(
         **headlines,
         waterfall_chart=waterfall,
@@ -124,6 +166,7 @@ def situation_reform():
     )
     if USE_CACHE:
         blob.upload_from_string(json.dumps(result))
+    gc.collect()
     duration = time() - start_time
     app.logger.info(f"Situation reform completed ({round(duration, 2)}s)")
     return result

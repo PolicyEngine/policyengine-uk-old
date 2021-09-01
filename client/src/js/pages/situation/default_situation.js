@@ -34,6 +34,13 @@ export const DEFAULT_FAMILY = {
 		default: true,
 		value: true,
 		type: "bool"
+	},
+	claims_PC: {
+		title: "PC claimant",
+		description: "Whether this family would claim Pension Credit",
+		default: true,
+		value: true,
+		type: "bool"
 	}
 };
 
