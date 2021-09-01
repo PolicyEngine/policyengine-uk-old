@@ -50,6 +50,7 @@ def static_site():
 
 STATIC_SITE_ROUTES = (
     "/",
+    "/api",
     "/situation",
     "/population-results",
     "/situation-results",
