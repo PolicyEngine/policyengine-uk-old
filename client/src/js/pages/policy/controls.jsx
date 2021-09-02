@@ -210,13 +210,9 @@ function PolicyControls(props) {
 			"senior_UBI",
 			"surplus_UBI",
 		],
-		universal_credit: [
-			"abolish_UC"
-		],
 		legacy_benefits: [
 			"abolish_CTC",
 			"abolish_WTC",
-			"abolish_HB",
 		],
 		child_benefit: [
 			"abolish_CB",
