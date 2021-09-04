@@ -28,7 +28,7 @@ const VARIABLES = {
 	},
 	universal_credit: {
 		name: "Universal Credit",
-		explainers: ["universal_credit_applicable_amount", "universal_credit_income_reduction"]
+		explainers: ["UC_maximum_amount", "UC_income_reduction"]
 	},
 	employee_NI_class_1: {
 		name: "Class 1 (employee-side)",
@@ -66,10 +66,10 @@ const VARIABLES = {
 	net_income: {
 		name: "Net income"
 	},
-	universal_credit_applicable_amount: {
+	UC_maximum_amount: {
 		name: "Applicable amount",
 	},
-	universal_credit_income_reduction: {
+	UC_income_reduction: {
 		name: "Reduction"
 	}
 };
