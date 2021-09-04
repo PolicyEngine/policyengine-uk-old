@@ -143,6 +143,14 @@ def waterfall(values, labels, gain_label="Spending", loss_label="Revenue"):
                     ),
                 ]
             )
+        else:
+            df = pd.DataFrame(
+                {
+                    "Amount": [],
+                    "Reform": [],
+                    "Type": [],
+                }
+            )
     fig = px.bar(
         df,
         x="Reform",

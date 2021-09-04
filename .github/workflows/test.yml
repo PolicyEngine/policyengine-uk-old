@@ -1,4 +1,4 @@
-name: Check Black formatting
+name: Run tests
 
 on: [push, pull_request]
 
@@ -11,3 +11,4 @@ jobs:
       - uses: psf/black@stable
         with:
           options: ". -l 79 --check"
+

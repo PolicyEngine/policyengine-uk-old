@@ -29,7 +29,7 @@ from server.situations.charts import (
     budget_chart,
 )
 
-VERSION = "0.0.6"
+VERSION = "0.0.7"
 USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 

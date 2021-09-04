@@ -21,6 +21,13 @@ export const DEFAULT_HOUSEHOLD = {
 };
 
 export const DEFAULT_FAMILY = {
+	claims_legacy_benefits: {
+		title: "Legacy benefits claimant",
+		description: "Whether this family would claim legacy benefits (not UC)",
+		default: false,
+		value: false,
+		type: "bool"
+	},
 	claims_UC: {
 		title: "UC claimant",
 		description: "Whether this family would claim Universal Credit",
@@ -38,6 +45,27 @@ export const DEFAULT_FAMILY = {
 	claims_PC: {
 		title: "PC claimant",
 		description: "Whether this family would claim Pension Credit",
+		default: true,
+		value: true,
+		type: "bool"
+	},
+	claims_HB: {
+		title: "HB claimant",
+		description: "Whether this family would claim Housing Benefit",
+		default: true,
+		value: true,
+		type: "bool"
+	},
+	claims_WTC: {
+		title: "WTC claimant",
+		description: "Whether this family would claim Working Tax Credit",
+		default: true,
+		value: true,
+		type: "bool"
+	},
+	claims_CTC: {
+		title: "CTC claimant",
+		description: "Whether this family would claim Child Tax Credit",
 		default: true,
 		value: true,
 		type: "bool"
