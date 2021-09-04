@@ -213,12 +213,16 @@ function PolicyControls(props) {
 		legacy_benefits: [
 			"abolish_CTC",
 			"abolish_WTC",
+			"abolish_HB",
 		],
 		child_benefit: [
 			"abolish_CB",
 		],
 		state_pension: [
 			"abolish_SP",
+		],
+		universal_credit: [
+			"abolish_UC"
 		]
 	};
 	const names = controlSet[props.selected];
