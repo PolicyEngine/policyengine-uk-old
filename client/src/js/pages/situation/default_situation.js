@@ -52,22 +52,22 @@ export const DEFAULT_FAMILY = {
 	claims_HB: {
 		title: "HB claimant",
 		description: "Whether this family would claim Housing Benefit",
-		default: true,
-		value: true,
+		default: false,
+		value: false,
 		type: "bool"
 	},
 	claims_WTC: {
 		title: "WTC claimant",
 		description: "Whether this family would claim Working Tax Credit",
-		default: true,
-		value: true,
+		default: false,
+		value: false,
 		type: "bool"
 	},
 	claims_CTC: {
 		title: "CTC claimant",
 		description: "Whether this family would claim Child Tax Credit",
-		default: true,
-		value: true,
+		default: false,
+		value: false,
 		type: "bool"
 	}
 };
