@@ -2,12 +2,11 @@ runtime: custom
 env: flex
 resources:
   cpu: 1
-  memory_gb: 4
+  memory_gb: 6
   disk_size_gb: 10
 automatic_scaling:
   min_num_instances: 1
-  max_num_instances: 16
+  max_num_instances: 4
   cool_down_period_sec: 180
   cpu_utilization:
-    target_utilization: 0.7
-  target_concurrent_requests: 100
+    target_utilization: 0.8
