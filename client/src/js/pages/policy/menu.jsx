@@ -29,7 +29,7 @@ class PolicyMenu extends React.Component {
 					<Menu.Item key="legacy_benefits">Legacy Benefits</Menu.Item>
 					<Menu.Item key="child_benefit">Child Benefit</Menu.Item>
 					<Menu.Item key="state_pension">State Pension</Menu.Item>
-					<Menu.Item key="UBI">UBI</Menu.Item>
+					<Menu.Item key="UBI">Universal Basic Income</Menu.Item>
 				</SubMenu>
 			</Menu>
 		);
