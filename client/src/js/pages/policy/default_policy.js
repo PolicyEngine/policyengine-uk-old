@@ -122,7 +122,7 @@ const DEFAULT_POLICY = {
 	},
 	child_UBI: {
 		title: "Child UBI",
-		description: "A basic income for children is given to every child aged under 18, regardless of household income.",
+		description: "Flat payment given to each person 17 years of age or younger.",
 		default: 0,
 		value: 0,
 		max: 250,
@@ -131,7 +131,7 @@ const DEFAULT_POLICY = {
 	},
 	adult_UBI: {
 		title: "Working-age adult UBI",
-		description: "Basic income for working-age adults is given to individuals aged over 18 but under State Pension age.",
+		description: "Flat payment given to each person older than 17 and younger than State Pension age.",
 		default: 0,
 		value: 0,
 		max: 250,
@@ -140,7 +140,7 @@ const DEFAULT_POLICY = {
 	},
 	senior_UBI: {
 		title: "Senior UBI",
-		description: "A basic income for senior citizens is given to those at or above State Pension age.",
+		description: "Flat payment given to each person at or above State Pension age.",
 		default: 0,
 		value: 0,
 		max: 250,
