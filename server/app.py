@@ -29,7 +29,7 @@ from server.situations.charts import (
     budget_chart,
 )
 
-VERSION = "0.0.5"
+VERSION = "0.0.9"
 USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 
@@ -50,7 +50,7 @@ def static_site():
 
 STATIC_SITE_ROUTES = (
     "/",
-    "/api",
+    "/faq",
     "/situation",
     "/population-results",
     "/situation-results",

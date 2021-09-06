@@ -29,3 +29,8 @@ deploy: openfisca_uk_data openfisca_uk test
 	y | gcloud app deploy
 test:
 	pytest tests
+deploy-local: test
+	rm -rf server/static
+	cd client; npm run build
+	cp -r client/build server/static
+	FLASK_APP=main.py FLASK_DEBUG=1 flask run

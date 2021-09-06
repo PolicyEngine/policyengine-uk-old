@@ -210,9 +210,6 @@ function PolicyControls(props) {
 			"senior_UBI",
 			"surplus_UBI",
 		],
-		universal_credit: [
-			"abolish_UC"
-		],
 		legacy_benefits: [
 			"abolish_CTC",
 			"abolish_WTC",
@@ -223,6 +220,9 @@ function PolicyControls(props) {
 		],
 		state_pension: [
 			"abolish_SP",
+		],
+		universal_credit: [
+			"abolish_UC"
 		]
 	};
 	const names = controlSet[props.selected];
