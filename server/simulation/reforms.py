@@ -215,14 +215,6 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
             )
         ]
         names += ["NI main rate"]
-    if "NI_employer_rate" in params:
-        reforms += [
-            change_param(
-                "tax.national_insurance.class_1.rates.employer",
-                params["NI_employer_rate"] / 100,
-            )
-        ]
-        names += ["NI employer rate"]
     if "NI_add_rate" in params:
         reforms += [
             change_param(

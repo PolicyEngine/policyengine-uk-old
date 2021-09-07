@@ -169,7 +169,7 @@ def waterfall(values, labels, gain_label="Spending", loss_label="Revenue"):
 
 
 def total_income(sim):
-    return sim.calc("net_income").sum() - sim.calc("employer_NI").sum()
+    return sim.calc("net_income").sum()
 
 
 def population_waterfall_chart(reform, labels, baseline, reformed):

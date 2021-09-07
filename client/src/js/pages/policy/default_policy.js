@@ -66,14 +66,6 @@ const DEFAULT_POLICY = {
 		summary: "Change the NI additional rate to @%",
 		type: "rate",
 	},
-	NI_employer_rate: {
-		title: "NI employer rate",
-		description: "The Class 1 NI employer rate is paid on employment earnings above the Primary Threshold.",
-		default: 13.8,
-		value: 13.8,
-		summary: "Change the NI employer rate to @%",
-		type: "rate",
-	},
 	NI_PT: {
 		title: "NI Primary Threshold",
 		description: "The Primary Threshold is the lower bound for the main rate of NI.",

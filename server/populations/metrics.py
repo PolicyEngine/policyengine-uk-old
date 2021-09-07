@@ -16,9 +16,7 @@ def headline_metrics(baseline: Microsimulation, reformed: Microsimulation):
     gain = new_income - old_income
     net_cost = (
         reformed.calc("net_income").sum()
-        - reformed.calc("employer_NI").sum()
         - baseline.calc("net_income").sum()
-        + baseline.calc("employer_NI").sum()
     )
     poverty_change = pct_change(
         baseline.calc("in_poverty_bhc", map_to="person").mean(),
