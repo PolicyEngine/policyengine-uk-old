@@ -5,6 +5,7 @@ Functions to convert JSON web app parameters into OpenFisca reform objects.
 from openfisca_core import periods
 from openfisca_core.model_api import *
 from openfisca_uk import BASELINE_VARIABLES, Microsimulation
+from openfisca_uk.reforms.presets.current_date import use_current_parameters
 from openfisca_uk.entities import *
 from openfisca_uk.tools.general import *
 
@@ -214,6 +215,14 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
             )
         ]
         names += ["NI main rate"]
+    if "NI_employer_rate" in params:
+        reforms += [
+            change_param(
+                "tax.national_insurance.class_1.rates.employer",
+                params["NI_employer_rate"] / 100,
+            )
+        ]
+        names += ["NI employer rate"]
     if "NI_add_rate" in params:
         reforms += [
             change_param(
@@ -313,7 +322,15 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
             if params[f"abolish_{variable}"]:
                 reforms += [neutralizer_reform(var)]
                 names += [name]
+    first_reform, later_reforms = (), ()
+    if len(reforms) > 0:
+        first_reform = reforms[0]
+    if len(reforms) > 1:
+        later_reforms = reforms[1:]
+    reform_tuple = tuple(
+        ((use_current_parameters(), first_reform), *later_reforms)
+    )
     if not return_names:
-        return tuple(reforms)
+        return reform_tuple
     else:
-        return tuple(reforms), names
+        return reform_tuple, names
