@@ -12,6 +12,7 @@ import gc
 
 from server.simulation.situations import create_situation
 from server.simulation.reforms import create_reform
+from openfisca_uk.reforms.presets.current_date import use_current_parameters
 
 from server.populations.metrics import headline_metrics
 from server.populations.charts import (
@@ -29,14 +30,14 @@ from server.situations.charts import (
     budget_chart,
 )
 
-VERSION = "0.0.9"
+VERSION = "0.0.10"
 USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 
 client = storage.Client()
 bucket = client.get_bucket("uk-policy-engine.appspot.com")
 
-baseline = Microsimulation()
+baseline = Microsimulation(use_current_parameters())
 baseline_microsim = baseline
 
 app = Flask(__name__, static_url_path="")
@@ -142,15 +143,15 @@ def situation_reform():
     reform, subreform_labels = create_reform(
         params, return_names=True, baseline=baseline_microsim
     )
-    baseline = situation(IndividualSim())
-    reformed = situation(IndividualSim(reform))
+    baseline = situation(IndividualSim(use_current_parameters(), year=2021))
+    reformed = situation(IndividualSim(reform, year=2021))
     headlines = headline_figures(baseline, reformed)
     waterfall = household_waterfall_chart(
         reform, subreform_labels, situation, baseline, reformed
     )
-    baseline_varying = situation(IndividualSim())
+    baseline_varying = situation(IndividualSim(year=2021))
     baseline_varying.vary("employment_income")
-    reformed_varying = situation(IndividualSim(reform))
+    reformed_varying = situation(IndividualSim(reform, year=2021))
     reformed_varying.vary("employment_income")
     budget = budget_chart(baseline_varying, reformed_varying)
     mtr = mtr_chart(baseline_varying, reformed_varying)

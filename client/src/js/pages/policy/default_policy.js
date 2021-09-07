@@ -44,8 +44,8 @@ const DEFAULT_POLICY = {
 	personal_allowance: {
 		title: "Personal allowance",
 		description: "The personal allowance is deducted from general income.",
-		default: 12500,
-		value: 12500,
+		default: 12570,
+		value: 12570,
 		max: 25000,
 		summary: "Change the personal allowance to £@/year",
 		type: "yearly",
@@ -69,8 +69,8 @@ const DEFAULT_POLICY = {
 	NI_PT: {
 		title: "NI Primary Threshold",
 		description: "The Primary Threshold is the lower bound for the main rate of NI.",
-		default: 183,
-		value: 183,
+		default: 184,
+		value: 184,
 		max: 1000,
 		summary: "Change the PT to £@/week",
 		type: "weekly",
@@ -78,8 +78,8 @@ const DEFAULT_POLICY = {
 	NI_UEL: {
 		title: "NI Upper Earnings Limit",
 		description: "The Upper Earnings Limit is the upper bound for the main rate of NI.",
-		default: 962,
-		value: 962,
+		default: 967,
+		value: 967,
 		max: 10000,
 		summary: "Change the UEL to £@/week",
 		type: "weekly",

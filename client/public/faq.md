@@ -51,7 +51,8 @@ For now, you'll have to change it back using the slider or text box, or reload t
 
 
 ### As of what date are policy parameters set?
-We simulate policy as of 2021-01-01, and assume that policy is active throughout 2021. We're working on [updating to the latest policy](https://github.com/UBICenter/policyengine-uk/issues/44).
+
+We use policy parameters from today's date, and backdate them to the start of the year.
 
 
 ## UK impact page

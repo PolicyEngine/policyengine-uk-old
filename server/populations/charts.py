@@ -5,6 +5,7 @@ from plotly.subplots import make_subplots
 import json
 import numpy as np
 from openfisca_uk import Microsimulation
+from openfisca_uk.reforms.presets.current_date import use_current_parameters
 import pandas as pd
 
 WHITE = "#FFF"
@@ -167,12 +168,18 @@ def waterfall(values, labels, gain_label="Spending", loss_label="Revenue"):
     return format_fig(fig, show=False)
 
 
+def total_income(sim):
+    return sim.calc("net_income").sum()
+
+
 def population_waterfall_chart(reform, labels, baseline, reformed):
-    net_income = [baseline.calc("net_income").sum()]
+    net_income = [total_income(baseline)]
     for i in range(1, len(reform)):
-        partially_reformed = Microsimulation(reform[:i])
-        net_income += [partially_reformed.calc("net_income").sum()]
-    net_income += [reformed.calc("net_income").sum()]
+        partially_reformed = Microsimulation(
+            use_current_parameters(), reform[:i]
+        )
+        net_income += [total_income(partially_reformed)]
+    net_income += [total_income(reformed)]
     net_income = np.array(net_income)
     budget_effects = net_income[1:] - net_income[:-1]
     fig = waterfall(budget_effects, labels)

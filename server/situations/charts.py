@@ -1,4 +1,5 @@
 from openfisca_uk import graphs, IndividualSim
+from openfisca_uk.reforms.presets.current_date import use_current_parameters
 from server.utils.formatting import DARK_BLUE, format_fig
 from server.populations.charts import waterfall
 import json
@@ -79,7 +80,7 @@ def mtr_chart(baseline, reformed):
 def household_waterfall_chart(reform, labels, situation, baseline, reformed):
     net_income = [baseline.calc("net_income").sum()]
     for i in range(1, len(reform)):
-        partially_reformed = situation(IndividualSim(reform[:i]))
+        partially_reformed = situation(IndividualSim(reform[:i], year=2021))
         net_income += [partially_reformed.calc("net_income").sum()]
     net_income += [reformed.calc("net_income").sum()]
     net_income = np.array(net_income)
