@@ -192,6 +192,9 @@ function PolicyControls(props) {
 			"NI_add_rate",
 			"NI_UEL",
 		],
+		employer_side: [
+			"NI_employer_rate",
+		],
 		self_emp: [
 			"NI_LPL",
 			"NI_class_4_main_rate",

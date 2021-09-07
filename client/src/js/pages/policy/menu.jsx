@@ -20,6 +20,7 @@ class PolicyMenu extends React.Component {
 					</SubMenu>
 					<SubMenu key="national_insurance" title="National Insurance">
 						<Menu.Item key="employee_side">Employees</Menu.Item>
+						<Menu.Item key="employer_side">Employers</Menu.Item>
 						<Menu.Item key="self_emp">Self-employed</Menu.Item>
 						<Menu.Item key="ni_alt">Structural</Menu.Item>
 					</SubMenu>
