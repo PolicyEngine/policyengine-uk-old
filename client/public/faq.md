@@ -54,6 +54,10 @@ For now, you'll have to change it back using the slider or text box, or reload t
 
 We use policy parameters from today's date, and backdate them to the start of the year.
 
+### How is this model validated?
+
+PolicyEngine uses the OpenFisca-UK microsimulation model, which we constructed by programming rules and parameters specified primarily in the country report (link) created by [UKMOD](https://www.iser.essex.ac.uk/research/projects/ukmod), a microsimulation model developed by the University of Essex. We also validated against legislation, various gov.uk sites, reports from other microsimulation models, and external benefits calculators. See the [OpenFisca-UK validation page](https://pslmodels.github.io/openfisca-uk/validation.html) for more information.
+
 
 ## UK impact page
 
