@@ -2,7 +2,7 @@ reset:
 	rm -rf openfisca_uk
 	rm -rf openfisca_uk_data
 install: openfisca_uk openfisca_uk_data
-	pip install -r requirements.txt
+	pip install -e .
 	cd client; npm install
 format:
 	black . -l 79
@@ -23,14 +23,14 @@ openfisca_uk_data:
 	rm -rf openfisca-uk-data
 	gsutil cp gs://uk-policy-engine.appspot.com/frs_2018.h5 openfisca_uk_data/microdata/openfisca_uk/frs_2018.h5
 deploy: openfisca_uk_data openfisca_uk test
-	rm -rf server/static
+	rm -rf policy_engine/static
 	cd client; npm run build
-	cp -r client/build server/static
+	cp -r client/build policy_engine/static
 	y | gcloud app deploy
 test:
 	pytest tests
 deploy-local: test
-	rm -rf server/static
+	rm -rf policy_engine/static
 	cd client; npm run build
 	cp -r client/build server/static
 	FLASK_APP=main.py FLASK_DEBUG=1 flask run
