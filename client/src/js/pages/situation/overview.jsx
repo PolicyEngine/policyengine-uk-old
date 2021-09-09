@@ -42,9 +42,22 @@ function SituationOverview(props) {
 				{
 					<>
 						<Step status="finish" title={isSingleFamily ? "Single-family household" : "Multi-family household"} description="This affects benefit entitlements" />
-						<Step status="finish" title={(numWA == 0 ? "No " : numWA) + " working-age adult" + (numWA == 1 ? "" : "s")}/>
-						<Step status="finish" title={(numChildren == 0 ? "No " : numChildren) + " child" + (numChildren == 1 ? "" : "ren")}/>
-						<Step status="finish" title={(numPensioners == 0 ? "No " : numPensioners) + " pensioner" + (numPensioners == 1 ? "" : "s")}/>
+						{
+							numWA > 0 ? 
+								<Step status="finish" title={numWA + " working-age adult" + (numWA == 1 ? "" : "s")}/> :
+								null
+						}
+						{
+							numChildren > 0 ?
+								<Step status="finish" title={numChildren + " child" + (numChildren == 1 ? "" : "ren")}/> :
+								null
+						}
+						{
+							numPensioners > 0 ?
+								<Step status="finish" title={numPensioners + " pensioner" + (numPensioners == 1 ? "" : "s")}/> :
+								null
+						}
+						
 					</>
 				}
 			</Steps>
