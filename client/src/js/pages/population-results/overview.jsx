@@ -2,6 +2,7 @@ import { Steps, Divider, Empty, Button } from "antd";
 import { Link } from "react-router-dom";
 import { SimulateButton } from "../policy/overview";
 import { SharePolicyLinks } from "../policy/overview";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const { Step } = Steps;
 
@@ -39,7 +40,7 @@ function PolicySituationOverview(props) {
 			{
 				!props.noButton ?
 					<Empty description="" image={null}>
-						<SimulateButton text="🠔 Change the policy reform" target="/" policy={props.policy} onClick={props.onSubmit} />
+						<SimulateButton text={<><ArrowLeftOutlined /> Change the policy reform</>} target="/" policy={props.policy} onClick={props.onSubmit} />
 						<SimulateButton hidden text="🠔 Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
 						<SimulateButton primary text="Describe your household" target="/situation" policy={props.policy} onClick={props.onSubmit} />
 						<SimulateButton disabled text="See your results" target="/situation-results" policy={props.policy} onClick={props.onSubmit} />
