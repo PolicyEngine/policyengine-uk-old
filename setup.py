@@ -8,7 +8,7 @@ setup(
     license="http://www.fsf.org/licensing/licenses/agpl-3.0.html",
     url="https://github.com/ubicenter/policyengine-uk",
     install_requires=[
-        "OpenFisca-UK @ git+https://github.com/pslmodels/openfisca-uk",
+        # "OpenFisca-UK @ git+https://github.com/pslmodels/openfisca-uk",
         "ubicenter @ git+https://github.com/ubicenter/ubicenter.py",
         "plotly",
         "flask",
