@@ -15,15 +15,18 @@ def decile_chart(baseline, reformed):
     income = baseline.calc("household_net_income", map_to="person")
     equiv_income = baseline.calc("equiv_household_net_income", map_to="person")
     gain = reformed.calc("household_net_income", map_to="person") - income
-    changes = gain.groupby(equiv_income.decile_rank()).mean()
+    changes = (
+        gain.groupby(equiv_income.decile_rank()).sum()
+        / income.groupby(equiv_income.decile_rank()).sum()
+    )
     df = pd.DataFrame({"Decile": changes.index, "Change": changes.values})
     fig = (
         format_fig(px.bar(df, x="Decile", y="Change"), show=False)
         .update_layout(
-            title="Impact on net income by decile",
+            title="Change to net income by decile",
             xaxis_title="Equivalised disposable income decile",
-            yaxis_title="Average change to net income",
-            yaxis_tickprefix="£",
+            yaxis_title="Percentage change",
+            yaxis_tickformat="%",
             showlegend=False,
             xaxis_tickvals=list(range(1, 11)),
         )

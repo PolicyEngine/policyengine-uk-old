@@ -32,7 +32,7 @@ export function TopHeader() {
 		<>
 			<div className="d-none d-md-block">
 				<PageHeader
-					title={<>PolicyEngine<sub style={{fontSize: "50%"}}>UK</sub></>}
+					title={<><a href="/" style={{color: "black"}}>PolicyEngine<sub style={{fontSize: "50%"}}>UK</sub></a></>}
 					subTitle="by the UBI Center"
 					style={{minHeight: 40}}
 					tags={[<Tag key="beta" color="processing">BETA</Tag>]}
