@@ -14,6 +14,8 @@ reform_examples = (
     reforms.parametric.set_parameter("tax.income_tax.rates.uk[0].rate", 0.21),
 )
 
+# Test charts for each reform
+
 
 @pytest.mark.parametrize("reform", reform_examples)
 def test_decile_chart(reform):

@@ -29,6 +29,8 @@ reform_examples = (
     raise_basic_rate,
 )
 
+# Test charts for each possible (reform, situation) pair
+
 
 @pytest.mark.parametrize(
     "situation,reform", itertools.product(situation_examples, reform_examples)
