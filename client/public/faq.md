@@ -5,16 +5,16 @@
 
 ### What is PolicyEngine?
 
-PolicyEngine is a tool to democratise tax and benefit analysis. With PolicyEngine, anyone can design a reform to the UK tax and benefit system, and explore the impact of that reform both on the UK overall and on one's individual household.
+PolicyEngine is a tool to democratise tax and benefit analysis. With PolicyEngine, anyone can design a reform to the UK tax and benefit system, and explore the impact of that reform both on society and one's own household.
 
 ### How do I use PolicyEngine?
 
-See our [demo video](https://www.youtube.com/watch?v=nv_gVtokikU&t=1s) for a tour of the interface.
+See our [demo video](https://youtu.be/P7ELqxEHRhE) for a tour of the interface.
 
 
 ### Who created PolicyEngine?
 
-PolicyEngine is a product from the [UBI Center](http://ubicenter.org), a research organization studying universal basic income policies. We also developed [OpenFisca-UK](https://github.com/PSLmodels/openfisca-uk), the microsimulation model underlying PolicyEngine. [Nikhil Woodruff](https://www.ubicenter.org/author/nikhil/) is the technical lead and [Max Ghenis](https://www.ubicenter.org/author/max/) is the product manager.
+Nikhil Woodruff and Max Ghenis built the PolicyEngine product while working at the UBI Center, a research organisation that studies universal basic income policies. They then created PolicyEngine as an independent nonprofit (fiscally sponsored by the [PSL Foundation](https://opencollective.com/psl)) to serve the broader policy community and ultimately the public, striving to make everyone a policymaker.
 
 
 ### When will PolicyEngine be available in my country?
@@ -24,12 +24,12 @@ Currently, PolicyEngine is only available in the UK, but we're working on bringi
 
 ### Where can I learn more about how PolicyEngine works?
 
-The code for [PolicyEngine](github.com/ubicenter/policyengine-uk) and for [OpenFisca-UK](https://github.com/PSLmodels/openfisca-uk), the microsimulation model that underlies it, is publicly available on GitHub. We've also answered some common questions below.
+The code for [PolicyEngine](http://github.com/PolicyEngine/policyengine-uk) and for [OpenFisca-UK](https://github.com/PolicyEngine/openfisca-uk), the microsimulation model that underlies it, is publicly available on GitHub. We've also answered some common questions below.
 
 
 ### How can I help?
 
-Using and sharing PolicyEngine is already a great help to us! If you'd like to support our work and web hosting fees, please consider [making a donation](https://www.ubicenter.org/donate/). We're also entirely open source, and welcome contributions from developers on [GitHub](github.com/ubicenter/policyengine-uk).
+Using and sharing PolicyEngine is already a great help to us! If you'd like to support our work and web hosting fees, please consider [making a donation](https://opencollective.com/psl) through our fiscal sponsor, the PSL Foundation. We're also entirely open source, and welcome contributions from developers on [GitHub](http://github.com/PolicyEngine/policyengine-uk).
 
 
 ## Policy page
@@ -37,17 +37,17 @@ Using and sharing PolicyEngine is already a great help to us! If you'd like to s
 
 ### Do you only simulate policies listed on this page?
 
-No, we simulate essentially the entire tax and benefit system, except for [capital gains tax](https://github.com/PSLmodels/openfisca-uk/issues/40) and [council tax benefit](https://github.com/PSLmodels/openfisca-uk/issues/150). For example, while we don't yet expose parameters on Income Support, we do simulate it for those who are eligible.
+No, we simulate essentially the entire tax and benefit system, except for [capital gains tax](https://github.com/PolicyEngine/openfisca-uk/issues/40) and [council tax benefit](https://github.com/PolicyEngine/openfisca-uk/issues/150). For example, while we don't yet expose parameters on Income Support, we do simulate it for those who are eligible.
 
 
 ### Will you be adding more policy parameters?
 
-Yes, we’re planning to add more tax and benefit parameter options, and other taxes like [land value taxes](https://github.com/UBICenter/policyengine-uk/issues/105) and [carbon taxes](https://github.com/UBICenter/policyengine-uk/issues/104). What would you like to simulate? 
+Yes, we’re planning to add more tax and benefit parameter options, and other taxes like [land value taxes](https://github.com/PolicyEngine/policyengine-uk/issues/105) and [carbon taxes](https://github.com/PolicyEngine/policyengine-uk/issues/104). What would you like to simulate? 
 
 
 ### How can I reset a policy parameter to its current value?
 
-For now, you'll have to change it back using the slider or text box, or reload the page to reset all policy parameters. We're working on a [better way](https://github.com/UBICenter/policyengine-uk/issues/23).
+For now, you'll have to change it back using the slider or text box, or reload the page to reset all policy parameters. We're working on a [better way](https://github.com/PolicyEngine/policyengine-uk/issues/23).
 
 
 ### As of what date are policy parameters set?
@@ -56,7 +56,7 @@ We use policy parameters from today's date, and backdate them to the start of th
 
 ### How is this model validated?
 
-PolicyEngine uses the OpenFisca-UK microsimulation model, which we constructed by programming rules and parameters specified primarily in the [country report](https://www.iser.essex.ac.uk/research/publications/working-papers/cempa/cempa7-20.pdf) created by [UKMOD](https://www.iser.essex.ac.uk/research/projects/ukmod), a microsimulation model developed by the University of Essex. We also validated against legislation, various gov.uk sites, reports from other microsimulation models, and external benefits calculators. See the [OpenFisca-UK validation page](https://pslmodels.github.io/openfisca-uk/validation.html) for more information.
+PolicyEngine uses the OpenFisca-UK microsimulation model, which we constructed by programming rules and parameters specified primarily in the [country report](https://www.iser.essex.ac.uk/research/publications/working-papers/cempa/cempa7-20.pdf) created by [UKMOD](https://www.iser.essex.ac.uk/research/projects/ukmod), a microsimulation model developed by the University of Essex. We also validated against legislation, various gov.uk sites, reports from other microsimulation models, and external benefits calculators. See the [OpenFisca-UK validation page](https://PolicyEngine.github.io/openfisca-uk/validation.html) for more information.
 
 
 ## UK impact page
@@ -66,7 +66,7 @@ PolicyEngine uses the OpenFisca-UK microsimulation model, which we constructed b
 
 We use the Family Resources Survey (FRS), the UK's standard survey for estimating poverty. The latest FRS is from 2018-19, and we extrapolate this to 2021 using growth factors published by the ONS and OBR. We also adjust benefit receipt to reflect trends like the Universal Credit rollout.
 
-The FRS underestimates high incomes, so PolicyEngine accordingly will as well; for example, we'll underestimate the revenue from a reform that raises the Additional Rate. We're working on improving the data quality by [adjusting top incomes](https://github.com/PSLmodels/openfisca-uk/issues/103) to better match datasets that accurately capture that population segment.
+The FRS underestimates high incomes, so PolicyEngine accordingly will as well; for example, we'll underestimate the revenue from a reform that raises the Additional Rate. We're working on improving the data quality by [adjusting top incomes](https://github.com/PolicyEngine/openfisca-uk/issues/103) to better match datasets that accurately capture that population segment.
 
 
 ### What behavioral or macroeconomic assumptions do you make?
@@ -96,7 +96,7 @@ Child poverty refers to poverty among people aged 0 to 17. Working age adults ar
 
 ### How can I remove a household member I've added?
 
-Sorry, but for now you have to reload the page and re-enter your household information. We're working on a [better way](https://github.com/UBICenter/policyengine-uk/issues/101).
+Sorry, but for now you have to reload the page and re-enter your household information. We're working on a [better way](https://github.com/PolicyEngine/policyengine-uk/issues/101).
 
 
 ### Do you store data about my household?
