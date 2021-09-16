@@ -2,7 +2,15 @@ from openfisca_uk.tools.simulation import IndividualSim
 import numpy as np
 
 
-def headline_figures(baseline, reformed):
+def headline_figures(baseline: IndividualSim, reformed: IndividualSim) -> dict:
+    """ Create dictionary of totals for the reform and baseline.
+    
+    :param baseline: Baseline simulation
+    :type baseline: IndividualSim
+    :param reformed: Reform simulation
+    :type reformed: IndividualSim
+    :return: Dictionary of baseline and reformed sums for a set of variables
+    """
     getValue = lambda sim, name: float(np.array(sim.calc(name)).sum())
     getValues = lambda name: {
         "old": getValue(baseline, name),
