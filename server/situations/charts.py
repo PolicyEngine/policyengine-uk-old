@@ -15,7 +15,16 @@ COLOR_MAP = {
 }
 
 
-def budget_chart(baseline, reformed):
+def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
+    """Produces line chart with employment income on the x axis and net income
+    on the y axis, for baseline and reform simulations.
+    :param baseline: Baseline simulation.
+    :type baseline: IndividualSim
+    :param reformed: Reform simulation.
+    :type reformed: IndividualSim
+    :return: Representation of the budget plotly chart as a JSON string.
+    :rtype: str
+    """
     df = pd.DataFrame(
         {
             "Employment income": baseline.calc("employment_income").sum(),
@@ -44,7 +53,17 @@ def budget_chart(baseline, reformed):
     )
 
 
-def mtr_chart(baseline, reformed):
+def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
+    """Produces line chart with employment income on the x axis and marginal
+    tax rate on the y axis, for baseline and reform simulations.
+    :param baseline: Baseline simulation.
+    :type baseline: IndividualSim
+    :param reformed: Reform simulation.
+    :type reformed: IndividualSim
+    :return: Representation of the marginal tax rate plotly chart as a JSON
+        string.
+    :rtype: str
+    """
     earnings = baseline.calc("employment_income").sum()
     baseline_net = baseline.calc("net_income").sum()
     reform_net = reformed.calc("net_income").sum()
