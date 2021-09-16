@@ -2,7 +2,6 @@ reset:
 	rm -rf openfisca_uk
 	rm -rf openfisca_uk_data
 install: openfisca_uk openfisca_uk_data
-	pip install git+https://github.com/PSLmodels/synthimpute
 	pip install -e .
 	cd client; npm install
 format:
@@ -18,6 +17,7 @@ openfisca_uk:
 	cp -r openfisca-uk/openfisca_uk openfisca_uk
 	rm -rf openfisca-uk
 openfisca_uk_data:
+	pip install git+https://github.com/PSLmodels/synthimpute
 	git clone https://github.com/ubicenter/openfisca-uk-data --depth 1
 	cd openfisca-uk-data; make install
 	cp -r openfisca-uk-data/openfisca_uk_data/ openfisca_uk_data
