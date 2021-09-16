@@ -15,8 +15,8 @@ def poverty_rate(sim, population_var):
 def headline_metrics(
     baseline: Microsimulation, reformed: Microsimulation
 ) -> dict:
-    """ Compute headline society-wide metrics.
-    
+    """Compute headline society-wide metrics.
+
     :param baseline: Baseline simulation.
     :type baseline: Microsimulation
     :param reformed: Reform simulation.

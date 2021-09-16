@@ -3,8 +3,8 @@ import numpy as np
 
 
 def headline_figures(baseline: IndividualSim, reformed: IndividualSim) -> dict:
-    """ Create dictionary of totals for the reform and baseline.
-    
+    """Create dictionary of totals for the reform and baseline.
+
     :param baseline: Baseline simulation
     :type baseline: IndividualSim
     :param reformed: Reform simulation
