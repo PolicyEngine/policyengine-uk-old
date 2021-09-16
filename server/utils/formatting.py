@@ -3,10 +3,6 @@ from typing import Union
 
 CONFIG = {"displayModeBar": False}
 
-LOGO_URL = (
-    "https://raw.githubusercontent.com/UBICenter/blog/master/jb/"
-    "_static/ubi_center_logo_wide_blue.png"
-)
 
 LIGHTER_BLUE = "#ABCEEB"  # Blue 100.
 LIGHT_BLUE = "#49A6E2"  # Blue 500.
@@ -17,38 +13,8 @@ GRAY = "#BDBDBD"
 BLUE_COLOR_SEQUENCE = [LIGHTER_BLUE, LIGHT_BLUE, BLUE, DARK_BLUE]
 
 
-def add_ubi_center_logo(
-    fig: go.Figure, x: float = 0.98, y: float = -0.12
-) -> None:
-    """Adds UBI Center logo to a plotly figure. Returns nothing.
-
-    :param fig: Plotly figure.
-    :type fig: go.Figure
-    :param x: Horizontal coordinate.
-    :type x: float
-    :param y: Vertical coordinate, defaults to -0.12.
-    :type y: float, optional
-    """
-    fig.add_layout_image(
-        dict(
-            source=LOGO_URL,
-            xref="paper",
-            yref="paper",
-            x=x,
-            y=y,
-            sizex=0.12,
-            sizey=0.12,
-            xanchor="right",
-            yanchor="bottom",
-        )
-    )
-
-
-def format_fig(
-    fig: go.Figure, show: bool = True, **kwargs
-) -> Union[None, go.Figure]:
-    """Formats figure with UBI styling and logo.
-    **kwargs passed to add_ubi_center_logo.
+def format_fig(fig: go.Figure, show: bool = True,) -> Union[None, go.Figure]:
+    """Formats figure with styling and logo.
 
     :param fig: Plotly figure.
     :type fig: go.Figure
@@ -59,7 +25,6 @@ def format_fig(
         formatted plotly figure.
     :rtype: go.Figure
     """
-    # add_ubi_center_logo(fig, **kwargs)
     fig.update_xaxes(
         title_font=dict(size=16, color="black"), tickfont={"size": 14}
     )
