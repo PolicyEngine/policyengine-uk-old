@@ -1,9 +1,10 @@
-name: Run tests
+name: Pull reqest
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -12,6 +13,7 @@ jobs:
         with:
           options: ". -l 79 --check"
   test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
