@@ -1,13 +1,10 @@
 import json
-from typing import Any
-from flask import Flask, request, redirect, make_response, send_from_directory
+from flask import Flask, request, make_response, send_from_directory
 from flask_cors import CORS
 import logging
 from time import time
 from openfisca_uk import Microsimulation, IndividualSim
-from pathlib import Path
 from google.cloud import storage
-import os
 import gc
 
 from server.simulation.situations import create_situation
