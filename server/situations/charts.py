@@ -1,5 +1,5 @@
-from openfisca_uk import graphs, IndividualSim
-from server.utils.formatting import DARK_BLUE, format_fig
+from openfisca_uk import IndividualSim
+from server.utils.formatting import format_fig
 from server.populations.charts import waterfall
 import json
 import plotly.express as px
