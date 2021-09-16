@@ -1,7 +1,7 @@
 from openfisca_uk import graphs, IndividualSim
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
-from server.utils.formatting import DARK_BLUE, format_fig
-from server.populations.charts import waterfall
+from policy_engine.utils.formatting import DARK_BLUE, format_fig
+from policy_engine.populations.charts import waterfall
 import json
 import plotly.express as px
 import pandas as pd
