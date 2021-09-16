@@ -18,11 +18,9 @@ COLOR_MAP = {
 def budget_chart(baseline, reformed):
     df = pd.DataFrame(
         {
-            "Employment income": baseline.calc("employment_income").sum(
-                axis=0
-            ),
-            "Baseline": baseline.calc("net_income").sum(axis=0),
-            "Reform": reformed.calc("net_income").sum(axis=0),
+            "Employment income": baseline.calc("employment_income").sum(),
+            "Baseline": baseline.calc("net_income").sum(),
+            "Reform": reformed.calc("net_income").sum(),
         }
     )
     graph = px.line(
@@ -47,9 +45,9 @@ def budget_chart(baseline, reformed):
 
 
 def mtr_chart(baseline, reformed):
-    earnings = baseline.calc("employment_income").sum(axis=0)
-    baseline_net = baseline.calc("net_income").sum(axis=0)
-    reform_net = reformed.calc("net_income").sum(axis=0)
+    earnings = baseline.calc("employment_income").sum()
+    baseline_net = baseline.calc("net_income").sum()
+    reform_net = reformed.calc("net_income").sum()
     get_mtr = lambda x, y: 1 - ((y[1:] - y[:-1]) / (x[1:] - x[:-1]))
     baseline_mtr = get_mtr(earnings, baseline_net)
     reform_mtr = get_mtr(earnings, reform_net)
