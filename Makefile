@@ -2,6 +2,7 @@ reset:
 	rm -rf openfisca_uk
 	rm -rf openfisca_uk_data
 install: openfisca_uk openfisca_uk_data
+	pip install git+https://github.com/PSLmodels/synthimpute
 	pip install -e .
 	cd client; npm install
 format:
