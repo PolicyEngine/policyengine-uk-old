@@ -1,9 +1,13 @@
-name: Deploy to GCP
+name: Push
 
-on: [push]
+on: 
+  push:
+    branches:
+      - master
 
 jobs:
   deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
