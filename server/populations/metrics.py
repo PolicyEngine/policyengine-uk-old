@@ -1,7 +1,9 @@
 from openfisca_uk import Microsimulation
 from rdbl import gbp
 
-pct_change = lambda x, y: (y - x) / x
+
+def pct_change(x, y):
+    return (y - x) / x
 
 
 def poverty_rate(sim, population_var):
