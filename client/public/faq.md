@@ -22,7 +22,8 @@ They then created PolicyEngine as an independent nonprofit (fiscally sponsored b
 ### When will PolicyEngine be available in my country?
 
 Currently, PolicyEngine is only available in the UK, but we're working on bringing it to the US.
-Want to see PolicyEngine in your country? [Let us know](https://zej8fnylwn9.typeform.com/to/XFFu15Xq)!
+Want to see PolicyEngine in your country?
+[Let us know!](https://zej8fnylwn9.typeform.com/to/XFFu15Xq)
 
 
 ### Where can I learn more about how PolicyEngine works?
@@ -49,7 +50,9 @@ For example, while we don't yet expose parameters on Income Support, we do simul
 
 ### Will you be adding more policy parameters?
 
-Yes, we're planning to add more tax and benefit parameter options, and other taxes like [land value taxes](https://github.com/PolicyEngine/policyengine-uk/issues/105) and [carbon taxes](https://github.com/PolicyEngine/policyengine-uk/issues/104). What would you like to simulate? 
+Yes, we're planning to add more tax and benefit parameter options, and other taxes like [land value taxes](https://github.com/PolicyEngine/policyengine-uk/issues/105) and [carbon taxes](https://github.com/PolicyEngine/policyengine-uk/issues/104).
+What would you like to simulate?
+[Let us know!](https://zej8fnylwn9.typeform.com/to/XFFu15Xq)
 
 
 ### How can I reset a policy parameter to its current value?
