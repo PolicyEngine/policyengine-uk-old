@@ -9,6 +9,11 @@ from ubicenter.plotly import GRAY, BLUE
 
 WHITE = "#FFF"
 
+COLOR_MAP = {
+    "Baseline": GRAY,
+    "Reform": BLUE,
+}
+
 
 def budget_chart(baseline, reformed):
     df = pd.DataFrame(
@@ -25,7 +30,7 @@ def budget_chart(baseline, reformed):
         x="Employment income",
         y=["Baseline", "Reform"],
         labels={"variable": "Policy", "value": "Net income"},
-        color_discrete_map={"Baseline": GRAY, "Reform": BLUE},
+        color_discrete_map=COLOR_MAP,
     )
     return json.loads(
         format_fig(graph, show=False)
@@ -60,7 +65,7 @@ def mtr_chart(baseline, reformed):
         x="Employment income",
         y=["Baseline", "Reform"],
         labels={"variable": "Policy", "value": "Effective MTR"},
-        color_discrete_map={"Baseline": GRAY, "Reform": BLUE},
+        color_discrete_map=COLOR_MAP,
     )
     return json.loads(
         format_fig(graph, show=False)
