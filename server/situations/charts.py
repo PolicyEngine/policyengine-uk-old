@@ -1,5 +1,4 @@
 from openfisca_uk import graphs, IndividualSim
-from openfisca_uk.reforms.presets.current_date import use_current_parameters
 from server.utils.formatting import DARK_BLUE, format_fig
 from server.populations.charts import waterfall
 import json
