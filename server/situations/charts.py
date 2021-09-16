@@ -67,7 +67,10 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     earnings = baseline.calc("employment_income").sum()
     baseline_net = baseline.calc("net_income").sum()
     reform_net = reformed.calc("net_income").sum()
-    get_mtr = lambda x, y: 1 - ((y[1:] - y[:-1]) / (x[1:] - x[:-1]))
+
+    def get_mtr(x, y):
+        return 1 - ((y[1:] - y[:-1]) / (x[1:] - x[:-1]))
+
     baseline_mtr = get_mtr(earnings, baseline_net)
     reform_mtr = get_mtr(earnings, reform_net)
     df = pd.DataFrame(
@@ -121,7 +124,7 @@ def household_waterfall_chart(reform, labels, situation, baseline, reformed):
     )
     fig.update_layout(
         title="Budget breakdown",
-        xaxis_title="",
+        xaxis_title=None,
         yaxis_title="Yearly amount",
         yaxis_tickprefix="£",
         legend_title=None,
