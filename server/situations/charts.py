@@ -38,7 +38,7 @@ def budget_chart(baseline, reformed):
             yaxis_title="Household net income",
             yaxis_tickprefix="£",
             xaxis_tickprefix="£",
-            legend_title="Policy",
+            legend_title=None,
         )
         .to_json()
     )
@@ -73,7 +73,7 @@ def mtr_chart(baseline, reformed):
             xaxis_tickprefix="£",
             yaxis_tickformat="%",
             yaxis_title="Effective MTR",
-            legend_title="Policy",
+            legend_title=None,
         )
         .to_json()
     )
@@ -105,6 +105,6 @@ def household_waterfall_chart(reform, labels, situation, baseline, reformed):
         xaxis_title="",
         yaxis_title="Yearly amount",
         yaxis_tickprefix="£",
-        legend_title="",
+        legend_title=None,
     )
     return json.loads(fig.to_json())
