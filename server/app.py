@@ -69,7 +69,7 @@ def ubi():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, components = create_reform(params, return_names=True)
+    reform, _ = create_reform(params, return_names=True)
     reformed = Microsimulation(reform)
     revenue = (
         baseline.calc("net_income").sum() - reformed.calc("net_income").sum()
