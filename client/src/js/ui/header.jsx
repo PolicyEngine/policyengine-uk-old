@@ -33,7 +33,6 @@ export function TopHeader() {
 			<div className="d-none d-md-block">
 				<PageHeader
 					title={<><a href="/" style={{color: "black"}}>PolicyEngine<sub style={{fontSize: "50%"}}>UK</sub></a></>}
-					subTitle="by the UBI Center"
 					style={{minHeight: 40}}
 					tags={[<Tag key="beta" color="processing">BETA</Tag>]}
 				/>
@@ -45,11 +44,6 @@ export function TopHeader() {
 						style={{paddingBottom: 8}}
 						tags={[<Tag key="beta" color="processing">BETA</Tag>]}
 					/>
-				</div>
-				<div className="d-flex justify-content-center">
-					<div className="ant-page-header-heading-sub-title">
-						By the UBI Center
-					</div>
 				</div>
 			</div>
 		</>
