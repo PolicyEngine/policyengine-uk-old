@@ -74,8 +74,8 @@ See the [OpenFisca-UK validation page](https://PolicyEngine.github.io/openfisca-
 
 ### What data do you use to estimate UK-wide impacts?
 
-We use the Family Resources Survey (FRS), the UK's standard survey for estimating poverty.
-The latest FRS is from 2018-19, and we extrapolate this to 2021 using growth factors published by the ONS and OBR.
+We use the Family Resources Survey (FRS), the UK's standard survey for estimating poverty, from 2018-19 (we're working on [updating to 2019-20](https://github.com/policyengine/openfisca-uk-data/issues/19)).
+We then extrapolate the survey to 2021 using growth factors published by the Office of National Statistics and Office for Budget Responsibility.
 We also adjust benefit receipt to reflect trends like the Universal Credit rollout.
 
 The FRS underestimates high incomes, so PolicyEngine accordingly will as well; for example, we'll underestimate the revenue from a reform that raises the Additional Rate.
