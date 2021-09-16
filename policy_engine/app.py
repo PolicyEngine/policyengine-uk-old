@@ -7,12 +7,12 @@ from openfisca_uk import Microsimulation, IndividualSim
 from google.cloud import storage
 import gc
 
-from server.simulation.situations import create_situation
-from server.simulation.reforms import create_reform
+from policy_engine.simulation.situations import create_situation
+from policy_engine.simulation.reforms import create_reform
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
 
-from server.populations.metrics import headline_metrics
-from server.populations.charts import (
+from policy_engine.populations.metrics import headline_metrics
+from policy_engine.populations.charts import (
     decile_chart,
     intra_decile_chart,
     poverty_chart,
@@ -20,8 +20,8 @@ from server.populations.charts import (
     population_waterfall_chart,
 )
 
-from server.situations.metrics import headline_figures
-from server.situations.charts import (
+from policy_engine.situations.metrics import headline_figures
+from policy_engine.situations.charts import (
     household_waterfall_chart,
     mtr_chart,
     budget_chart,

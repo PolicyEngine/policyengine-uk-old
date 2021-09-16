@@ -1,6 +1,6 @@
 from pathlib import Path
 
-REPO = Path(__file__).parent.parent
+REPO = Path(__file__).parents[2]
 
 
 def in_text_files(folder: Path, text: str):

@@ -1,0 +1,9 @@
+OpenFisca-UK@ git+https://github.com/pslmodels/openfisca-uk
+ubicenter@ git+https://github.com/ubicenter/ubicenter.py
+plotly
+flask
+flask_cors
+rdbl
+kaleido
+google-cloud-storage>=1.42.0
+gunicorn
