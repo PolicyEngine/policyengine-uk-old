@@ -11,13 +11,13 @@ debug-client:
 debug-server:
 	FLASK_APP=main.py FLASK_DEBUG=1 flask run
 openfisca_uk:
+	pip install git+https://github.com/PSLmodels/synthimpute
 	git clone https://github.com/PSLmodels/openfisca-uk --depth 1
 	cd openfisca-uk; make install
 	openfisca-uk-setup --set-default frs
 	cp -r openfisca-uk/openfisca_uk openfisca_uk
 	rm -rf openfisca-uk
 openfisca_uk_data:
-	pip install git+https://github.com/PSLmodels/synthimpute
 	git clone https://github.com/ubicenter/openfisca-uk-data --depth 1
 	cd openfisca-uk-data; make install
 	cp -r openfisca-uk-data/openfisca_uk_data/ openfisca_uk_data
