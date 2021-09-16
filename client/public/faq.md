@@ -34,7 +34,7 @@ We've also answered some common questions below.
 ### How can I help?
 
 Using and sharing PolicyEngine is already a great help to us!
-If you'd like to support our work and computing fees, please consider [making a donation](https://opencollective.com/psl) through our fiscal sponsor, the PSL Foundation.
+If you'd like to support our work and computing fees, please consider [making a donation](https://opencollective.com/psl) through our fiscal sponsor, the PSL Foundation (tax-deductible in the US).
 We're also entirely open source, and welcome contributions from developers on [GitHub](http://github.com/PolicyEngine/policyengine-uk).
 
 
