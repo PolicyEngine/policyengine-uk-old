@@ -12,7 +12,7 @@ debug-server:
 	FLASK_APP=main.py FLASK_DEBUG=1 flask run
 openfisca_uk:
 	pip install git+https://github.com/PSLmodels/synthimpute
-	git clone https://github.com/PSLmodels/openfisca-uk --depth 1
+	git clone https://github.com/PolicyEngine/openfisca-uk --depth 1
 	cd openfisca-uk; make install
 	openfisca-uk-setup --set-default frs_was_imp
 	cp -r openfisca-uk/openfisca_uk openfisca_uk
