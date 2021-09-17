@@ -14,6 +14,7 @@ openfisca_uk:
 	pip install git+https://github.com/PSLmodels/synthimpute
 	git clone https://github.com/PSLmodels/openfisca-uk --depth 1
 	cd openfisca-uk; make install
+	openfisca-uk-data frs_was_imp download 2019
 	openfisca-uk-setup --set-default frs_was_imp
 	cp -r openfisca-uk/openfisca_uk openfisca_uk
 	rm -rf openfisca-uk
@@ -22,7 +23,6 @@ openfisca_uk_data:
 	cd openfisca-uk-data; make install
 	cp -r openfisca-uk-data/openfisca_uk_data/ openfisca_uk_data
 	rm -rf openfisca-uk-data
-	openfisca-uk-data frs_was_imp download 2019
 deploy: openfisca_uk_data openfisca_uk test
 	rm -rf policy_engine/static
 	cd client; npm run build
