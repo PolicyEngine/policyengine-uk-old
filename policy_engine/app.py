@@ -30,7 +30,9 @@ from policy_engine.situations.charts import (
     budget_chart,
 )
 
-VERSION = "0.0.10"
+from openfisca_uk_data import FRS_WAS_Imputation
+
+VERSION = "0.0.11"
 USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 
