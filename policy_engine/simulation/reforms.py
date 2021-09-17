@@ -9,6 +9,49 @@ from openfisca_uk.reforms.presets.current_date import use_current_parameters
 from openfisca_uk.entities import *
 from openfisca_uk.tools.general import *
 
+def add_LVT() -> Reform:
+    class land_value(Variable):
+        entity = Household
+        label = "Land value"
+        definition_period = YEAR
+        value_type = float
+
+    class LVT(Variable):
+        entity = Household
+        label = "Land value tax"
+        definition_period = YEAR
+        value_type = float
+
+        def formula(household, period, parameters):
+            rate = parameters(period).tax.land_value.rate
+            return rate * household("land_value", period)
+    
+    class tax(BASELINE_VARIABLES.tax):
+        def formula(person, period, parameters):
+            LVT_charge = person.household("LVT", period) * person("is_household_head", period)
+            original_tax = BASELINE_VARIABLES.tax.formula(person, period, parameters)
+            return original_tax + LVT_charge
+    
+    def add_lvt_param(parameters: ParameterNode):
+        parameters.tax.add_child(
+            "land_value",
+            ParameterNode(
+                data={
+                    "rate": {"values": {"0000-01-01": 0.00}},
+                }
+            ),
+        )
+        return parameters
+
+    class lvt_param_reform(Reform):
+        def apply(self):
+            self.add_variable(land_value)
+            self.add_variable(LVT)
+            self.update_variable(tax)
+            self.modify_parameters(add_lvt_param)
+    
+    return lvt_param_reform
+
 
 def change_param(param, value, bracket=None, threshold=False):
     def modifier(parameters):
@@ -271,6 +314,14 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
             )
         ]
         names += ["NI Self-emp add."]
+    if "LVT" in params:
+        reforms += [
+            change_param(
+                "tax.land_value.rate",
+                params["LVT"] / 100,
+            )
+        ]
+        names += ["LVT"]
     ABOLITIONS = (
         "savings_allowance",
         "dividend_allowance",
@@ -320,7 +371,7 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
     if len(reforms) > 1:
         later_reforms = reforms[1:]
     reform_tuple = tuple(
-        ((use_current_parameters(), first_reform), *later_reforms)
+        ((use_current_parameters(), add_LVT(), first_reform), *later_reforms)
     )
     if not return_names:
         return reform_tuple

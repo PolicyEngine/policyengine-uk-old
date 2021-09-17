@@ -14,7 +14,7 @@ openfisca_uk:
 	pip install git+https://github.com/PSLmodels/synthimpute
 	git clone https://github.com/PSLmodels/openfisca-uk --depth 1
 	cd openfisca-uk; make install
-	openfisca-uk-setup --set-default frs
+	openfisca-uk-setup --set-default frs_was_imp
 	cp -r openfisca-uk/openfisca_uk openfisca_uk
 	rm -rf openfisca-uk
 openfisca_uk_data:
@@ -22,14 +22,14 @@ openfisca_uk_data:
 	cd openfisca-uk-data; make install
 	cp -r openfisca-uk-data/openfisca_uk_data/ openfisca_uk_data
 	rm -rf openfisca-uk-data
-	gsutil cp gs://uk-policy-engine.appspot.com/frs_2018.h5 openfisca_uk_data/microdata/openfisca_uk/frs_2018.h5
+	openfisca-uk-data frs_was_imp download 2019
 deploy: openfisca_uk_data openfisca_uk test
 	rm -rf policy_engine/static
 	cd client; npm run build
 	cp -r client/build policy_engine/static
 	y | gcloud app deploy
 test:
-	pytest tests
+	pytest tests -vv
 deploy-local: test
 	rm -rf policy_engine/static
 	cd client; npm run build

@@ -23,6 +23,7 @@ class PolicyMenu extends React.Component {
 						<Menu.Item key="self_emp">Self-employed</Menu.Item>
 						<Menu.Item key="ni_alt">Structural</Menu.Item>
 					</SubMenu>
+					<Menu.Item key="lvt">Land value tax</Menu.Item>
 				</SubMenu>
 				<SubMenu key="benefits" title="Benefits">
 					<Menu.Item key="universal_credit">Universal Credit</Menu.Item>

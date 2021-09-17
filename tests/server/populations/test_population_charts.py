@@ -4,9 +4,10 @@ from policy_engine.populations.charts import (
     population_waterfall_chart,
 )
 from openfisca_uk import Microsimulation, reforms
+from openfisca_uk_data import FRS_WAS_Imputation
 import pytest
 
-baseline = Microsimulation()
+baseline = Microsimulation(dataset=FRS_WAS_Imputation)
 
 reform_examples = (
     (),
