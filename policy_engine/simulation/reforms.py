@@ -9,6 +9,7 @@ from openfisca_uk.reforms.presets.current_date import use_current_parameters
 from openfisca_uk.entities import *
 from openfisca_uk.tools.general import *
 
+
 def add_LVT() -> Reform:
     class land_value(Variable):
         entity = Household
@@ -25,13 +26,17 @@ def add_LVT() -> Reform:
         def formula(household, period, parameters):
             rate = parameters(period).tax.land_value.rate
             return rate * household("land_value", period)
-    
+
     class tax(BASELINE_VARIABLES.tax):
         def formula(person, period, parameters):
-            LVT_charge = person.household("LVT", period) * person("is_household_head", period)
-            original_tax = BASELINE_VARIABLES.tax.formula(person, period, parameters)
+            LVT_charge = person.household("LVT", period) * person(
+                "is_household_head", period
+            )
+            original_tax = BASELINE_VARIABLES.tax.formula(
+                person, period, parameters
+            )
             return original_tax + LVT_charge
-    
+
     def add_lvt_param(parameters: ParameterNode):
         parameters.tax.add_child(
             "land_value",
@@ -49,7 +54,7 @@ def add_LVT() -> Reform:
             self.add_variable(LVT)
             self.update_variable(tax)
             self.modify_parameters(add_lvt_param)
-    
+
     return lvt_param_reform
 
 
