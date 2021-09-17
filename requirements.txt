@@ -1,4 +1,3 @@
-git+https://github.com/PSLmodels/openfisca-uk
 git+https://github.com/ubicenter/ubicenter.py
 git+https://github.com/PSLmodels/synthimpute
 plotly

@@ -19,7 +19,7 @@ openfisca_uk:
 	rm -rf openfisca-uk
 openfisca_uk_data:
 	git clone https://github.com/ubicenter/openfisca-uk-data --depth 1
-	cd openfisca-uk-data; make install
+	cd openfisca-uk-data; pip install -e .
 	openfisca-uk-data frs_was_imp download 2019
 	cp -r openfisca-uk-data/openfisca_uk_data/ openfisca_uk_data
 	rm -rf openfisca-uk-data
