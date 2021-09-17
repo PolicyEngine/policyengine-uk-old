@@ -76,12 +76,12 @@ class App extends React.Component {
 				<Divider style={{marginTop: 50}} />
 				<div className="d-none d-lg-block">
 					<div className="d-flex justify-content-center">
-						<p style={{textAlign: "center"}}><a href="https://ubicenter.org">UBI Center © 2021</a> | <a href="/faq">FAQ</a> | <a href="https://zej8fnylwn9.typeform.com/to/XFFu15Xq">Share your feedback</a> | <a href="https://www.ubicenter.org/donate/">Donate</a></p>
+						<p style={{textAlign: "center"}}><a href="https://policyengine.org">PolicyEngine © 2021</a> | <a href="/faq">FAQ</a> | <a href="https://zej8fnylwn9.typeform.com/to/XFFu15Xq">Share your feedback</a> | <a href="https://opencollective.com/psl">Donate</a></p>
 					</div>
 				</div>
 				<div className="d-block d-lg-none">
-					<p style={{textAlign: "center"}}><a href="https://ubicenter.org">UBI Center © 2021</a> | <a href="/faq">FAQ</a></p>
-					<p style={{textAlign: "center"}}><a href="https://zej8fnylwn9.typeform.com/to/XFFu15Xq">Share your feedback</a> | <a href="https://www.ubicenter.org/donate/">Donate</a></p>
+					<p style={{textAlign: "center"}}><a href="https://policyengine.org">PolicyEngine © 2021</a> | <a href="/faq">FAQ</a></p>
+					<p style={{textAlign: "center"}}><a href="https://zej8fnylwn9.typeform.com/to/XFFu15Xq">Share your feedback</a> | <a href="https://opencollective.com/psl">Donate</a></p>
 				</div>
 			</Container>
 		);
