@@ -62,6 +62,7 @@ def mtr_chart(baseline, reformed):
         y=["Baseline", "Reform"],
         labels={"variable": "Policy", "value": "Effective MTR"},
         color_discrete_map={"Baseline": GRAY, "Reform": BLUE},
+        line_shape="hv",
     )
     return json.loads(
         format_fig(graph, show=False)
