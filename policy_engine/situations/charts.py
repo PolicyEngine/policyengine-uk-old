@@ -27,9 +27,9 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     """
     df = pd.DataFrame(
         {
-            "Employment income": baseline.calc("employment_income").sum(),
-            "Baseline": baseline.calc("net_income").sum(),
-            "Reform": reformed.calc("net_income").sum(),
+            "Employment income": baseline.calc("employment_income").sum(axis=0),
+            "Baseline": baseline.calc("net_income").sum(axis=0),
+            "Reform": reformed.calc("net_income").sum(axis=0),
         }
     )
     graph = px.line(
@@ -64,9 +64,9 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         string.
     :rtype: str
     """
-    earnings = baseline.calc("employment_income").sum()
-    baseline_net = baseline.calc("net_income").sum()
-    reform_net = reformed.calc("net_income").sum()
+    earnings = baseline.calc("employment_income").sum(axis=0)
+    baseline_net = baseline.calc("net_income").sum(axis=0)
+    reform_net = reformed.calc("net_income").sum(axis=0)
 
     def get_mtr(x, y):
         return 1 - ((y[1:] - y[:-1]) / (x[1:] - x[:-1]))
