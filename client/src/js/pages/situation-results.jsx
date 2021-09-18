@@ -38,12 +38,12 @@ class SituationResults extends React.Component {
 				submission["policy_" + key] = this.props.policy[key].value;
 			}
 		}
-		/*for(let variableName in this.state.situation.household) {
+		for(let variableName in this.state.situation.household) {
 			let variable = this.state.situation.household[variableName];
 			if(variable.default != variable.value) {
-				submission[variableName] = variable.value;
+				submission[variableName + "_" + 1] = variable.value;
 			}
-		}*/
+		}
 		let url = new URL("https://uk.policyengine.org/api/situation-reform");
 		url.search = new URLSearchParams(submission).toString();
 		this.setState({ waiting: true }, () => {
