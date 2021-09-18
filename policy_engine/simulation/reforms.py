@@ -4,7 +4,7 @@ Functions to convert JSON web app parameters into OpenFisca reform objects.
 
 from openfisca_core import periods
 from openfisca_core.model_api import *
-from openfisca_uk import BASELINE_VARIABLES, Microsimulation
+from openfisca_uk import BASELINE_VARIABLES
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
 from openfisca_uk.entities import *
 from openfisca_uk.tools.general import *
@@ -132,7 +132,7 @@ def neutralizer_reform(variable):
     return reform
 
 
-def create_reform(parameters: dict, return_names=False, baseline=None):
+def create_reform(parameters: dict, return_names=False):
     params = {}
     for key, value in parameters.items():
         components = key.split("_")
