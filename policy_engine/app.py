@@ -1,13 +1,10 @@
 import json
-from typing import Any
-from flask import Flask, request, redirect, make_response, send_from_directory
+from flask import Flask, request, make_response, send_from_directory
 from flask_cors import CORS
 import logging
 from time import time
 from openfisca_uk import Microsimulation, IndividualSim
-from pathlib import Path
 from google.cloud import storage
-import os
 import gc
 
 from policy_engine.simulation.situations import create_situation
@@ -74,9 +71,7 @@ def ubi():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, components = create_reform(
-        params, return_names=True, baseline=baseline
-    )
+    reform, _ = create_reform(params, return_names=True)
     reformed = Microsimulation(reform)
     revenue = (
         baseline.calc("net_income").sum() - reformed.calc("net_income").sum()
@@ -102,9 +97,7 @@ def population_reform():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, components = create_reform(
-        params, return_names=True, baseline=baseline
-    )
+    reform, components = create_reform(params, return_names=True)
     reformed = Microsimulation(reform)
     result = dict(
         **headline_metrics(baseline, reformed),
@@ -142,9 +135,7 @@ def situation_reform():
         result = json.loads(blob.download_as_string())
         return result
     situation = create_situation(params)
-    reform, subreform_labels = create_reform(
-        params, return_names=True, baseline=baseline_microsim
-    )
+    reform, subreform_labels = create_reform(params, return_names=True)
     baseline = situation(IndividualSim(use_current_parameters(), year=2021))
     reformed = situation(IndividualSim(reform, year=2021))
     headlines = headline_figures(baseline, reformed)
