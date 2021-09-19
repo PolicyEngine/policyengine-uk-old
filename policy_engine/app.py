@@ -29,7 +29,7 @@ from policy_engine.situations.charts import (
 from openfisca_uk_data import FRS_WAS_Imputation
 
 VERSION = "0.0.11"
-USE_CACHE = False
+USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 
 client = storage.Client()
