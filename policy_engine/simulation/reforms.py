@@ -50,8 +50,8 @@ def add_LVT() -> Reform:
 
     class lvt_param_reform(Reform):
         def apply(self):
-            self.add_variable(land_value)
-            self.add_variable(LVT)
+            self.update_variable(land_value)
+            self.update_variable(LVT)
             self.update_variable(tax)
             self.modify_parameters(add_lvt_param)
 

@@ -8,7 +8,7 @@ from google.cloud import storage
 import gc
 
 from policy_engine.simulation.situations import create_situation
-from policy_engine.simulation.reforms import create_reform
+from policy_engine.simulation.reforms import create_reform, add_LVT
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
 
 from policy_engine.populations.metrics import headline_metrics
@@ -26,11 +26,10 @@ from policy_engine.situations.charts import (
     mtr_chart,
     budget_chart,
 )
-
 from openfisca_uk_data import FRS_WAS_Imputation
 
 VERSION = "0.0.11"
-USE_CACHE = True
+USE_CACHE = False
 logging.getLogger("werkzeug").disabled = True
 
 client = storage.Client()
@@ -136,18 +135,18 @@ def situation_reform():
         return result
     situation = create_situation(params)
     reform, subreform_labels = create_reform(params, return_names=True)
-    baseline = situation(IndividualSim(use_current_parameters(), year=2021))
-    reformed = situation(IndividualSim(reform, year=2021))
+    baseline_config = use_current_parameters(), add_LVT()
+    reform_config = use_current_parameters(), reform
+    baseline = situation(IndividualSim(baseline_config, year=2021))
+    reformed = situation(IndividualSim(reform_config, year=2021))
     headlines = headline_figures(baseline, reformed)
     waterfall = household_waterfall_chart(
         reform, subreform_labels, situation, baseline, reformed
     )
-    baseline_varying = situation(IndividualSim(year=2021))
-    baseline_varying.vary("employment_income")
-    reformed_varying = situation(IndividualSim(reform, year=2021))
-    reformed_varying.vary("employment_income")
-    budget = budget_chart(baseline_varying, reformed_varying)
-    mtr = mtr_chart(baseline_varying, reformed_varying)
+    baseline.vary("employment_income", step=10)
+    reformed.vary("employment_income", step=10)
+    budget = budget_chart(baseline, reformed)
+    mtr = mtr_chart(baseline, reformed)
     del situation
     del reform
     del baseline

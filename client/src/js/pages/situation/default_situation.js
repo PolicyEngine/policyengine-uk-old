@@ -17,6 +17,15 @@ export const DEFAULT_HOUSEHOLD = {
 			"East Midlands",
 			"North East",
 		]
+	},
+	land_value: {
+		title: "Land value",
+		description: "Total exposure to land value tax.",
+		default: 0,
+		value: 0,
+		min: 0,
+		max: 1000000,
+		type: "yearly"
 	}
 };
 
