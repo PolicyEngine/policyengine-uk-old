@@ -1,17 +1,14 @@
 import json
-from typing import Any
-from flask import Flask, request, redirect, make_response, send_from_directory
+from flask import Flask, request, make_response, send_from_directory
 from flask_cors import CORS
 import logging
 from time import time
 from openfisca_uk import Microsimulation, IndividualSim
-from pathlib import Path
 from google.cloud import storage
-import os
 import gc
 
 from policy_engine_uk.simulation.situations import create_situation
-from policy_engine_uk.simulation.reforms import create_reform
+from policy_engine_uk.simulation.reforms import create_reform, add_LVT
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
 
 from policy_engine_uk.populations.metrics import headline_metrics
@@ -29,9 +26,10 @@ from policy_engine_uk.situations.charts import (
     mtr_chart,
     budget_chart,
 )
+from openfisca_uk_data import FRS_WAS_Imputation
 
-VERSION = "0.0.10"
-USE_CACHE = False
+VERSION = "0.0.12"
+USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 
 client = storage.Client()
@@ -72,9 +70,7 @@ def ubi():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, components = create_reform(
-        params, return_names=True, baseline=baseline
-    )
+    reform, _ = create_reform(params, return_names=True)
     reformed = Microsimulation(reform)
     revenue = (
         baseline.calc("net_income").sum() - reformed.calc("net_income").sum()
@@ -100,9 +96,7 @@ def population_reform():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, components = create_reform(
-        params, return_names=True, baseline=baseline
-    )
+    reform, components = create_reform(params, return_names=True)
     reformed = Microsimulation(reform)
     result = dict(
         **headline_metrics(baseline, reformed),
@@ -140,21 +134,19 @@ def situation_reform():
         result = json.loads(blob.download_as_string())
         return result
     situation = create_situation(params)
-    reform, subreform_labels = create_reform(
-        params, return_names=True, baseline=baseline_microsim
-    )
-    baseline = situation(IndividualSim(use_current_parameters(), year=2021))
-    reformed = situation(IndividualSim(reform, year=2021))
+    reform, subreform_labels = create_reform(params, return_names=True)
+    baseline_config = use_current_parameters(), add_LVT()
+    reform_config = use_current_parameters(), reform
+    baseline = situation(IndividualSim(baseline_config, year=2021))
+    reformed = situation(IndividualSim(reform_config, year=2021))
     headlines = headline_figures(baseline, reformed)
     waterfall = household_waterfall_chart(
         reform, subreform_labels, situation, baseline, reformed
     )
-    baseline_varying = situation(IndividualSim(year=2021))
-    baseline_varying.vary("employment_income")
-    reformed_varying = situation(IndividualSim(reform, year=2021))
-    reformed_varying.vary("employment_income")
-    budget = budget_chart(baseline_varying, reformed_varying)
-    mtr = mtr_chart(baseline_varying, reformed_varying)
+    baseline.vary("employment_income", step=10)
+    reformed.vary("employment_income", step=10)
+    budget = budget_chart(baseline, reformed)
+    mtr = mtr_chart(baseline, reformed)
     del situation
     del reform
     del baseline

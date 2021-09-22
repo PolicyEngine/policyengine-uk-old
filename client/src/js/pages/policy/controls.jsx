@@ -186,6 +186,9 @@ function PolicyControls(props) {
 		it_alt: [
 			"abolish_income_tax"
 		],
+		lvt: [
+			"LVT"
+		],
 		employee_side: [
 			"NI_main_rate",
 			"NI_PT",

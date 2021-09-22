@@ -1,7 +1,9 @@
 from openfisca_uk import Microsimulation
 from rdbl import gbp
 
-pct_change = lambda x, y: (y - x) / x
+
+def pct_change(x, y):
+    return (y - x) / x
 
 
 def poverty_rate(sim, population_var):
@@ -10,7 +12,19 @@ def poverty_rate(sim, population_var):
     ].mean()
 
 
-def headline_metrics(baseline: Microsimulation, reformed: Microsimulation):
+def headline_metrics(
+    baseline: Microsimulation, reformed: Microsimulation
+) -> dict:
+    """Compute headline society-wide metrics.
+
+    :param baseline: Baseline simulation.
+    :type baseline: Microsimulation
+    :param reformed: Reform simulation.
+    :type reformed: Microsimulation
+    :return: Dictionary with net_cost, poverty_change, winner_share,
+        loser_share, and gini_change.
+    :rtype: dict
+    """
     new_income = reformed.calc("equiv_household_net_income", map_to="person")
     old_income = baseline.calc("equiv_household_net_income", map_to="person")
     gain = new_income - old_income

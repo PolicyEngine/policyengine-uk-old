@@ -5,6 +5,7 @@ from plotly.subplots import make_subplots
 import json
 import numpy as np
 from openfisca_uk import Microsimulation
+from openfisca_uk_data import FRS_WAS_Imputation
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
 import pandas as pd
 

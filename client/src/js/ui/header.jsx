@@ -33,7 +33,6 @@ export function TopHeader() {
 			<div className="d-none d-md-block">
 				<PageHeader
 					title={<><a href="/" style={{color: "black"}}>PolicyEngine<sub style={{fontSize: "50%"}}>UK</sub></a></>}
-					subTitle="by the UBI Center"
 					style={{minHeight: 40}}
 					tags={[<Tag key="beta" color="processing">BETA</Tag>]}
 				/>
@@ -46,26 +45,12 @@ export function TopHeader() {
 						tags={[<Tag key="beta" color="processing">BETA</Tag>]}
 					/>
 				</div>
-				<div className="d-flex justify-content-center">
-					<div className="ant-page-header-heading-sub-title">
-						By the UBI Center
-					</div>
-				</div>
 			</div>
 		</>
 	);
 }
 
 function Header(props) {
-	const INTRO = (
-		<p style={{fontSize: 16}}>
-      Welcome to the UBI Center's UK Policy Engine. Powered by the open-source
-      microsimulation model OpenFisca-UK, this site allows you to experiment
-      with different changes to how taxes and benefits are set in the United
-      Kingdom, and simulate the results on people, families and households in
-      the country.
-		</p>
-	);
 	const TITLES = ["Policy", "UK impact", "Your household", "Household impact"];
 	const DESCRIPTIONS = [
 		"Specify changes to tax and benefit policy",

@@ -120,6 +120,15 @@ const DEFAULT_POLICY = {
 		summary: "Change the rate to @%",
 		type: "rate",
 	},
+	LVT: {
+		title: "Land value tax",
+		description: "A yearly flat tax on land values",
+		default: 0,
+		value: 0,
+		max: 5,
+		summary: "Impose an LVT of @%",
+		type: "rate",
+	},
 	child_UBI: {
 		title: "Child UBI",
 		description: "Flat payment given to each person 17 years of age or younger.",

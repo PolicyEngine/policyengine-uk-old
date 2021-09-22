@@ -2,7 +2,10 @@
 Functions to convert URL query parameters into OpenFisca situation initialiser functions.
 """
 
-from openfisca_uk import BASELINE_VARIABLES
+from openfisca_uk import BASELINE_VARIABLES, CountryTaxBenefitSystem
+from policy_engine.simulation.reforms import add_LVT
+
+variables = add_LVT()(CountryTaxBenefitSystem()).variables
 
 
 def create_situation(params: dict):
@@ -24,11 +27,11 @@ def create_situation(params: dict):
                     value = True
                 elif value == "false":
                     value = False
-                if variable not in BASELINE_VARIABLES and variable != "family":
+                if variable not in variables and variable != "family":
                     print(f"Skipping variable {variable}")
                 if (
                     variable == "family"
-                    or BASELINE_VARIABLES[variable].entity.key == "person"
+                    or variables[variable].entity.key == "person"
                 ):
                     if entity_id not in people:
                         people[entity_id] = {}
@@ -40,7 +43,7 @@ def create_situation(params: dict):
                         family_members[value] += [entity_id]
                     else:
                         people[entity_id][variable] = value
-                elif BASELINE_VARIABLES[variable].entity.key == "benunit":
+                elif variables[variable].entity.key == "benunit":
                     if entity_id not in families:
                         families[entity_id] = {}
                     families[entity_id][variable] = value
