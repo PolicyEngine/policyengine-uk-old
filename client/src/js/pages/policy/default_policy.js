@@ -227,6 +227,15 @@ const DEFAULT_POLICY = {
 		summary: "Abolish State Pension",
 		type: "abolish"
 	},
+	UC_single_young: {
+		title: "UC single amount (under 18-25)",
+		description: "Standard allowance for single claimants under 25",
+		default: 344.00,
+		value: 344.00,
+		max: 500,
+		summary: "Change the standard allowance (18-25) to £@/month",
+		type: "monthly",
+	},
 };
 
 export default DEFAULT_POLICY;

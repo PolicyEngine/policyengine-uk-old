@@ -222,7 +222,8 @@ function PolicyControls(props) {
 			"abolish_SP",
 		],
 		universal_credit: [
-			"abolish_UC"
+			"abolish_UC",
+			"UC_single_young",
 		]
 	};
 	const names = controlSet[props.selected];

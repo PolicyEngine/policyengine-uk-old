@@ -271,6 +271,14 @@ def create_reform(parameters: dict, return_names=False, baseline=None):
             )
         ]
         names += ["NI Self-emp add."]
+    if "UC_single_young" in params:
+        reforms += [
+            change_param(
+                "benefit.universal_credit.standard_allowance.amount.SINGLE_YOUNG",
+                params["UC_single_young"],
+            )
+        ]
+        names += ["UC Single amount (young)"]
     ABOLITIONS = (
         "savings_allowance",
         "dividend_allowance",

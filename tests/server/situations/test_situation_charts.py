@@ -1,5 +1,5 @@
 from openfisca_uk import IndividualSim, reforms
-from policy_engine.situations.charts import (
+from policy_engine_uk.situations.charts import (
     household_waterfall_chart,
     budget_chart,
     mtr_chart,

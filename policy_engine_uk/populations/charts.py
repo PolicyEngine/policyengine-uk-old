@@ -1,5 +1,5 @@
-from policy_engine.populations.metrics import poverty_rate, pct_change
-from policy_engine.utils.formatting import format_fig, BLUE, GRAY, DARK_BLUE
+from policy_engine_uk.populations.metrics import poverty_rate, pct_change
+from policy_engine_uk.utils.formatting import format_fig, BLUE, GRAY, DARK_BLUE
 import plotly.express as px
 from plotly.subplots import make_subplots
 import json
@@ -176,16 +176,13 @@ def total_income(sim):
 
 
 def population_waterfall_chart(reform, labels, baseline, reformed):
-    net_income = [total_income(baseline)]
-    for i in range(1, len(reform)):
-        partially_reformed = Microsimulation(
-            use_current_parameters(), reform[:i]
-        )
-        net_income += [total_income(partially_reformed)]
-    net_income += [total_income(reformed)]
-    net_income = np.array(net_income)
-    budget_effects = net_income[1:] - net_income[:-1]
-    fig = waterfall(budget_effects, labels)
+    GROUPS = ["tax", "benefits"]
+    MULTIPLIERS = [1, -1]
+    effects = [
+        (reformed.calc(var).sum() - baseline.calc(var).sum()) * multiplier
+        for var, multiplier in zip(GROUPS, MULTIPLIERS)
+    ]
+    fig = waterfall(effects, ["Tax", "Benefit"])
     fig.add_shape(
         type="line",
         xref="paper",
