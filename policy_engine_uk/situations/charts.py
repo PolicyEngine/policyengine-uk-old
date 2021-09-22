@@ -105,13 +105,13 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
 
 
 def household_waterfall_chart(reform, labels, situation, baseline, reformed):
-    net_income = [baseline.calc("net_income").sum()]
-    for i in range(1, len(reform)):
-        partially_reformed = situation(IndividualSim(reform[:i], year=2021))
-        net_income += [partially_reformed.calc("net_income").sum()]
-    net_income += [reformed.calc("net_income").sum()]
-    net_income = np.array(net_income)
-    budget_effects = net_income[1:] - net_income[:-1]
+    GROUPS = ["benefits", "tax"]
+    MULTIPLIERS = [1, -1]
+    effects = [
+        (reformed.calc(var).sum() - baseline.calc(var).sum()) * multiplier
+        for var, multiplier in zip(GROUPS, MULTIPLIERS)
+    ]
+    fig = waterfall(effects, ["Benefit", "Tax"], gain_label="Gain", loss_label="Loss")
     fig = waterfall(
         budget_effects, labels, gain_label="Gain", loss_label="Loss"
     )
