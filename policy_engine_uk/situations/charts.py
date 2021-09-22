@@ -111,7 +111,9 @@ def household_waterfall_chart(reform, labels, situation, baseline, reformed):
         (reformed.calc(var).sum() - baseline.calc(var).sum()) * multiplier
         for var, multiplier in zip(GROUPS, MULTIPLIERS)
     ]
-    fig = waterfall(effects, ["Benefit", "Tax"], gain_label="Gain", loss_label="Loss")
+    fig = waterfall(
+        effects, ["Benefit", "Tax"], gain_label="Gain", loss_label="Loss"
+    )
     fig = waterfall(
         budget_effects, labels, gain_label="Gain", loss_label="Loss"
     )
