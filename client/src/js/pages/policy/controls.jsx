@@ -26,6 +26,9 @@ function Parameter(props) {
 	} else if (props.param.type === "monthly") {
 		formatter = (value) => `£${value}/month`;
 		parser = (value) => value.replace("£", "").replace("/month", "");
+	} else if (props.param.type === "gbp") {
+		formatter = (value) => `£${value}`;
+		parser = (value) => value.replace("£", "");
 	}
 	let component;
 	if(props.param.type == "bool") {

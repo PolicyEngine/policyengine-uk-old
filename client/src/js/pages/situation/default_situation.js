@@ -25,7 +25,7 @@ export const DEFAULT_HOUSEHOLD = {
 		value: 0,
 		min: 0,
 		max: 1000000,
-		type: "yearly"
+		type: "gbp"
 	}
 };
 
