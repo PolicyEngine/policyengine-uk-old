@@ -42,7 +42,6 @@ function SituationOverview(props) {
 			<Steps progressDot direction="vertical">
 				{
 					<>
-						<Step status="finish" title={isSingleFamily ? "Single-family household" : "Multi-family household"} description="This affects benefit entitlements" />
 						{
 							numWA > 0 ? 
 								<Step status="finish" title={numWA + " working-age adult" + (numWA == 1 ? "" : "s")}/> :
