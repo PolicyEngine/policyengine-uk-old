@@ -114,9 +114,6 @@ def household_waterfall_chart(reform, labels, situation, baseline, reformed):
     fig = waterfall(
         effects, ["Benefit", "Tax"], gain_label="Gain", loss_label="Loss"
     )
-    fig = waterfall(
-        budget_effects, labels, gain_label="Gain", loss_label="Loss"
-    )
     fig.add_shape(
         type="line",
         xref="paper",
