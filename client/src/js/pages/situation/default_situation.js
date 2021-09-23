@@ -106,6 +106,14 @@ export const DEFAULT_ADULT = {
 		max: 150000,
 		type: "yearly"
 	},
+	state_pension: {
+		title: "State Pension income",
+		description: "Income from the State Pension",
+		default: 0,
+		value: 0,
+		max: 12000,
+		type: "yearly"
+	},
 	savings_interest_income: {
 		title: "Savings interest income",
 		description: "Income from savings interest (including ISAs)",
