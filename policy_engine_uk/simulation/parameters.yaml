@@ -24,15 +24,12 @@ add_rate:
   parameter: tax.income_tax.rates.uk[2].rate
 basic_threshold:
   name: Basic threshold
-  multiplier: 1.e-2
   parameter: tax.income_tax.rates.uk[0].threshold
 higher_threshold:
   name: Higher threshold
-  multiplier: 1.e-2
   parameter: tax.income_tax.rates.uk[1].threshold
 add_threshold:
   name: Additional threshold
-  multiplier: 1.e-2
   parameter: tax.income_tax.rates.uk[2].threshold
 personal_allowance:
   name: PA
