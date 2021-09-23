@@ -104,3 +104,6 @@ UC_couple_young:
 UC_couple_old:
   name: UC SA (couple, over 25)
   parameter: benefit.universal_credit.standard_allowance.amount.COUPLE_OLD
+LVT:
+  name: LVT
+  parameter: tax.land_value.rate
