@@ -28,7 +28,7 @@ from policy_engine_uk.situations.charts import (
 )
 from openfisca_uk_data import FRS_WAS_Imputation
 
-VERSION = "0.0.12"
+VERSION = "0.0.13"
 USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 
@@ -133,19 +133,29 @@ def situation_reform():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
+    app.logger.info("Creating situation")
     situation = create_situation(params)
+    app.logger.info("Creating reform")
     reform, subreform_labels = create_reform(params, return_names=True)
     baseline_config = use_current_parameters(), add_LVT()
     reform_config = use_current_parameters(), reform
+    app.logger.info("Creating baseline individualsim")
     baseline = situation(IndividualSim(baseline_config, year=2021))
+    app.logger.info("Creating reform individualsim")
     reformed = situation(IndividualSim(reform_config, year=2021))
+    app.logger.info("Headline figures")
     headlines = headline_figures(baseline, reformed)
+    app.logger.info("waterfall")
     waterfall = household_waterfall_chart(
         reform, subreform_labels, situation, baseline, reformed
     )
+    app.logger.info("Varying baseline")
     baseline.vary("employment_income", step=10)
+    app.logger.info("Varying reform")
     reformed.vary("employment_income", step=10)
+    app.logger.info("Budget")
     budget = budget_chart(baseline, reformed)
+    app.logger.info("mtr chart")
     mtr = mtr_chart(baseline, reformed)
     del situation
     del reform

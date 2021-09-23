@@ -1,0 +1,106 @@
+child_UBI:
+  name: Child UBI
+  multiplier: 52
+  parameter: benefit.UBI.child
+adult_UBI:
+  name: WA adult UBI
+  multiplier: 52
+  parameter: benefit.UBI.WA_adult
+senior_UBI:
+  name: Senior UBI
+  multiplier: 52
+  parameter: benefit.UBI.senior
+basic_rate:
+  name: Basic rate
+  multiplier: 1.e-2
+  parameter: tax.income_tax.rates.uk[0].rate
+higher_rate:
+  name: Higher rate
+  multiplier: 1.e-2
+  parameter: tax.income_tax.rates.uk[1].rate
+add_rate:
+  name: Additional rate
+  multiplier: 1.e-2
+  parameter: tax.income_tax.rates.uk[2].rate
+basic_threshold:
+  name: Basic threshold
+  multiplier: 1.e-2
+  parameter: tax.income_tax.rates.uk[0].threshold
+higher_threshold:
+  name: Higher threshold
+  multiplier: 1.e-2
+  parameter: tax.income_tax.rates.uk[1].threshold
+add_threshold:
+  name: Additional threshold
+  multiplier: 1.e-2
+  parameter: tax.income_tax.rates.uk[2].threshold
+personal_allowance:
+  name: PA
+  parameter: tax.income_tax.allowances.personal_allowance.amount
+NI_main_rate:
+  name: NI main rate
+  multiplier: 1.e-2
+  parameter: tax.national_insurance.class_1.rates.employee.main
+NI_add_rate:
+  name: NI add. rate
+  multiplier: 1.e-2
+  parameter: tax.national_insurance.class_1.rates.employee.additional
+NI_PT:
+  name: NI PT
+  parameter: tax.national_insurance.class_1.thresholds.primary_threshold
+NI_UEL:
+  name: NI UEL
+  parameter: tax.national_insurance.class_1.thresholds.upper_earnings_limit
+NI_LPL:
+  name: NI LPL
+  parameter: tax.national_insurance.class_1.thresholds.lower_profits_limit
+NI_UPL:
+  name: NI UPL
+  parameter: tax.national_insurance.class_1.thresholds.upper_profits_limit
+NI_class_4_main_rate:
+  name: NI Self-emp. main
+  multiplier: 1.e-2
+  parameter: tax.national_insurance.class_4.rates.main
+NI_class_4_add_rate:
+  name: NI Self-emp. add.
+  multiplier: 1.e-2
+  parameter: tax.national_insurance.class_4.rates.additional
+savings_allowance:
+  name: Savings Allowance
+dividend_allowance:
+  name: Dividend Allowance
+income_tax:
+  name: Income Tax
+NI:
+  name: National Insurance
+  variable: national_insurance
+UC:
+  name: Universal Credit
+  variable: universal_credit
+CB:
+  name: Child Benefit
+  variable: child_benefit
+CTC:
+  name: Child Tax Credit
+  variable: child_tax_credit
+WTC:
+  name: Working Tax Credit
+  variable: working_tax_credit
+HB:
+  name: Housing Benefit
+  variable: housing_benefit
+SP:
+  name: State Pension
+  variable: state_pension
+UC_single_young:
+  name: UC SA (single, under 25)
+  parameter: benefit.universal_credit.standard_allowance.amount.SINGLE_YOUNG
+UC_single_old:
+  name: UC SA (single, over 25)
+  parameter: benefit.universal_credit.standard_allowance.amount.SINGLE_OLD
+UC_couple_young:
+  name: UC SA (couple, under 25)
+  parameter: benefit.universal_credit.standard_allowance.amount.COUPLE_YOUNG
+UC_couple_old:
+  name: UC SA (couple, over 25)
+  parameter: benefit.universal_credit.standard_allowance.amount.COUPLE_OLD
