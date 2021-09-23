@@ -3,7 +3,7 @@ Functions to convert URL query parameters into OpenFisca situation initialiser f
 """
 
 from openfisca_uk import BASELINE_VARIABLES, CountryTaxBenefitSystem
-from policy_engine.simulation.reforms import add_LVT
+from policy_engine_uk.simulation.reforms import add_LVT
 
 variables = add_LVT()(CountryTaxBenefitSystem()).variables
 

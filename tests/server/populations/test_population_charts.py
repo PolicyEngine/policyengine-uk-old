@@ -1,4 +1,4 @@
-from policy_engine.populations.charts import (
+from policy_engine_uk.populations.charts import (
     decile_chart,
     poverty_chart,
     population_waterfall_chart,

@@ -3,7 +3,7 @@ from pathlib import Path
 
 setup(
     name="PolicyEngine-UK",
-    version="0.1.0",
+    version="0.1.1",
     author="PolicyEngine",
     license="http://www.fsf.org/licensing/licenses/agpl-3.0.html",
     url="https://github.com/ubicenter/policyengine-uk",

@@ -26,6 +26,9 @@ function Parameter(props) {
 	} else if (props.param.type === "monthly") {
 		formatter = (value) => `£${value}/month`;
 		parser = (value) => value.replace("£", "").replace("/month", "");
+	} else if (props.param.type === "gbp") {
+		formatter = (value) => `£${value}`;
+		parser = (value) => value.replace("£", "");
 	}
 	let component;
 	if(props.param.type == "bool") {
@@ -69,7 +72,7 @@ function Parameter(props) {
 					disabled={props.disabled}
 				/>
 				<InputNumber
-					value={Math.round(props.param.value, 2)}
+					value={props.param.value}
 					min={props.param.min ? props.min : null}
 					max={props.param.max ? props.max : null}
 					formatter={formatter}
@@ -225,7 +228,11 @@ function PolicyControls(props) {
 			"abolish_SP",
 		],
 		universal_credit: [
-			"abolish_UC"
+			"abolish_UC",
+			"UC_single_young",
+			"UC_single_old",
+			"UC_couple_young",
+			"UC_couple_old",
 		]
 	};
 	const names = controlSet[props.selected];

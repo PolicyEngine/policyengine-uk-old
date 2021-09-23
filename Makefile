@@ -24,14 +24,14 @@ openfisca_uk_data:
 	cp -r openfisca-uk-data/openfisca_uk_data/ openfisca_uk_data
 	rm -rf openfisca-uk-data
 deploy: openfisca_uk_data openfisca_uk test
-	rm -rf policy_engine/static
+	rm -rf policy_engine_uk/static
 	cd client; npm run build
-	cp -r client/build policy_engine/static
+	cp -r client/build policy_engine_uk/static
 	y | gcloud app deploy
 test:
 	pytest tests -vv
 deploy-local: test
-	rm -rf policy_engine/static
+	rm -rf policy_engine_uk/static
 	cd client; npm run build
 	cp -r client/build server/static
 	FLASK_APP=main.py FLASK_DEBUG=1 flask run

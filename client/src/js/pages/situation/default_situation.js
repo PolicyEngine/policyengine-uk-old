@@ -25,7 +25,7 @@ export const DEFAULT_HOUSEHOLD = {
 		value: 0,
 		min: 0,
 		max: 1000000,
-		type: "yearly"
+		type: "gbp"
 	}
 };
 
@@ -104,6 +104,14 @@ export const DEFAULT_ADULT = {
 		default: 0,
 		value: 0,
 		max: 150000,
+		type: "yearly"
+	},
+	state_pension: {
+		title: "State Pension income",
+		description: "Income from the State Pension",
+		default: 0,
+		value: 0,
+		max: 12000,
 		type: "yearly"
 	},
 	savings_interest_income: {
