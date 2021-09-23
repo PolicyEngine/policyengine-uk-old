@@ -72,7 +72,7 @@ function Parameter(props) {
 					disabled={props.disabled}
 				/>
 				<InputNumber
-					value={Math.round(props.param.value, 2)}
+					value={props.param.value}
 					min={props.param.min ? props.min : null}
 					max={props.param.max ? props.max : null}
 					formatter={formatter}
@@ -230,6 +230,9 @@ function PolicyControls(props) {
 		universal_credit: [
 			"abolish_UC",
 			"UC_single_young",
+			"UC_single_old",
+			"UC_couple_young",
+			"UC_couple_old",
 		]
 	};
 	const names = controlSet[props.selected];
