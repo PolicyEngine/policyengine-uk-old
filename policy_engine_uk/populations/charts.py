@@ -116,7 +116,6 @@ def waterfall(values, labels, gain_label="Spending", loss_label="Revenue"):
         )
     else:
         df = pd.DataFrame({"Amount": values, "Reform": labels, "Type": ""})
-        df = df[df.Amount != 0]
         if len(df) != 0:
             order = np.where(
                 df.Amount >= 0, -np.log(df.Amount), 1e2 - np.log(-df.Amount)
