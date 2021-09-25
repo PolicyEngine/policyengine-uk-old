@@ -71,6 +71,11 @@ PolicyEngine uses the OpenFisca-UK microsimulation model, which we constructed b
 We also validated against legislation, various gov.uk sites, reports from other microsimulation models, and external benefits calculators.
 See the [OpenFisca-UK validation page](https://PolicyEngine.github.io/openfisca-uk/validation.html) for more information.
 
+### Does abolishing legacy benefits move claimants to Universal Credit, and vice versa?
+
+No; PolicyEngine treats Universal Credit enrolment as fixed (based on the published rollout rate), so claimants are not moved between it and legacy benefits.
+We suggest abolishing Universal Credit and legacy benefits together if abolishing either.
+
 
 ## UK impact page
 
