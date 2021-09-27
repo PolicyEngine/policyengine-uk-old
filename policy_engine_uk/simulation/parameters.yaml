@@ -104,4 +104,4 @@ UC_couple_old:
 LVT:
   name: LVT
   parameter: tax.land_value.rate
-  multiplier: 1e-2
+  multiplier: 1.e-2
