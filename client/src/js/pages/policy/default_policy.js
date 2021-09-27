@@ -257,8 +257,8 @@ const DEFAULT_POLICY = {
 	UC_single_old: {
 		title: "UC single amount (over 25)",
 		description: "Standard allowance for single claimants over 25",
-		default: 498.89,
-		value: 498.89,
+		default: 411.51,
+		value: 411.51,
 		max: 1000,
 		summary: "Change the standard allowance (single, over 25) to £@/month",
 		type: "monthly",
@@ -266,8 +266,8 @@ const DEFAULT_POLICY = {
 	UC_couple_old: {
 		title: "UC couple amount (one over 25)",
 		description: "Standard allowance for couples where one is over 25",
-		default: 411.51,
-		value: 411.51,
+		default: 596.58,
+		value: 596.58,
 		max: 1000,
 		summary: "Change the standard allowance (couple, one over 25) to £@/month",
 		type: "monthly",
