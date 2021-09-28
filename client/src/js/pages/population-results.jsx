@@ -56,7 +56,7 @@ class PopulationResults extends React.Component {
 					}
 				</Col>
 				<Col xl={3} style={{paddingLeft: 50}}>
-					<PolicySituationOverview policy={this.props.policy} situation={this.props.situation}/>
+					<PolicySituationOverview policy={this.props.policy} situation={this.props.situation} invalid={this.props.invalid}/>
 				</Col>
 			</Row>
 		);

@@ -33,7 +33,7 @@ const DEFAULT_POLICY = {
 		type: "yearly",
 	},
 	add_threshold: {
-		title: "Additional rate",
+		title: "Additional rate threshold",
 		description: "The lower threshold for the additional rate.",
 		default: 150000,
 		value: 150000,

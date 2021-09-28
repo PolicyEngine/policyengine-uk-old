@@ -44,7 +44,7 @@ function getPolicyFromURL() {
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {policy: getPolicyFromURL(), situation: DEFAULT_SITUATION, situationEntered: false};
+		this.state = {policy: getPolicyFromURL(), situation: DEFAULT_SITUATION, situationEntered: false, invalid: false};
 	}
 
 	render() {
@@ -54,7 +54,7 @@ class App extends React.Component {
 				<Switch>
 					<Route path="/" exact>
 						<Header step={0} situationEntered={this.state.situationEntered}/>
-						<Policy policy={this.state.policy} onSubmit={policy => {this.setState({policy: policy});}}/>
+						<Policy policy={this.state.policy} onSubmit={(policy, invalid) => {this.setState({policy: policy, invalid: invalid});}}/>
 					</Route>
 					<Route path="/population-results">
 						<Header step={1} situationEntered={this.state.situationEntered}/>
