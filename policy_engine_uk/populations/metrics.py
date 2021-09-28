@@ -40,6 +40,7 @@ def headline_metrics(
     gini_change = pct_change(old_income.gini(), new_income.gini())
     return dict(
         net_cost=gbp(net_cost),
+        net_cost_numeric=(net_cost),
         poverty_change=float(poverty_change),
         winner_share=float(winner_share),
         loser_share=float(loser_share),
