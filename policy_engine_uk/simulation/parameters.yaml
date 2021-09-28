@@ -77,6 +77,12 @@ UC:
 CB:
   name: Child Benefit
   variable: child_benefit
+CB_eldest:
+  name: Child Benefit (eldest)
+  parameter: benefit.child_benefit.amount.eldest
+CB_additional:
+  name: Child Benefit (additional)
+  parameter: benefit.child_benefit.amount.additional
 CTC:
   name: Child Tax Credit
   variable: child_tax_credit

@@ -223,6 +223,8 @@ function PolicyControls(props) {
 		],
 		child_benefit: [
 			"abolish_CB",
+			"CB_eldest",
+			"CB_additional",
 		],
 		state_pension: [
 			"abolish_SP",
