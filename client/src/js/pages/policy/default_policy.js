@@ -272,6 +272,15 @@ const DEFAULT_POLICY = {
 		summary: "Change the standard allowance (couple, one over 25) to £@/month",
 		type: "monthly",
 	},
+	UC_reduction_rate: {
+		title: "UC reduction rate",
+		description: "Rate at which Universal Credit is reduced with earnings above the threshold",
+		default: 63,
+		value: 63,
+		max: 100,
+		summary: "Change the reduction rate to @%",
+		type: "rate",
+	},
 };
 
 export default DEFAULT_POLICY;
