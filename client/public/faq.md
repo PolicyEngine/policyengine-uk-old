@@ -21,7 +21,7 @@ Max has a master's degree in Data, Economics, and Development Policy from MIT an
 
 **Nikhil Woodruff** is the co-founder and CTO of PolicyEngine.
 He is also a tech lead at the UBI Center, a think tank researching universal basic income policies, and was previously a data scientist at Caspian, where he worked in improving anti-money laundering investigations.
-He is currently on leave from Durham University's Computer Science program.
+Nikhil is currently on leave from Durham University's Computer Science program.
 
 
 ### When will PolicyEngine be available in my country?
