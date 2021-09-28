@@ -15,8 +15,13 @@ See our [demo video](https://youtu.be/P7ELqxEHRhE) for a tour of the interface.
 
 ### Who created PolicyEngine?
 
-Nikhil Woodruff and Max Ghenis built the PolicyEngine product while working at the UBI Center, a research organisation that studies universal basic income policies.
-They then created PolicyEngine as an independent nonprofit (fiscally sponsored by the [PSL Foundation](https://opencollective.com/psl)) to serve the broader policy community and ultimately the public, striving to make everyone a policymaker.
+**Max Ghenis** is the co-founder and CEO of PolicyEngine.
+He is also the founder and president of the UBI Center, a think tank researching universal basic income policies, and was previously a data scientist at Google.
+Max has a master's degree in Data, Economics, and Development Policy from MIT and a bachelor's degree in operations research from UC Berkeley.
+
+**Nikhil Woodruff** is the co-founder and CTO of PolicyEngine.
+He is also a tech lead at the UBI Center, a think tank researching universal basic income policies, and was previously a data scientist at Caspian, where he worked in improving anti-money laundering investigations.
+Nikhil is currently on leave from Durham University's Computer Science program.
 
 
 ### When will PolicyEngine be available in my country?

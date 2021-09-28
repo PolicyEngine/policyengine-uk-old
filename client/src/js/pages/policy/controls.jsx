@@ -223,6 +223,8 @@ function PolicyControls(props) {
 		],
 		child_benefit: [
 			"abolish_CB",
+			"CB_eldest",
+			"CB_additional",
 		],
 		state_pension: [
 			"abolish_SP",
@@ -233,6 +235,7 @@ function PolicyControls(props) {
 			"UC_single_old",
 			"UC_couple_young",
 			"UC_couple_old",
+			"UC_reduction_rate",
 		]
 	};
 	const names = controlSet[props.selected];

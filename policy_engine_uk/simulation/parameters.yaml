@@ -77,6 +77,12 @@ UC:
 CB:
   name: Child Benefit
   variable: child_benefit
+CB_eldest:
+  name: Child Benefit (eldest)
+  parameter: benefit.child_benefit.amount.eldest
+CB_additional:
+  name: Child Benefit (additional)
+  parameter: benefit.child_benefit.amount.additional
 CTC:
   name: Child Tax Credit
   variable: child_tax_credit
@@ -101,6 +107,10 @@ UC_couple_young:
 UC_couple_old:
   name: UC SA (couple, over 25)
   parameter: benefit.universal_credit.standard_allowance.amount.COUPLE_OLD
+UC_reduction_rate:
+  name: UC reduction rate
+  parameter: benefit.universal_credit.means_test.reduction_rate
+  multiplier: 1.e-2
 LVT:
   name: LVT
   parameter: tax.land_value.rate
