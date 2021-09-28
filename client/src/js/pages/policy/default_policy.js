@@ -205,21 +205,21 @@ const DEFAULT_POLICY = {
 		type: "abolish"
 	},
 	CB_eldest: {
-		title: "Child Benefit",
+		title: "Child Benefit amount (eldest)",
 		description: "Child Benefit amount for the eldest or only child",
 		default: 21.15,
 		value: 21.15,
 		max: 50,
-		summary: "Child Benefit (eldest)",
+		summary: "Change the Child Benefit for the eldest or only child to £@/week",
 		type: "weekly"
 	},
 	CB_additional: {
-		title: "Child Benefit",
+		title: "Child Benefit amount (additional)",
 		description: "Child Benefit amount for additional children",
 		default: 14,
 		value: 14,
 		max: 50,
-		summary: "Child Benefit (additional)",
+		summary: "Change the Child Benefit for additional children to £@/week",
 		type: "weekly"
 	},
 	abolish_CTC: {
