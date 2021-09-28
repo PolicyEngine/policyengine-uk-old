@@ -104,7 +104,7 @@ def add_zero_line(fig):
     return fig
 
 
-def waterfall(values, labels, gain_label="Spending", loss_label="Revenue"):
+def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
     final_color = DARK_BLUE
     if len(labels) == 0:
         df = pd.DataFrame(
