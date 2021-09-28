@@ -254,6 +254,30 @@ const DEFAULT_POLICY = {
 		summary: "Abolish State Pension",
 		type: "abolish"
 	},
+	abolish_PC: {
+		title: "Pension Credit",
+		description: "This switch abolishes Pension Credit",
+		default: false,
+		value: false,
+		summary: "Abolish Pension Credit",
+		type: "abolish"
+	},
+	abolish_IS: {
+		title: "Income Support",
+		description: "This switch abolishes Income Support",
+		default: false,
+		value: false,
+		summary: "Abolish Income Support",
+		type: "abolish"
+	},
+	abolish_JSA_income: {
+		title: "Jobseeker's Allowance",
+		description: "This switch abolishes income-based Jobseeker's Allowance",
+		default: false,
+		value: false,
+		summary: "Abolish JSA (income-based)",
+		type: "abolish"
+	},
 	UC_single_young: {
 		title: "UC single amount (under 18-25)",
 		description: "Standard allowance for single claimants under 25",
