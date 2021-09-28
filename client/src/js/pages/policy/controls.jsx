@@ -221,6 +221,8 @@ function PolicyControls(props) {
 			"abolish_CTC",
 			"abolish_WTC",
 			"abolish_HB",
+			"abolish_IS",
+			"abolish_JSA_income",
 		],
 		child_benefit: [
 			"abolish_CB",
@@ -229,6 +231,7 @@ function PolicyControls(props) {
 		],
 		state_pension: [
 			"abolish_SP",
+			"abolish_PC",
 		],
 		universal_credit: [
 			"abolish_UC",
