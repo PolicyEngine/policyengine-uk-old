@@ -1,3 +1,4 @@
+from openfisca_core.reforms import reform
 from policy_engine_uk.populations.metrics import headline_metrics
 from openfisca_uk import Microsimulation, reforms
 from openfisca_uk_data import FRS_WAS_Imputation
@@ -12,6 +13,7 @@ reform_examples = (
     reforms.parametric.set_parameter(
         "benefit.universal_credit.standard_allowance.amount.SINGLE_OLD", 1000
     ),
+    reforms.parametric.set_parameter("benefit.child_benefit.amount.eldest", 1000),
 )
 
 # Wide ranges - these tests are verifying that the model is being used
@@ -22,6 +24,7 @@ expected_results = (
     dict(net_cost_numeric=(-110e9, -90e9)),
     dict(net_cost_numeric=(-6e9, -3e9)),
     dict(net_cost_numeric=(2e9, 3e9)),
+    dict(loser_count=(0, 1e-3)),
 )
 
 # Test metrics for each reform
