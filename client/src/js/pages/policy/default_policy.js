@@ -196,32 +196,6 @@ const DEFAULT_POLICY = {
 		summary: "Abolish Universal Credit",
 		type: "abolish"
 	},
-	abolish_CB: {
-		title: "Child Benefit",
-		description: "This switch abolishes the Child Benefit",
-		default: false,
-		value: false,
-		summary: "Abolish Child Benefit",
-		type: "abolish"
-	},
-	CB_eldest: {
-		title: "Child Benefit amount (eldest)",
-		description: "Child Benefit amount for the eldest or only child",
-		default: 21.15,
-		value: 21.15,
-		max: 50,
-		summary: "Change the Child Benefit for the eldest or only child to £@/week",
-		type: "weekly"
-	},
-	CB_additional: {
-		title: "Child Benefit amount (additional)",
-		description: "Child Benefit amount for additional children",
-		default: 14,
-		value: 14,
-		max: 50,
-		summary: "Change the Child Benefit for additional children to £@/week",
-		type: "weekly"
-	},
 	abolish_CTC: {
 		title: "Child Tax Credit",
 		description: "This switch abolishes the Child Tax Credit",
