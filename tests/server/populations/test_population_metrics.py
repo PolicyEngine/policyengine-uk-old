@@ -1,7 +1,7 @@
 from openfisca_core.reforms import reform
 from policy_engine_uk.populations.metrics import headline_metrics
 from openfisca_uk import Microsimulation, reforms
-from openfisca_uk_data import FRS_WAS_Imputation
+from openfisca_uk_data import FRS_WAS_Imputation, FRS
 import pytest
 
 baseline = Microsimulation()
@@ -25,7 +25,7 @@ EXPECTED_RESULTS = (
     dict(net_cost_numeric=(0, 0)),
     dict(net_cost_numeric=(-110e9, -90e9)),
     dict(net_cost_numeric=(-6e9, -3e9)),
-    dict(net_cost_numeric=(2e9, 3e9)),
+    dict(net_cost_numeric=(20e9, 30e9)),
     dict(loser_share=(0, 1e-3)),
 )
 

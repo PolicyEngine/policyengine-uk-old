@@ -35,8 +35,8 @@ def headline_metrics(
         baseline.calc("in_poverty_bhc", map_to="person").mean(),
         reformed.calc("in_poverty_bhc", map_to="person").mean(),
     )
-    winner_share = (gain > 0).mean()
-    loser_share = (gain < 0).mean()
+    winner_share = (gain > 1).mean()
+    loser_share = (gain < -1).mean()
     gini_change = pct_change(old_income.gini(), new_income.gini())
     return dict(
         net_cost=gbp(net_cost),
