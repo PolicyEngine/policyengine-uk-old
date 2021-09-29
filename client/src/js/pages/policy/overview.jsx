@@ -30,6 +30,7 @@ export function SimulateButton(props) {
 }
 
 function PolicyOverview(props) {
+	console.log(props.invalid);
 	let plan = Object.keys(props.policy).map((key, i) => (
 		props.policy[key].value !== props.policy[key].default
 			? <Step key={key} status="finish" title={props.policy[key].title} description={props.policy[key].summary.replace("@", props.policy[key].value)} />
@@ -46,9 +47,9 @@ function PolicyOverview(props) {
 				<Empty description="No plan provided" />
 			}
 			<Empty description="" image={null}>
-				<SimulateButton hidden text="Select your reform" target="/" policy={props.policy} onClick={props.onSubmit} />
-				<SimulateButton primary text="Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
-				<SimulateButton text="Skip to your household" target="/situation" policy={props.policy} onClick={props.onSubmit} />
+				<SimulateButton hidden text="Select your reform" target="/" policy={props.policy} onClick={props.onSubmit}/>
+				<SimulateButton primary disabled={props.invalid} text="Simulate on the population" target="/population-results" policy={props.policy} onClick={props.onSubmit}/>
+				<SimulateButton disabled={props.invalid} text="Skip to your household" target="/situation" policy={props.policy} onClick={props.onSubmit} />
 				<SimulateButton disabled text="See your results" target="/situation-results" policy={props.policy} onClick={props.onSubmit} />
 			</Empty>
 			<SharePolicyLinks policy={props.policy}/>

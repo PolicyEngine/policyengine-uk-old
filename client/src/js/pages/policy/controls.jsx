@@ -1,10 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import "antd/dist/antd.css";
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, CloseCircleFilled } from "@ant-design/icons";
 
 import {
-	InputNumber, Divider, Switch, Slider, Select, Button, Spin
+	InputNumber, Divider, Switch, Slider, Select, Alert, Spin
 } from "antd";
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
@@ -16,19 +16,19 @@ function Parameter(props) {
 	let parser = null;
 	if (props.param.type === "rate") {
 		formatter = (value) => `${value}%`;
-		parser = (value) => value.replace("%", "");
+		parser = (value) => +value.replace("%", "");
 	} else if (props.param.type === "weekly") {
 		formatter = (value) => `£${value}/week`;
-		parser = (value) => value.replace("£", "").replace("/week", "");
+		parser = (value) => +value.replace("£", "").replace("/week", "");
 	} else if (props.param.type === "yearly") {
 		formatter = (value) => `£${value}/year`;
-		parser = (value) => value.replace("£", "").replace("/year", "");
+		parser = (value) => +value.replace("£", "").replace("/year", "");
 	} else if (props.param.type === "monthly") {
 		formatter = (value) => `£${value}/month`;
-		parser = (value) => value.replace("£", "").replace("/month", "");
+		parser = (value) => +value.replace("£", "").replace("/month", "");
 	} else if (props.param.type === "gbp") {
 		formatter = (value) => `£${value}`;
-		parser = (value) => value.replace("£", "");
+		parser = (value) => +value.replace("£", "");
 	}
 	let component;
 	if(props.param.type == "bool") {
@@ -89,6 +89,7 @@ function Parameter(props) {
 	return (
 		<>
 			<Divider>{props.param.title}</Divider>
+			{props.param.error ? <Alert type="error" message={props.param.error} style={{marginBottom: 10}} showIcon icon={<CloseCircleFilled style={{marginTop: 5}} color="red" />}/> : null}
 			<p>{props.param.description}</p>
 			{component}
 		</>
