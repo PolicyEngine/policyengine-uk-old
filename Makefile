@@ -1,7 +1,7 @@
 install:
+	pip install -e .
 	openfisca-uk-setup --set-default frs_was_imp
 	openfisca-uk-data frs_was_imp download 2019
-	pip install -e .
 	cd client; npm install
 format:
 	black . -l 79
