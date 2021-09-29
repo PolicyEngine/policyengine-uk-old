@@ -8,7 +8,8 @@ setup(
     license="http://www.fsf.org/licensing/licenses/agpl-3.0.html",
     url="https://github.com/ubicenter/policyengine-uk",
     install_requires=[
-        "OpenFisca-UK",
+        # OpenFisca-UK is required, but for deployment purposes is skipped
+        # (Google Cloud Platform) servers have read-only storage
         "plotly",
         "flask",
         "flask_cors",
