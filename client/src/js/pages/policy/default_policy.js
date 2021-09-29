@@ -297,6 +297,24 @@ const DEFAULT_POLICY = {
 		summary: "Change the reduction rate to @%",
 		type: "rate",
 	},
+	CB_eldest: {
+		title: "Child Benefit",
+		description: "Child Benefit amount for the eldest or only child",
+		default: 21.15,
+		value: 21.15,
+		max: 50,
+		summary: "Child Benefit (eldest)",
+		type: "weekly"
+	},
+	CB_additional: {
+		title: "Child Benefit",
+		description: "Child Benefit amount for additional children",
+		default: 14,
+		value: 14,
+		max: 50,
+		summary: "Child Benefit (additional)",
+		type: "weekly"
+	},
 };
 
 export default DEFAULT_POLICY;
