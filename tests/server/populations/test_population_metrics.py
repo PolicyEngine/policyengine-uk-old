@@ -21,7 +21,7 @@ reform_examples = (
 # Wide ranges - these tests are verifying that the model is being used
 # correctly rather testing than the actual model output
 
-expected_results = (
+EXPECTED_RESULTS = (
     dict(net_cost_numeric=(0, 0)),
     dict(net_cost_numeric=(-110e9, -90e9)),
     dict(net_cost_numeric=(-6e9, -3e9)),
@@ -33,7 +33,7 @@ expected_results = (
 
 
 @pytest.mark.parametrize(
-    "reform,expected", zip(reform_examples, expected_results)
+    "reform,expected", zip(reform_examples, EXPECTED_RESULTS)
 )
 def test_headline_metrics(reform, expected):
     reformed = Microsimulation(reform)
