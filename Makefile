@@ -9,6 +9,7 @@ debug-client:
 debug-server:
 	FLASK_APP=main.py FLASK_DEBUG=1 flask run
 openfisca_uk_data:
+	pip install -e .
 	git clone https://github.com/ubicenter/openfisca-uk-data --depth 1
 	cd openfisca-uk-data; pip install -e .
 	openfisca-uk-data frs_was_imp download 2019
