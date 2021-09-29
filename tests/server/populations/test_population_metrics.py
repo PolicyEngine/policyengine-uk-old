@@ -26,7 +26,7 @@ EXPECTED_RESULTS = (
     dict(net_cost_numeric=(-110e9, -90e9)),
     dict(net_cost_numeric=(-6e9, -3e9)),
     dict(net_cost_numeric=(2e9, 3e9)),
-    dict(loser_count=(0, 1e-3)),
+    dict(loser_share=(0, 1e-3)),
 )
 
 # Test metrics for each reform
