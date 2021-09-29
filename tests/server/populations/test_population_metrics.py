@@ -13,7 +13,9 @@ reform_examples = (
     reforms.parametric.set_parameter(
         "benefit.universal_credit.standard_allowance.amount.SINGLE_OLD", 1000
     ),
-    reforms.parametric.set_parameter("benefit.child_benefit.amount.eldest", 1000),
+    reforms.parametric.set_parameter(
+        "benefit.child_benefit.amount.eldest", 1000
+    ),
 )
 
 # Wide ranges - these tests are verifying that the model is being used
