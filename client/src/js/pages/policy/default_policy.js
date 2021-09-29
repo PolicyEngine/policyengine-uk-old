@@ -196,6 +196,14 @@ const DEFAULT_POLICY = {
 		summary: "Abolish Universal Credit",
 		type: "abolish"
 	},
+	abolish_CB: {
+		title: "Child Benefit",
+		description: "This switch abolishes the Child Benefit",
+		default: false,
+		value: false,
+		summary: "Abolish Child Benefit",
+		type: "abolish"
+	},
 	abolish_CTC: {
 		title: "Child Tax Credit",
 		description: "This switch abolishes the Child Tax Credit",
