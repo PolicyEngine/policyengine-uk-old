@@ -57,11 +57,24 @@ def poverty_chart(baseline, reform):
             "Poverty rate change": [child, adult, senior, person],
         }
     )
+    df["label"] = (
+        np.where(df.Group == "All", "Total", df.Group)
+        + " poverty "
+        + np.where(
+            df["Poverty rate change"] < 0,
+            "falls ",
+            np.where(
+                df["Poverty rate change"] > 0, "rises ", "does not change"
+            ),
+        )
+        + df["Poverty rate change"]
+    )
     fig = format_fig(
         px.bar(
             df,
             x="Group",
             y="Poverty rate change",
+            text="label",
         ),
         show=False,
     )
