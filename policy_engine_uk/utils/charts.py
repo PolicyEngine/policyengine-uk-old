@@ -7,6 +7,10 @@ WHITE = "#FFF"
 BLUE = "#1976D2"  # Blue 700.
 DARK_BLUE = "#0F4AA1"  # Blue 900.
 GRAY = "#BDBDBD"
+DARK_GRAY = "#616161"
+LIGHT_GRAY = "#F5F5F5"
+LIGHT_GREEN = "#C5E1A5"
+DARK_GREEN = "#558B2F"
 
 
 def format_fig(

@@ -5,6 +5,10 @@ from policy_engine_uk.utils.charts import (
     GRAY,
     DARK_BLUE,
     WHITE,
+    DARK_GRAY,
+    LIGHT_GRAY,
+    LIGHT_GREEN,
+    DARK_GREEN,
 )
 import plotly.express as px
 from plotly.subplots import make_subplots
@@ -247,10 +251,6 @@ def intra_decile_graph_data(baseline, reformed):
     return pd.concat(l).reset_index()
 
 
-DARK_GRAY = "#616161"
-LIGHT_GRAY = "#F5F5F5"
-LIGHT_GREEN = "#C5E1A5"
-DARK_GREEN = "#558B2F"
 INTRA_DECILE_COLORS = (
     DARK_GRAY,
     GRAY,
