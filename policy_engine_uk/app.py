@@ -16,7 +16,6 @@ from policy_engine_uk.populations.charts import (
     decile_chart,
     intra_decile_chart,
     poverty_chart,
-    age_chart,
     population_waterfall_chart,
 )
 
