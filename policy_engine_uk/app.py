@@ -94,7 +94,7 @@ def population_reform():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, components = create_reform(params, return_names=True)
+    reform, _ = create_reform(params, return_names=True)
     reformed = Microsimulation(reform)
     result = dict(
         **headline_metrics(baseline, reformed),
@@ -131,7 +131,7 @@ def situation_reform():
     app.logger.info("Creating situation")
     situation = create_situation(params)
     app.logger.info("Creating reform")
-    reform, subreform_labels = create_reform(params, return_names=True)
+    reform, _ = create_reform(params, return_names=True)
     baseline_config = use_current_parameters(), add_LVT()
     reform_config = use_current_parameters(), reform
     app.logger.info("Creating baseline individualsim")
