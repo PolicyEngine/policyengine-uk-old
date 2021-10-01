@@ -38,49 +38,42 @@ def decile_chart(baseline, reformed):
 
 
 def poverty_chart(baseline, reform):
-    child = pct_change(
-        poverty_rate(baseline, "is_child"), poverty_rate(reform, "is_child")
-    )
-    adult = pct_change(
-        poverty_rate(baseline, "is_WA_adult"),
-        poverty_rate(reform, "is_WA_adult"),
-    )
-    senior = pct_change(
-        poverty_rate(baseline, "is_SP_age"), poverty_rate(reform, "is_SP_age")
-    )
-    person = pct_change(
-        poverty_rate(baseline, "people"), poverty_rate(reform, "people")
-    )
+    def pov_chg(criterion):
+        return pct_change(
+            poverty_rate(baseline, criterion), poverty_rate(reform, criterion)
+        )
+
     df = pd.DataFrame(
         {
-            "Group": ["Child", "Working-age", "Senior", "All"],
-            "Poverty rate change": [child, adult, senior, person],
+            "group": ["Child", "Working-age", "Senior", "All"],
+            "pov_chg": [
+                pov_chg(i)
+                for i in ["is_child", "is_working_age", "is_senior", "people"]
+            ],
         }
     )
-    df["abs_chg_str"] = df["Poverty rate change"].abs().map("{:.1%}".format)
+    df["abs_chg_str"] = df.pov_chg.abs().map("{:.1%}".format)
     df["label"] = (
-        np.where(df.Group == "All", "Total", df.Group)
+        np.where(df.group == "All", "Total", df.group)
         + " poverty "
         + np.where(
             df.abs_chg_str == "0.0%",
             "does not change",
-            (
-                np.where(df["Poverty rate change"] < 0, "falls ", "rises ")
-                + df.abs_chg_str
-            ),
+            (np.where(df.pov_chg < 0, "falls ", "rises ") + df.abs_chg_str),
         )
     )
     fig = format_fig(
         px.bar(
             df,
-            x="Group",
-            y="Poverty rate change",
+            x="group",
+            y="pov_chg",
             custom_data=["label"],
+            labels={"group": "Group", "pov_chg": "Poverty rate change"},
         ),
         show=False,
     )
     fig.update_layout(
-        title="Poverty rate changes",
+        title="Poverty rate change by age",
         xaxis=dict(title="Population"),
         yaxis=dict(title="Percent change", tickformat="%"),
     )
