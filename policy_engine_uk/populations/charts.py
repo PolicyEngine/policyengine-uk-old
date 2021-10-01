@@ -1,14 +1,5 @@
 from policy_engine_uk.populations.metrics import poverty_rate, pct_change
-from policy_engine_uk.utils.charts import (
-    format_fig,
-    waterfall,
-    BLUE,
-    GRAY,
-    DARK_GRAY,
-    LIGHT_GRAY,
-    LIGHT_GREEN,
-    DARK_GREEN,
-)
+from policy_engine_uk.utils.charts import *
 import plotly.express as px
 from plotly.subplots import make_subplots
 import json
