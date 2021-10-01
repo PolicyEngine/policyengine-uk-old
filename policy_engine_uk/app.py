@@ -141,9 +141,7 @@ def situation_reform():
     app.logger.info("Headline figures")
     headlines = headline_figures(baseline, reformed)
     app.logger.info("waterfall")
-    waterfall = household_waterfall_chart(
-        reform, subreform_labels, situation, baseline, reformed
-    )
+    waterfall = household_waterfall_chart(baseline, reformed)
     app.logger.info("Varying baseline")
     baseline.vary("employment_income", step=10)
     app.logger.info("Varying reform")

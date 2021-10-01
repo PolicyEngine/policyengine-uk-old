@@ -40,9 +40,7 @@ def test_household_waterfall_chart(situation, reform):
     reformed = situation(IndividualSim(reform))
     baseline.vary("employment_income")
     reformed.vary("employment_income")
-    household_waterfall_chart(
-        (reform,), ["Reform"], situation, baseline, reformed
-    )
+    household_waterfall_chart(baseline, reformed)
 
 
 @pytest.mark.parametrize(

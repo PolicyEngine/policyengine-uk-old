@@ -101,7 +101,7 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     return format_fig(fig)
 
 
-def household_waterfall_chart(reform, labels, situation, baseline, reformed):
+def household_waterfall_chart(baseline, reformed):
     GROUPS = ["benefits", "tax"]
     MULTIPLIERS = [1, -1]
     effects = [
