@@ -38,39 +38,46 @@ def decile_chart(baseline, reformed):
 
 
 def poverty_chart(baseline, reform):
-    child = pct_change(
-        poverty_rate(baseline, "is_child"), poverty_rate(reform, "is_child")
-    )
-    adult = pct_change(
-        poverty_rate(baseline, "is_WA_adult"),
-        poverty_rate(reform, "is_WA_adult"),
-    )
-    senior = pct_change(
-        poverty_rate(baseline, "is_SP_age"), poverty_rate(reform, "is_SP_age")
-    )
-    person = pct_change(
-        poverty_rate(baseline, "people"), poverty_rate(reform, "people")
-    )
+    def pov_chg(criterion):
+        return pct_change(
+            poverty_rate(baseline, criterion), poverty_rate(reform, criterion)
+        )
+
     df = pd.DataFrame(
         {
-            "Group": ["Child", "Working-age", "Senior", "All"],
-            "Poverty rate change": [child, adult, senior, person],
+            "group": ["Child", "Working-age", "Senior", "All"],
+            "pov_chg": [
+                pov_chg(i)
+                for i in ["is_child", "is_WA_adult", "is_SP_age", "people"]
+            ],
         }
+    )
+    df["abs_chg_str"] = df.pov_chg.abs().map("{:.1%}".format)
+    df["label"] = (
+        np.where(df.group == "All", "Total", df.group)
+        + " poverty "
+        + np.where(
+            df.abs_chg_str == "0.0%",
+            "does not change",
+            (np.where(df.pov_chg < 0, "falls ", "rises ") + df.abs_chg_str),
+        )
     )
     fig = format_fig(
         px.bar(
             df,
-            x="Group",
-            y="Poverty rate change",
+            x="group",
+            y="pov_chg",
+            custom_data=["label"],
+            labels={"group": "Group", "pov_chg": "Poverty rate change"},
         ),
         show=False,
     )
     fig.update_layout(
-        title="Poverty rate changes",
-        xaxis=dict(title="Population"),
+        title="Poverty impact by age",
+        xaxis_title=None,
         yaxis=dict(title="Percent change", tickformat="%"),
     )
-    fig.update_traces(marker_color=BLUE)
+    fig.update_traces(marker_color=BLUE, hovertemplate="%{customdata[0]}")
     fig = add_zero_line(fig)
     return json.loads(fig.to_json())
 
@@ -106,16 +113,14 @@ def add_zero_line(fig):
 
 def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
     final_color = DARK_BLUE
+
+    def amount_reform_type(amount, reform, type):
+        return pd.DataFrame({"Amount": amount, "Reform": reform, "Type": type})
+
     if len(labels) == 0:
-        df = pd.DataFrame(
-            {
-                "Amount": [],
-                "Reform": [],
-                "Type": [],
-            }
-        )
+        df = amount_reform_type([], [], [])
     else:
-        df = pd.DataFrame({"Amount": values, "Reform": labels, "Type": ""})
+        df = amount_reform_type(values, labels, "")
         if len(df) != 0:
             order = np.where(
                 df.Amount >= 0, -np.log(df.Amount), 1e2 - np.log(-df.Amount)
@@ -130,33 +135,15 @@ def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
                 final_color = DARK_GRAY
             df = pd.concat(
                 [
-                    pd.DataFrame(
-                        {
-                            "Amount": base,
-                            "Reform": df.Reform,
-                            "Type": "",
-                        }
-                    ),
+                    amount_reform_type(base, df.Reform, ""),
                     df,
-                    pd.DataFrame(
-                        {
-                            "Amount": [final_value],
-                            "Reform": ["Final"],
-                            "Type": ["Final"],
-                        }
-                    ),
+                    amount_reform_type([final_value], ["Final"], ["Final"]),
                 ]
             )
         else:
-            df = pd.DataFrame(
-                {
-                    "Amount": [],
-                    "Reform": [],
-                    "Type": [],
-                }
-            )
+            df = amount_reform_type([], [], [])
     fig = px.bar(
-        df,
+        df.round(),
         x="Reform",
         y="Amount",
         color="Type",
@@ -245,12 +232,14 @@ def intra_decile_graph_data(baseline, reformed):
     l = []
     income = baseline.calc("equiv_household_net_income", map_to="person")
     decile = income.decile_rank()
-    gain = reformed.calc(
+    baseline_hh_net_income = baseline.calc(
         "household_net_income", map_to="person"
-    ) - baseline.calc("household_net_income", map_to="person")
-    rel_gain = (
-        gain / baseline.calc("household_net_income", map_to="person")
-    ).dropna()
+    )
+    reformed_hh_net_income = reformed.calc(
+        "household_net_income", map_to="person"
+    )
+    gain = reformed_hh_net_income - baseline_hh_net_income
+    rel_gain = (gain / baseline_hh_net_income).dropna()
     bands = (None, 0.05, 1e-3, -1e-3, -0.05, None)
     for upper, lower, name in zip(bands[:-1], bands[1:], NAMES):
         fractions = []
@@ -300,40 +289,57 @@ INTRA_DECILE_COLORS = (
 
 def intra_decile_chart(baseline, reformed):
     df = intra_decile_graph_data(baseline, reformed)
-    fig1 = px.bar(
-        df[df.Decile != "All"],
-        x="Fraction",
-        y="Decile",
-        color="Outcome",
-        color_discrete_sequence=INTRA_DECILE_COLORS,
-        orientation="h",
+    TEXT_MAP = {
+        "Gain more than 5%": "gain more than 5%",
+        "Gain less than 5%": "gain less than 5%",
+        "No change": "experience no change",
+        "Lose less than 5%": "lose less than 5%",
+        "Lose more than 5%": "lose more than 5%",
+    }
+    df["hover"] = (
+        df.Fraction.apply(lambda x: "{:.0%}".format(x))
+        + " of "
+        + np.where(
+            df.Decile == "All",
+            "all people",
+            "decile " + df.Decile.astype(str),
+        )
+        + " "
+        + df.Outcome.map(TEXT_MAP)
     )
-    fig2 = px.bar(
-        df[df.Decile == "All"],
-        x="Fraction",
-        y="Decile",
-        color="Outcome",
-        color_discrete_sequence=INTRA_DECILE_COLORS,
-        orientation="h",
-    )
+
+    def single_intra_decile_graph(df):
+        return px.bar(
+            df,
+            x="Fraction",
+            y="Decile",
+            color="Outcome",
+            custom_data=["hover"],
+            color_discrete_sequence=INTRA_DECILE_COLORS,
+            orientation="h",
+        ).update_traces(hovertemplate="%{customdata[0]}")
+
+    decile_fig = single_intra_decile_graph(df[df.Decile != "All"])
+    total_fig = single_intra_decile_graph(df[df.Decile == "All"])
     fig = make_subplots(
         rows=2,
         cols=1,
         shared_xaxes=True,
         row_heights=[1, 10],
         vertical_spacing=0.05,
-        x_title="Outcome distribution",
+        x_title="Population share",
         y_title="Income decile",
     )
     fig.update_xaxes(showgrid=False)
-    f = fig2.full_figure_for_development(warn=False)
-    fig.add_traces(fig2.data, 1, 1)
-    fig.add_traces(fig1.data, 2, 1)
-    fig.update_layout(barmode="stack")
-    fig = format_fig(fig, show=False).update_layout(
-        title="Intra-decile outcomes",
-        xaxis_tickformat="%",
+    # Unused, delete?
+    f = total_fig.full_figure_for_development(warn=False)
+    fig.add_traces(total_fig.data, 1, 1)
+    fig.add_traces(decile_fig.data, 2, 1)
+    fig.update_layout(
+        barmode="stack",
+        title="Distribution of gains and losses",
     )
+    fig = format_fig(fig, show=False)
     fig.update_xaxes(tickformat="%")
     for i in range(5):
         fig.data[i].showlegend = False

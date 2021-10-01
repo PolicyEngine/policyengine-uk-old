@@ -13,6 +13,11 @@ COLOR_MAP = {
     "Reform": BLUE,
 }
 
+LABELS = dict(
+    variable="Policy",
+    employment_income="Employment income",
+)
+
 
 def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     """Produces line chart with employment income on the x axis and net income
@@ -26,22 +31,23 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     """
     df = pd.DataFrame(
         {
-            "Employment income": baseline.calc("employment_income").sum(
-                axis=0
-            ),
-            "Baseline": baseline.calc("net_income").sum(axis=0),
-            "Reform": reformed.calc("net_income").sum(axis=0),
+            "employment_income": baseline.calc("employment_income")
+            .sum(axis=0)
+            .round(-2),
+            "Baseline": baseline.calc("net_income").sum(axis=0).round(0),
+            "Reform": reformed.calc("net_income").sum(axis=0).round(0),
         }
     )
-    graph = px.line(
+    fig = px.line(
         df,
-        x="Employment income",
+        x="employment_income",
         y=["Baseline", "Reform"],
-        labels={"variable": "Policy", "value": "Net income"},
+        labels=dict(LABELS, value="Net income"),
         color_discrete_map=COLOR_MAP,
     )
+    fig.update_traces(hovertemplate="%{y}")
     return json.loads(
-        format_fig(graph, show=False)
+        format_fig(fig, show=False)
         .update_layout(
             title="Net income by employment income",
             xaxis_title="Employment income",
@@ -49,6 +55,7 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
             yaxis_tickprefix="£",
             xaxis_tickprefix="£",
             legend_title=None,
+            hovermode="x unified",
         )
         .to_json()
     )
@@ -76,21 +83,22 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     reform_mtr = get_mtr(earnings, reform_net)
     df = pd.DataFrame(
         {
-            "Employment income": earnings[:-1],
+            "employment_income": earnings[:-1].round(0),
             "Baseline": baseline_mtr,
             "Reform": reform_mtr,
         }
     )
-    graph = px.line(
+    fig = px.line(
         df,
-        x="Employment income",
+        x="employment_income",
         y=["Baseline", "Reform"],
-        labels={"variable": "Policy", "value": "Effective MTR"},
+        labels=dict(LABELS, value="Effective MTR"),
         color_discrete_map=COLOR_MAP,
         line_shape="hv",
     )
+    fig.update_traces(hovertemplate="%{y}")
     return json.loads(
-        format_fig(graph, show=False)
+        format_fig(fig, show=False)
         .update_layout(
             title="Effective marginal tax rate by employment income",
             xaxis_title="Employment income",
@@ -98,6 +106,7 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
             yaxis_tickformat="%",
             yaxis_title="Effective MTR",
             legend_title=None,
+            hovermode="x unified",
         )
         .to_json()
     )
