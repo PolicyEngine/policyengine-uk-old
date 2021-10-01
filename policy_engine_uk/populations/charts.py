@@ -73,8 +73,8 @@ def poverty_chart(baseline, reform):
         show=False,
     )
     fig.update_layout(
-        title="Poverty rate change by age",
-        xaxis=dict(title="Population"),
+        title="Poverty impact by age",
+        xaxis_title=None,
         yaxis=dict(title="Percent change", tickformat="%"),
     )
     fig.update_traces(marker_color=BLUE, hovertemplate="%{customdata[0]}")
