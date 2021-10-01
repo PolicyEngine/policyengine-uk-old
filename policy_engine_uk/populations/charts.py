@@ -5,6 +5,7 @@ from plotly.subplots import make_subplots
 import json
 import numpy as np
 from openfisca_uk import Microsimulation
+import pandas as pd
 
 WHITE = "#FFF"
 
