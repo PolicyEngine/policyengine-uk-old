@@ -57,24 +57,25 @@ def poverty_chart(baseline, reform):
             "Poverty rate change": [child, adult, senior, person],
         }
     )
+    df["abs_chg_str"] = df["Poverty rate change"].abs().map("{:.1%}".format)
     df["label"] = (
         np.where(df.Group == "All", "Total", df.Group)
         + " poverty "
         + np.where(
-            df["Poverty rate change"] < 0,
-            "falls ",
-            np.where(
-                df["Poverty rate change"] > 0, "rises ", "does not change"
+            df.abs_chg_str == "0.0%",
+            "does not change",
+            (
+                np.where(df["Poverty rate change"] < 0, "falls ", "rises ")
+                + df.abs_chg_str
             ),
         )
-        + df["Poverty rate change"]
     )
     fig = format_fig(
         px.bar(
             df,
             x="Group",
             y="Poverty rate change",
-            text="label",
+            custom_data=["label"],
         ),
         show=False,
     )
@@ -83,7 +84,7 @@ def poverty_chart(baseline, reform):
         xaxis=dict(title="Population"),
         yaxis=dict(title="Percent change", tickformat="%"),
     )
-    fig.update_traces(marker_color=BLUE)
+    fig.update_traces(marker_color=BLUE, hovertemplate="%{customdata[0]}")
     fig = add_zero_line(fig)
     return json.loads(fig.to_json())
 
