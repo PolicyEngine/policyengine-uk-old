@@ -42,19 +42,16 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         color_discrete_map=COLOR_MAP,
     )
     fig.update_traces(hovertemplate="%{y}")
-    return json.loads(
-        format_fig(fig)
-        .update_layout(
-            title="Net income by employment income",
-            xaxis_title="Employment income",
-            yaxis_title="Household net income",
-            yaxis_tickprefix="£",
-            xaxis_tickprefix="£",
-            legend_title=None,
-            hovermode="x unified",
-        )
-        .to_json()
+    fig.update_layout(
+        title="Net income by employment income",
+        xaxis_title="Employment income",
+        yaxis_title="Household net income",
+        yaxis_tickprefix="£",
+        xaxis_tickprefix="£",
+        legend_title=None,
+        hovermode="x unified",
     )
+    return json.loads(format_fig(fig).to_json())
 
 
 def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
@@ -93,19 +90,16 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         line_shape="hv",
     )
     fig.update_traces(hovertemplate="%{y}")
-    return json.loads(
-        format_fig(fig)
-        .update_layout(
-            title="Effective marginal tax rate by employment income",
-            xaxis_title="Employment income",
-            xaxis_tickprefix="£",
-            yaxis_tickformat="%",
-            yaxis_title="Effective MTR",
-            legend_title=None,
-            hovermode="x unified",
-        )
-        .to_json()
+    fig.update_layout(
+        title="Effective marginal tax rate by employment income",
+        xaxis_title="Employment income",
+        xaxis_tickprefix="£",
+        yaxis_tickformat="%",
+        yaxis_title="Effective MTR",
+        legend_title=None,
+        hovermode="x unified",
     )
+    return json.loads(format_fig(fig).to_json())
 
 
 def household_waterfall_chart(reform, labels, situation, baseline, reformed):
@@ -135,4 +129,4 @@ def household_waterfall_chart(reform, labels, situation, baseline, reformed):
         yaxis_tickprefix="£",
         legend_title=None,
     )
-    return json.loads(fig.to_json())
+    return json.loads(format_fig(fig).to_json())

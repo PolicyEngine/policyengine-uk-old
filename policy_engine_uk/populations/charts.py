@@ -18,7 +18,7 @@ def decile_chart(baseline, reformed):
     )
     df = pd.DataFrame({"Decile": changes.index, "Change": changes.values})
     fig = (
-        format_fig(px.bar(df, x="Decile", y="Change"))
+        px.bar(df, x="Decile", y="Change")
         .update_layout(
             title="Change to net income by decile",
             xaxis_title="Equivalised disposable income decile",
@@ -30,7 +30,7 @@ def decile_chart(baseline, reformed):
         .update_traces(marker_color=BLUE)
     )
     fig = add_zero_line(fig)
-    return json.loads(fig.to_json())
+    return json.loads(format_fig(fig).to_json())
 
 
 def poverty_chart(baseline, reform):
@@ -58,14 +58,12 @@ def poverty_chart(baseline, reform):
             (np.where(df.pov_chg < 0, "falls ", "rises ") + df.abs_chg_str),
         )
     )
-    fig = format_fig(
-        px.bar(
-            df,
-            x="group",
-            y="pov_chg",
-            custom_data=["label"],
-            labels={"group": "Group", "pov_chg": "Poverty rate change"},
-        ),
+    fig = px.bar(
+        df,
+        x="group",
+        y="pov_chg",
+        custom_data=["label"],
+        labels={"group": "Group", "pov_chg": "Poverty rate change"},
     )
     fig.update_layout(
         title="Poverty impact by age",
@@ -74,7 +72,7 @@ def poverty_chart(baseline, reform):
     )
     fig.update_traces(marker_color=BLUE, hovertemplate="%{customdata[0]}")
     fig = add_zero_line(fig)
-    return json.loads(fig.to_json())
+    return json.loads(format_fig(fig).to_json())
 
 
 def spending(baseline, reformed):
@@ -135,7 +133,7 @@ def population_waterfall_chart(reform, labels, baseline, reformed):
         yaxis_tickprefix="£",
         legend_title="",
     )
-    return json.loads(fig.to_json())
+    return json.loads(format_fig(fig).to_json())
 
 
 NAMES = (
@@ -254,8 +252,7 @@ def intra_decile_chart(baseline, reformed):
         barmode="stack",
         title="Distribution of gains and losses",
     )
-    fig = format_fig(fig)
     fig.update_xaxes(tickformat="%")
     for i in range(5):
         fig.data[i].showlegend = False
-    return json.loads(fig.to_json())
+    return json.loads(format_fig(fig).to_json())
