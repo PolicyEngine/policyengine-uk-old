@@ -18,7 +18,7 @@ def decile_chart(baseline, reformed):
     )
     df = pd.DataFrame({"Decile": changes.index, "Change": changes.values})
     fig = (
-        format_fig(px.bar(df, x="Decile", y="Change"), show=False)
+        format_fig(px.bar(df, x="Decile", y="Change"))
         .update_layout(
             title="Change to net income by decile",
             xaxis_title="Equivalised disposable income decile",
@@ -66,7 +66,6 @@ def poverty_chart(baseline, reform):
             custom_data=["label"],
             labels={"group": "Group", "pov_chg": "Poverty rate change"},
         ),
-        show=False,
     )
     fig.update_layout(
         title="Poverty impact by age",
@@ -255,7 +254,7 @@ def intra_decile_chart(baseline, reformed):
         barmode="stack",
         title="Distribution of gains and losses",
     )
-    fig = format_fig(fig, show=False)
+    fig = format_fig(fig)
     fig.update_xaxes(tickformat="%")
     for i in range(5):
         fig.data[i].showlegend = False

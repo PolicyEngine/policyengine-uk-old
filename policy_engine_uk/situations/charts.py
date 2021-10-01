@@ -43,7 +43,7 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     )
     fig.update_traces(hovertemplate="%{y}")
     return json.loads(
-        format_fig(fig, show=False)
+        format_fig(fig)
         .update_layout(
             title="Net income by employment income",
             xaxis_title="Employment income",
@@ -94,7 +94,7 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     )
     fig.update_traces(hovertemplate="%{y}")
     return json.loads(
-        format_fig(fig, show=False)
+        format_fig(fig)
         .update_layout(
             title="Effective marginal tax rate by employment income",
             xaxis_title="Employment income",

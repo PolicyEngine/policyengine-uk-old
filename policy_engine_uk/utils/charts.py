@@ -18,7 +18,6 @@ DARK_GREEN = "#558B2F"
 
 def format_fig(
     fig: go.Figure,
-    show: bool = True,
 ) -> Union[None, go.Figure]:
     """Formats figure with styling and logo.
 
@@ -44,10 +43,7 @@ def format_fig(
         plot_bgcolor="white",
         paper_bgcolor="white",
     )
-    if show:
-        fig.show(config=CONFIG)
-    else:
-        return fig
+    return fig
 
 def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
     final_color = DARK_BLUE
@@ -93,4 +89,4 @@ def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
             "Final": final_color,
         },
     )
-    return format_fig(fig, show=False)
+    return format_fig(fig)
