@@ -81,12 +81,12 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     reform_mtr = get_mtr(earnings, reform_net)
     df = pd.DataFrame(
         {
-            "employment_income": earnings[:-1],
+            "employment_income": earnings[:-1].round(-2),
             "Baseline": baseline_mtr,
             "Reform": reform_mtr,
         }
     )
-    graph = px.line(
+    fig = px.line(
         df,
         x="employment_income",
         y=["Baseline", "Reform"],
@@ -94,8 +94,9 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         color_discrete_map=COLOR_MAP,
         line_shape="hv",
     )
+    fig.update_traces(hovertemplate="%{y}")
     return json.loads(
-        format_fig(graph, show=False)
+        format_fig(fig, show=False)
         .update_layout(
             title="Effective marginal tax rate by employment income",
             xaxis_title="Employment income",
@@ -103,6 +104,7 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
             yaxis_tickformat="%",
             yaxis_title="Effective MTR",
             legend_title=None,
+            hovermode="x unified",
         )
         .to_json()
     )
