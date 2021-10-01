@@ -29,11 +29,11 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     :return: Representation of the budget plotly chart as a JSON string.
     :rtype: str
     """
-
     df = pd.DataFrame(
         {
             "employment_income": baseline.calc("employment_income")
-            .sum(axis=0).round(-2),
+            .sum(axis=0)
+            .round(-2),
             "Baseline": baseline.calc("net_income").sum(axis=0).round(0),
             "Reform": reformed.calc("net_income").sum(axis=0).round(0),
         }
