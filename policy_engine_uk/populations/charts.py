@@ -143,7 +143,7 @@ def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
         else:
             df = amount_reform_type([], [], [])
     fig = px.bar(
-        df,
+        df.round(),
         x="Reform",
         y="Amount",
         color="Type",
