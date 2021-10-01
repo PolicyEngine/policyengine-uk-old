@@ -287,22 +287,19 @@ INTRA_DECILE_COLORS = (
 
 def intra_decile_chart(baseline, reformed):
     df = intra_decile_graph_data(baseline, reformed)
-    fig1 = px.bar(
-        df[df.Decile != "All"],
-        x="Fraction",
-        y="Decile",
-        color="Outcome",
-        color_discrete_sequence=INTRA_DECILE_COLORS,
-        orientation="h",
-    )
-    fig2 = px.bar(
-        df[df.Decile == "All"],
-        x="Fraction",
-        y="Decile",
-        color="Outcome",
-        color_discrete_sequence=INTRA_DECILE_COLORS,
-        orientation="h",
-    )
+
+    def single_intra_decile_graph(df):
+        return px.bar(
+            df,
+            x="Fraction",
+            y="Decile",
+            color="Outcome",
+            color_discrete_sequence=INTRA_DECILE_COLORS,
+            orientation="h",
+        )
+
+    fig1 = single_intra_decile_graph(df[df.Decile != "All"])
+    fig2 = single_intra_decile_graph(df[df.Decile == "All"])
     fig = make_subplots(
         rows=2,
         cols=1,
@@ -313,12 +310,13 @@ def intra_decile_chart(baseline, reformed):
         y_title="Income decile",
     )
     fig.update_xaxes(showgrid=False)
+    # Unused, delete?
     f = fig2.full_figure_for_development(warn=False)
     fig.add_traces(fig2.data, 1, 1)
     fig.add_traces(fig1.data, 2, 1)
     fig.update_layout(barmode="stack")
     fig = format_fig(fig, show=False).update_layout(
-        title="Intra-decile outcomes",
+        title="Distribution of gains and losses",
         xaxis_tickformat="%",
     )
     fig.update_xaxes(tickformat="%")
