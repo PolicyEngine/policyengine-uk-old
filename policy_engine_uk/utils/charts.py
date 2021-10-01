@@ -2,9 +2,6 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 import pandas as pd
-from typing import Union
-
-CONFIG = {"displayModeBar": False}
 
 WHITE = "#FFF"
 BLUE = "#1976D2"  # Blue 700.
@@ -16,18 +13,12 @@ LIGHT_GREEN = "#C5E1A5"
 DARK_GREEN = "#558B2F"
 
 
-def format_fig(
-    fig: go.Figure,
-) -> Union[None, go.Figure]:
-    """Formats figure with styling and logo.
+def format_fig(fig: go.Figure) -> go.Figure:
+    """Formats figure with styling.
 
     :param fig: Plotly figure.
     :type fig: go.Figure
-    :param show: Whether to show the figure, defaults to True.
-        If False, returns the figure.
-    :type show: bool
-    :return: If show is True, nothing. If show is False, returns the
-        formatted plotly figure.
+    :return: Formatted plotly figure.
     :rtype: go.Figure
     """
     fig.update_xaxes(
@@ -44,6 +35,7 @@ def format_fig(
         paper_bgcolor="white",
     )
     return fig
+
 
 def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
     final_color = DARK_BLUE
