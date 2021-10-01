@@ -232,12 +232,14 @@ def intra_decile_graph_data(baseline, reformed):
     l = []
     income = baseline.calc("equiv_household_net_income", map_to="person")
     decile = income.decile_rank()
-    gain = reformed.calc(
+    baseline_hh_net_income = baseline.calc(
         "household_net_income", map_to="person"
-    ) - baseline.calc("household_net_income", map_to="person")
-    rel_gain = (
-        gain / baseline.calc("household_net_income", map_to="person")
-    ).dropna()
+    )
+    reformed_hh_net_income = reformed.calc(
+        "household_net_income", map_to="person"
+    )
+    gain = reformed_hh_net_income - baseline_hh_net_income
+    rel_gain = (gain / baseline_hh_net_income).dropna()
     bands = (None, 0.05, 1e-3, -1e-3, -0.05, None)
     for upper, lower, name in zip(bands[:-1], bands[1:], NAMES):
         fractions = []
@@ -287,6 +289,24 @@ INTRA_DECILE_COLORS = (
 
 def intra_decile_chart(baseline, reformed):
     df = intra_decile_graph_data(baseline, reformed)
+    TEXT_MAP = {
+        "Gain more than 5%": "gain more than 5%",
+        "Gain less than 5%": "gain less than 5%",
+        "No change": "experience no change",
+        "Lose less than 5%": "lose less than 5%",
+        "Lose more than 5%": "lose more than 5%",
+    }
+    df["hover"] = (
+        df.Fraction.apply(lambda x: "{:.0%}".format(x))
+        + " of "
+        + np.where(
+            df.Decile == "All",
+            "all people",
+            "decile " + df.Decile.astype(str),
+        )
+        + " "
+        + df.Outcome.map(TEXT_MAP)
+    )
 
     def single_intra_decile_graph(df):
         return px.bar(
@@ -294,26 +314,27 @@ def intra_decile_chart(baseline, reformed):
             x="Fraction",
             y="Decile",
             color="Outcome",
+            custom_data=["hover"],
             color_discrete_sequence=INTRA_DECILE_COLORS,
             orientation="h",
-        )
+        ).update_traces(hovertemplate="%{customdata[0]}")
 
-    fig1 = single_intra_decile_graph(df[df.Decile != "All"])
-    fig2 = single_intra_decile_graph(df[df.Decile == "All"])
+    decile_fig = single_intra_decile_graph(df[df.Decile != "All"])
+    total_fig = single_intra_decile_graph(df[df.Decile == "All"])
     fig = make_subplots(
         rows=2,
         cols=1,
         shared_xaxes=True,
         row_heights=[1, 10],
         vertical_spacing=0.05,
-        x_title="Outcome distribution",
+        x_title="Population share",
         y_title="Income decile",
     )
     fig.update_xaxes(showgrid=False)
     # Unused, delete?
-    f = fig2.full_figure_for_development(warn=False)
-    fig.add_traces(fig2.data, 1, 1)
-    fig.add_traces(fig1.data, 2, 1)
+    f = total_fig.full_figure_for_development(warn=False)
+    fig.add_traces(total_fig.data, 1, 1)
+    fig.add_traces(decile_fig.data, 2, 1)
     fig.update_layout(barmode="stack")
     fig = format_fig(fig, show=False).update_layout(
         title="Distribution of gains and losses",
