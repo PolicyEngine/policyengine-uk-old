@@ -48,7 +48,7 @@ def poverty_chart(baseline, reform):
             "group": ["Child", "Working-age", "Senior", "All"],
             "pov_chg": [
                 pov_chg(i)
-                for i in ["is_child", "is_working_age", "is_senior", "people"]
+                for i in ["is_child", "is_WA_adult", "is_SP_age", "people"]
             ],
         }
     )
