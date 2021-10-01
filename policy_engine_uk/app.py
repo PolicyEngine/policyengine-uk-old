@@ -100,7 +100,6 @@ def population_reform():
     result = dict(
         **headline_metrics(baseline, reformed),
         decile_chart=decile_chart(baseline, reformed),
-        age_chart=age_chart(baseline, reformed),
         poverty_chart=poverty_chart(baseline, reformed),
         waterfall_chart=population_waterfall_chart(
             reform, components, baseline, reformed
