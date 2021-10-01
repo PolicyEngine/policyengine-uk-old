@@ -30,6 +30,4 @@ def test_poverty_chart(reform):
 
 @pytest.mark.parametrize("reform", reform_examples)
 def test_population_waterfall_chart(reform):
-    population_waterfall_chart(
-        (reform,), ["Reform"], baseline, Microsimulation(reform)
-    )
+    population_waterfall_chart(baseline, Microsimulation(reform))
