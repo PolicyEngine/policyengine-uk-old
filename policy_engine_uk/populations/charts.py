@@ -335,11 +335,11 @@ def intra_decile_chart(baseline, reformed):
     f = total_fig.full_figure_for_development(warn=False)
     fig.add_traces(total_fig.data, 1, 1)
     fig.add_traces(decile_fig.data, 2, 1)
-    fig.update_layout(barmode="stack")
-    fig = format_fig(fig, show=False).update_layout(
+    fig.update_layout(
+        barmode="stack",
         title="Distribution of gains and losses",
-        xaxis_tickformat="%",
     )
+    fig = format_fig(fig, show=False)
     fig.update_xaxes(tickformat="%")
     for i in range(5):
         fig.data[i].showlegend = False
