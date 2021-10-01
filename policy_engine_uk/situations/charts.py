@@ -13,6 +13,11 @@ COLOR_MAP = {
     "Reform": BLUE,
 }
 
+LABELS = dict(
+    variable="Policy",
+    employment_income="Employment income",
+)
+
 
 def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     """Produces line chart with employment income on the x axis and net income
@@ -26,7 +31,7 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     """
     df = pd.DataFrame(
         {
-            "Employment income": baseline.calc("employment_income").sum(
+            "employment_income": baseline.calc("employment_income").sum(
                 axis=0
             ),
             "Baseline": baseline.calc("net_income").sum(axis=0),
@@ -35,9 +40,9 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     )
     graph = px.line(
         df,
-        x="Employment income",
+        x="employment_income",
         y=["Baseline", "Reform"],
-        labels={"variable": "Policy", "value": "Net income"},
+        labels=dict(LABELS, value="Net income"),
         color_discrete_map=COLOR_MAP,
     )
     return json.loads(
@@ -76,16 +81,16 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     reform_mtr = get_mtr(earnings, reform_net)
     df = pd.DataFrame(
         {
-            "Employment income": earnings[:-1],
+            "employment_income": earnings[:-1],
             "Baseline": baseline_mtr,
             "Reform": reform_mtr,
         }
     )
     graph = px.line(
         df,
-        x="Employment income",
+        x="employment_income",
         y=["Baseline", "Reform"],
-        labels={"variable": "Policy", "value": "Effective MTR"},
+        labels=dict(LABELS, value="Effective MTR"),
         color_discrete_map=COLOR_MAP,
         line_shape="hv",
     )
