@@ -1,6 +1,8 @@
-# UK Policy Engine
+# PolicyEngine UK
 
-A user interface for OpenFisca-UK showing population- and individual-level policy impacts.
+[PolicyEngine UK](https://uk.policyengine.org) allows anyone to reform the tax and benefit system, and see how it affects society and their own household.
+It builds on the [OpenFisca UK](https://github.com/PolicyEngine/openfisca-uk) microsimulation model.
+PolicyEngine is entirely open source and free to use.
 
 To develop:
 - Run the client `make debug-client` (if you're only developing the client, you're done)
