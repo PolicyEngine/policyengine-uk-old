@@ -100,9 +100,7 @@ def population_reform():
         **headline_metrics(baseline, reformed),
         decile_chart=decile_chart(baseline, reformed),
         poverty_chart=poverty_chart(baseline, reformed),
-        waterfall_chart=population_waterfall_chart(
-            reform, components, baseline, reformed
-        ),
+        waterfall_chart=population_waterfall_chart(baseline, reformed),
         intra_decile_chart=intra_decile_chart(baseline, reformed),
     )
     del reformed

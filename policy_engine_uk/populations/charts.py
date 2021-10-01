@@ -107,7 +107,7 @@ def total_income(sim):
     return sim.calc("net_income").sum()
 
 
-def population_waterfall_chart(reform, labels, baseline, reformed):
+def population_waterfall_chart(baseline, reformed):
     GROUPS = ["tax", "benefits"]
     MULTIPLIERS = [1, -1]
     effects = [
