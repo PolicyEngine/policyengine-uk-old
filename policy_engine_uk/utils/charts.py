@@ -4,13 +4,9 @@ from typing import Union
 CONFIG = {"displayModeBar": False}
 
 WHITE = "#FFF"
-LIGHTER_BLUE = "#ABCEEB"  # Blue 100.
-LIGHT_BLUE = "#49A6E2"  # Blue 500.
 BLUE = "#1976D2"  # Blue 700.
 DARK_BLUE = "#0F4AA1"  # Blue 900.
 GRAY = "#BDBDBD"
-
-BLUE_COLOR_SEQUENCE = [LIGHTER_BLUE, LIGHT_BLUE, BLUE, DARK_BLUE]
 
 
 def format_fig(

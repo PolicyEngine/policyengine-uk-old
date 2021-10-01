@@ -1,5 +1,5 @@
 from openfisca_uk import IndividualSim
-from policy_engine_uk.utils.charts import format_fig, GRAY, BLUE, WHITE
+from policy_engine_uk.utils.charts import format_fig, GRAY, BLUE
 from policy_engine_uk.populations.charts import waterfall
 import json
 import plotly.express as px
