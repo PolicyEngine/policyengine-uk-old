@@ -1,13 +1,17 @@
 from policy_engine_uk.populations.metrics import poverty_rate, pct_change
-from policy_engine_uk.utils.charts import format_fig, BLUE, GRAY, DARK_BLUE
+from policy_engine_uk.utils.charts import (
+    format_fig,
+    BLUE,
+    GRAY,
+    DARK_BLUE,
+    WHITE,
+)
 import plotly.express as px
 from plotly.subplots import make_subplots
 import json
 import numpy as np
 from openfisca_uk import Microsimulation
 import pandas as pd
-
-WHITE = "#FFF"
 
 
 def decile_chart(baseline, reformed):

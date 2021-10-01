@@ -3,7 +3,7 @@ from typing import Union
 
 CONFIG = {"displayModeBar": False}
 
-
+WHITE = "#FFF"
 LIGHTER_BLUE = "#ABCEEB"  # Blue 100.
 LIGHT_BLUE = "#49A6E2"  # Blue 500.
 BLUE = "#1976D2"  # Blue 700.
