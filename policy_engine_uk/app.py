@@ -25,7 +25,6 @@ from policy_engine_uk.situations.charts import (
     mtr_chart,
     budget_chart,
 )
-from openfisca_uk_data import FRS_WAS_Imputation
 
 VERSION = "0.1.7"
 USE_CACHE = True
