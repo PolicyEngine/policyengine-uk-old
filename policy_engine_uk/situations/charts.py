@@ -1,6 +1,5 @@
 from openfisca_uk import IndividualSim
 from policy_engine_uk.utils.charts import *
-import json
 import plotly.express as px
 import pandas as pd
 
@@ -51,7 +50,7 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         legend_title=None,
         hovermode="x unified",
     )
-    return json.loads(format_fig(fig).to_json())
+    return format_fig(fig)
 
 
 def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
@@ -99,7 +98,7 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         legend_title=None,
         hovermode="x unified",
     )
-    return json.loads(format_fig(fig).to_json())
+    return format_fig(fig)
 
 
 def household_waterfall_chart(reform, labels, situation, baseline, reformed):
@@ -129,4 +128,4 @@ def household_waterfall_chart(reform, labels, situation, baseline, reformed):
         yaxis_tickprefix="£",
         legend_title=None,
     )
-    return json.loads(format_fig(fig).to_json())
+    return format_fig(fig)

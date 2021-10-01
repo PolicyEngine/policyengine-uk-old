@@ -2,6 +2,8 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 import pandas as pd
+import json
+
 
 WHITE = "#FFF"
 BLUE = "#1976D2"  # Blue 700.
@@ -13,13 +15,13 @@ LIGHT_GREEN = "#C5E1A5"
 DARK_GREEN = "#558B2F"
 
 
-def format_fig(fig: go.Figure) -> go.Figure:
-    """Formats figure with styling.
+def format_fig(fig: go.Figure) -> dict:
+    """Formats figure with styling and returns as JSON.
 
     :param fig: Plotly figure.
     :type fig: go.Figure
-    :return: Formatted plotly figure.
-    :rtype: go.Figure
+    :return: Formatted plotly figure as a JSON dict.
+    :rtype: dict
     """
     fig.update_xaxes(
         title_font=dict(size=16, color="black"), tickfont={"size": 14}
@@ -34,7 +36,7 @@ def format_fig(fig: go.Figure) -> go.Figure:
         plot_bgcolor="white",
         paper_bgcolor="white",
     )
-    return fig
+    return json.loads(fig.to_json())
 
 
 def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):

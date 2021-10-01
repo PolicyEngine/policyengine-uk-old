@@ -2,7 +2,6 @@ from policy_engine_uk.populations.metrics import poverty_rate, pct_change
 from policy_engine_uk.utils.charts import *
 import plotly.express as px
 from plotly.subplots import make_subplots
-import json
 import numpy as np
 from openfisca_uk import Microsimulation
 import pandas as pd
@@ -30,7 +29,7 @@ def decile_chart(baseline, reformed):
         .update_traces(marker_color=BLUE)
     )
     fig = add_zero_line(fig)
-    return json.loads(format_fig(fig).to_json())
+    return format_fig(fig)
 
 
 def poverty_chart(baseline, reform):
@@ -72,7 +71,7 @@ def poverty_chart(baseline, reform):
     )
     fig.update_traces(marker_color=BLUE, hovertemplate="%{customdata[0]}")
     fig = add_zero_line(fig)
-    return json.loads(format_fig(fig).to_json())
+    return format_fig(fig)
 
 
 def spending(baseline, reformed):
@@ -133,7 +132,7 @@ def population_waterfall_chart(reform, labels, baseline, reformed):
         yaxis_tickprefix="£",
         legend_title="",
     )
-    return json.loads(format_fig(fig).to_json())
+    return format_fig(fig)
 
 
 NAMES = (
@@ -255,4 +254,4 @@ def intra_decile_chart(baseline, reformed):
     fig.update_xaxes(tickformat="%")
     for i in range(5):
         fig.data[i].showlegend = False
-    return json.loads(format_fig(fig).to_json())
+    return format_fig(fig)
