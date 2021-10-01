@@ -68,7 +68,7 @@ def ubi():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, _ = create_reform(params, return_names=True)
+    reform = create_reform(params)
     reformed = Microsimulation(reform)
     revenue = (
         baseline.calc("net_income").sum() - reformed.calc("net_income").sum()
@@ -94,7 +94,7 @@ def population_reform():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, _ = create_reform(params, return_names=True)
+    reform = create_reform(params)
     reformed = Microsimulation(reform)
     result = dict(
         **headline_metrics(baseline, reformed),
@@ -131,7 +131,7 @@ def situation_reform():
     app.logger.info("Creating situation")
     situation = create_situation(params)
     app.logger.info("Creating reform")
-    reform, _ = create_reform(params, return_names=True)
+    reform = create_reform(params)
     baseline_config = use_current_parameters(), add_LVT()
     reform_config = use_current_parameters(), reform
     app.logger.info("Creating baseline individualsim")
