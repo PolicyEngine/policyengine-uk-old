@@ -1,4 +1,7 @@
-from plotly import graph_objects as go
+import plotly.graph_objects as go
+import plotly.express as px
+import numpy as np
+import pandas as pd
 from typing import Union
 
 CONFIG = {"displayModeBar": False}
@@ -45,3 +48,49 @@ def format_fig(
         fig.show(config=CONFIG)
     else:
         return fig
+
+def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
+    final_color = DARK_BLUE
+
+    def amount_reform_type(amount, reform, type):
+        return pd.DataFrame({"Amount": amount, "Reform": reform, "Type": type})
+
+    if len(labels) == 0:
+        df = amount_reform_type([], [], [])
+    else:
+        df = amount_reform_type(values, labels, "")
+        if len(df) != 0:
+            order = np.where(
+                df.Amount >= 0, -np.log(df.Amount), 1e2 - np.log(-df.Amount)
+            )
+            df = df.set_index(order).sort_index().reset_index(drop=True)
+            df["Type"] = np.where(df.Amount >= 0, gain_label, loss_label)
+            base = np.array([0] + list(df.Amount.cumsum()[:-1]))
+            final_value = df.Amount.cumsum().values[-1]
+            if final_value >= 0:
+                final_color = DARK_BLUE
+            else:
+                final_color = DARK_GRAY
+            df = pd.concat(
+                [
+                    amount_reform_type(base, df.Reform, ""),
+                    df,
+                    amount_reform_type([final_value], ["Final"], ["Final"]),
+                ]
+            )
+        else:
+            df = amount_reform_type([], [], [])
+    fig = px.bar(
+        df.round(),
+        x="Reform",
+        y="Amount",
+        color="Type",
+        barmode="stack",
+        color_discrete_map={
+            gain_label: BLUE,
+            loss_label: GRAY,
+            "": WHITE,
+            "Final": final_color,
+        },
+    )
+    return format_fig(fig, show=False)
