@@ -113,16 +113,14 @@ def add_zero_line(fig):
 
 def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
     final_color = DARK_BLUE
+
+    def amount_reform_type(amount, reform, type):
+        return pd.DataFrame({"Amount": amount, "Reform": reform, "Type": type})
+
     if len(labels) == 0:
-        df = pd.DataFrame(
-            {
-                "Amount": [],
-                "Reform": [],
-                "Type": [],
-            }
-        )
+        df = amount_reform_type([], [], [])
     else:
-        df = pd.DataFrame({"Amount": values, "Reform": labels, "Type": ""})
+        df = amount_reform_type(values, labels, "")
         if len(df) != 0:
             order = np.where(
                 df.Amount >= 0, -np.log(df.Amount), 1e2 - np.log(-df.Amount)
@@ -137,31 +135,13 @@ def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
                 final_color = DARK_GRAY
             df = pd.concat(
                 [
-                    pd.DataFrame(
-                        {
-                            "Amount": base,
-                            "Reform": df.Reform,
-                            "Type": "",
-                        }
-                    ),
+                    amount_reform_type(base, df.Reform, ""),
                     df,
-                    pd.DataFrame(
-                        {
-                            "Amount": [final_value],
-                            "Reform": ["Final"],
-                            "Type": ["Final"],
-                        }
-                    ),
+                    amount_reform_type([final_value], ["Final"], ["Final"]),
                 ]
             )
         else:
-            df = pd.DataFrame(
-                {
-                    "Amount": [],
-                    "Reform": [],
-                    "Type": [],
-                }
-            )
+            df = amount_reform_type([], [], [])
     fig = px.bar(
         df,
         x="Reform",
