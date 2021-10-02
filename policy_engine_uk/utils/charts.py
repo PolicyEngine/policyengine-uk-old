@@ -42,8 +42,14 @@ def format_fig(fig: go.Figure) -> dict:
 def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
     final_color = DARK_BLUE
 
-    def amount_reform_type(amount, reform, type):
-        return pd.DataFrame({"Amount": amount, "Reform": reform, "Type": type})
+    def amount_reform_type(amount_value, reform_value, type_value):
+        return pd.DataFrame(
+            {
+                "Amount": amount_value,
+                "Reform": reform_value,
+                "Type": type_value,
+            }
+        )
 
     if len(labels) == 0:
         df = amount_reform_type([], [], [])
