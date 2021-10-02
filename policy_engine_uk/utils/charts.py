@@ -3,6 +3,7 @@ import plotly.express as px
 import numpy as np
 import pandas as pd
 import json
+from rdbl import gbp
 
 
 WHITE = "#FFF"
@@ -76,11 +77,33 @@ def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
             )
         else:
             df = amount_reform_type([], [], [])
-    return px.bar(
+    reform_sum = (
+        df[df.Type != ""]
+        .groupby("Reform")[["Amount"]]
+        .sum()
+        .rename(columns={"Amount": "total_amount"})
+        .reset_index()
+    )
+    df = df.merge(reform_sum, on="Reform")
+
+    def label(reform, amount):
+        res = reform
+        if amount == 0:
+            res += " doesn't change"
+        if amount > 0:
+            res += " rises by " + gbp(amount)
+        if amount < 0:
+            res += " falls by " + gbp(-amount)
+        return res
+
+    df["label"] = df.apply(lambda x: label(x.Reform, x.total_amount), axis=1)
+    print(df)
+    fig = px.bar(
         df.round(),
         x="Reform",
         y="Amount",
         color="Type",
+        custom_data=["label"],
         barmode="stack",
         color_discrete_map={
             gain_label: BLUE,
@@ -89,3 +112,4 @@ def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
             "Final": final_color,
         },
     )
+    return fig.update_traces(hovertemplate="%{customdata[0]}")
