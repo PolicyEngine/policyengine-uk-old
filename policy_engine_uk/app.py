@@ -16,7 +16,6 @@ from policy_engine_uk.populations.charts import (
     decile_chart,
     intra_decile_chart,
     poverty_chart,
-    age_chart,
     population_waterfall_chart,
 )
 
@@ -26,7 +25,6 @@ from policy_engine_uk.situations.charts import (
     mtr_chart,
     budget_chart,
 )
-from openfisca_uk_data import FRS_WAS_Imputation
 
 VERSION = "0.1.7"
 USE_CACHE = True
@@ -101,7 +99,6 @@ def population_reform():
     result = dict(
         **headline_metrics(baseline, reformed),
         decile_chart=decile_chart(baseline, reformed),
-        age_chart=age_chart(baseline, reformed),
         poverty_chart=poverty_chart(baseline, reformed),
         waterfall_chart=population_waterfall_chart(
             reform, components, baseline, reformed

@@ -1,10 +1,9 @@
-from openfisca_uk import graphs, IndividualSim
-from policy_engine_uk.utils.formatting import DARK_BLUE, format_fig, GRAY, BLUE
+from openfisca_uk import IndividualSim
+from policy_engine_uk.utils.formatting import format_fig, GRAY, BLUE
 from policy_engine_uk.populations.charts import waterfall
 import json
 import plotly.express as px
 import pandas as pd
-import numpy as np
 
 WHITE = "#FFF"
 
