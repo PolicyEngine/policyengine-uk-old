@@ -26,7 +26,7 @@ from policy_engine_uk.situations.charts import (
     budget_chart,
 )
 
-VERSION = "0.1.7"
+VERSION = "0.1.8"
 USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 
@@ -68,7 +68,7 @@ def ubi():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, _ = create_reform(params, return_names=True)
+    reform = create_reform(params)
     reformed = Microsimulation(reform)
     revenue = (
         baseline.calc("net_income").sum() - reformed.calc("net_income").sum()
@@ -94,15 +94,13 @@ def population_reform():
         app.logger.info("Returning cached response")
         result = json.loads(blob.download_as_string())
         return result
-    reform, components = create_reform(params, return_names=True)
+    reform = create_reform(params)
     reformed = Microsimulation(reform)
     result = dict(
         **headline_metrics(baseline, reformed),
         decile_chart=decile_chart(baseline, reformed),
         poverty_chart=poverty_chart(baseline, reformed),
-        waterfall_chart=population_waterfall_chart(
-            reform, components, baseline, reformed
-        ),
+        waterfall_chart=population_waterfall_chart(baseline, reformed),
         intra_decile_chart=intra_decile_chart(baseline, reformed),
     )
     del reformed
@@ -133,7 +131,7 @@ def situation_reform():
     app.logger.info("Creating situation")
     situation = create_situation(params)
     app.logger.info("Creating reform")
-    reform, subreform_labels = create_reform(params, return_names=True)
+    reform = create_reform(params)
     baseline_config = use_current_parameters(), add_LVT()
     reform_config = use_current_parameters(), reform
     app.logger.info("Creating baseline individualsim")
@@ -143,9 +141,7 @@ def situation_reform():
     app.logger.info("Headline figures")
     headlines = headline_figures(baseline, reformed)
     app.logger.info("waterfall")
-    waterfall = household_waterfall_chart(
-        reform, subreform_labels, situation, baseline, reformed
-    )
+    waterfall = household_waterfall_chart(baseline, reformed)
     app.logger.info("Varying baseline")
     baseline.vary("employment_income", step=10)
     app.logger.info("Varying reform")

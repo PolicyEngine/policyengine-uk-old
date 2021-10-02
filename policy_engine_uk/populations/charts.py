@@ -1,13 +1,10 @@
 from policy_engine_uk.populations.metrics import poverty_rate, pct_change
-from policy_engine_uk.utils.formatting import format_fig, BLUE, GRAY, DARK_BLUE
+from policy_engine_uk.utils.charts import *
 import plotly.express as px
 from plotly.subplots import make_subplots
-import json
 import numpy as np
 from openfisca_uk import Microsimulation
 import pandas as pd
-
-WHITE = "#FFF"
 
 
 def decile_chart(baseline, reformed):
@@ -20,7 +17,7 @@ def decile_chart(baseline, reformed):
     )
     df = pd.DataFrame({"Decile": changes.index, "Change": changes.values})
     fig = (
-        format_fig(px.bar(df, x="Decile", y="Change"), show=False)
+        px.bar(df, x="Decile", y="Change")
         .update_layout(
             title="Change to net income by decile",
             xaxis_title="Equivalised disposable income decile",
@@ -32,7 +29,7 @@ def decile_chart(baseline, reformed):
         .update_traces(marker_color=BLUE)
     )
     fig = add_zero_line(fig)
-    return json.loads(fig.to_json())
+    return format_fig(fig)
 
 
 def poverty_chart(baseline, reform):
@@ -60,15 +57,12 @@ def poverty_chart(baseline, reform):
             (np.where(df.pov_chg < 0, "falls ", "rises ") + df.abs_chg_str),
         )
     )
-    fig = format_fig(
-        px.bar(
-            df,
-            x="group",
-            y="pov_chg",
-            custom_data=["label"],
-            labels={"group": "Group", "pov_chg": "Poverty rate change"},
-        ),
-        show=False,
+    fig = px.bar(
+        df,
+        x="group",
+        y="pov_chg",
+        custom_data=["label"],
+        labels={"group": "Group", "pov_chg": "Poverty rate change"},
     )
     fig.update_layout(
         title="Poverty impact by age",
@@ -77,7 +71,7 @@ def poverty_chart(baseline, reform):
     )
     fig.update_traces(marker_color=BLUE, hovertemplate="%{customdata[0]}")
     fig = add_zero_line(fig)
-    return json.loads(fig.to_json())
+    return format_fig(fig)
 
 
 def spending(baseline, reformed):
@@ -109,58 +103,11 @@ def add_zero_line(fig):
     return fig
 
 
-def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
-    final_color = DARK_BLUE
-
-    def amount_reform_type(amount, reform, type):
-        return pd.DataFrame({"Amount": amount, "Reform": reform, "Type": type})
-
-    if len(labels) == 0:
-        df = amount_reform_type([], [], [])
-    else:
-        df = amount_reform_type(values, labels, "")
-        if len(df) != 0:
-            order = np.where(
-                df.Amount >= 0, -np.log(df.Amount), 1e2 - np.log(-df.Amount)
-            )
-            df = df.set_index(order).sort_index().reset_index(drop=True)
-            df["Type"] = np.where(df.Amount >= 0, gain_label, loss_label)
-            base = np.array([0] + list(df.Amount.cumsum()[:-1]))
-            final_value = df.Amount.cumsum().values[-1]
-            if final_value >= 0:
-                final_color = DARK_BLUE
-            else:
-                final_color = DARK_GRAY
-            df = pd.concat(
-                [
-                    amount_reform_type(base, df.Reform, ""),
-                    df,
-                    amount_reform_type([final_value], ["Final"], ["Final"]),
-                ]
-            )
-        else:
-            df = amount_reform_type([], [], [])
-    fig = px.bar(
-        df.round(),
-        x="Reform",
-        y="Amount",
-        color="Type",
-        barmode="stack",
-        color_discrete_map={
-            gain_label: BLUE,
-            loss_label: GRAY,
-            "": WHITE,
-            "Final": final_color,
-        },
-    )
-    return format_fig(fig, show=False)
-
-
 def total_income(sim):
     return sim.calc("net_income").sum()
 
 
-def population_waterfall_chart(reform, labels, baseline, reformed):
+def population_waterfall_chart(baseline, reformed):
     GROUPS = ["tax", "benefits"]
     MULTIPLIERS = [1, -1]
     effects = [
@@ -185,7 +132,7 @@ def population_waterfall_chart(reform, labels, baseline, reformed):
         yaxis_tickprefix="£",
         legend_title="",
     )
-    return json.loads(fig.to_json())
+    return format_fig(fig)
 
 
 NAMES = (
@@ -243,10 +190,6 @@ def intra_decile_graph_data(baseline, reformed):
     return pd.concat(l).reset_index()
 
 
-DARK_GRAY = "#616161"
-LIGHT_GRAY = "#F5F5F5"
-LIGHT_GREEN = "#C5E1A5"
-DARK_GREEN = "#558B2F"
 INTRA_DECILE_COLORS = (
     DARK_GRAY,
     GRAY,
@@ -308,8 +251,7 @@ def intra_decile_chart(baseline, reformed):
         barmode="stack",
         title="Distribution of gains and losses",
     )
-    fig = format_fig(fig, show=False)
     fig.update_xaxes(tickformat="%")
     for i in range(5):
         fig.data[i].showlegend = False
-    return json.loads(fig.to_json())
+    return format_fig(fig)
