@@ -183,3 +183,16 @@ def waterfall_chart(
         xaxis_title=None,
     )
     return format_fig(fig)
+
+
+def ordinal(n: int) -> str:
+    """ Create an ordinal number (1st, 2nd, etc.) from an integer.
+
+    Source: https://stackoverflow.com/a/20007730/1840471
+
+    :param n: Number.
+    :type n: int
+    :return: Ordinal number (1st, 2nd, etc.).
+    :rtype: str
+    """
+    return "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])

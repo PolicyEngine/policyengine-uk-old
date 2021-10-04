@@ -72,7 +72,9 @@ def poverty_chart(baseline: Microsimulation, reform: Microsimulation) -> dict:
         xaxis_title=None,
         yaxis=dict(title="Percent change", tickformat="%"),
     )
-    fig.update_traces(marker_color=BLUE, hovertemplate="%{customdata[0]}<extra></extra>")
+    fig.update_traces(
+        marker_color=BLUE, hovertemplate="%{customdata[0]}<extra></extra>"
+    )
     add_zero_line(fig)
     return format_fig(fig)
 
@@ -139,9 +141,9 @@ def intra_decile_graph_data(
             fractions += [subset.count() / rel_gain[decile == j].count()]
         tmp = pd.DataFrame(
             {
-                "Fraction": fractions,
-                "Decile": list(map(str, range(1, 11))),
-                "Outcome": name,
+                "fraction": fractions,
+                "decile": list(map(str, range(1, 11))),
+                "outcome": name,
             }
         )
         l.append(tmp)
@@ -152,9 +154,9 @@ def intra_decile_graph_data(
             subset = subset[rel_gain <= upper]
         all_row = pd.DataFrame(
             {
-                "Fraction": [subset.count() / rel_gain.count()],
-                "Decile": "All",
-                "Outcome": name,
+                "fraction": [subset.count() / rel_gain.count()],
+                "decile": "All",
+                "outcome": name,
             }
         )
         l.append(all_row)
@@ -170,42 +172,40 @@ INTRA_DECILE_COLORS = (
 )[::-1]
 
 
+def intra_decile_label(fraction, decile, outcome):
+    res = "{:.0%}".format(fraction) + " of "  # x% of
+    if decile == "All":
+        res += "all people "
+    else:
+        res += "people in the " + ordinal(int(decile)) + " decile "
+    if outcome == "No change":
+        return res + "experience no change"
+    else:
+        return res + outcome.lower()
+
+
+def single_intra_decile_graph(df):
+    return px.bar(
+        df,
+        x="fraction",
+        y="decile",
+        color="outcome",
+        custom_data=["hover"],
+        color_discrete_sequence=INTRA_DECILE_COLORS,
+        orientation="h",
+    ).update_traces(hovertemplate="%{customdata[0]}<extra></extra>")
+
+
 def intra_decile_chart(
     baseline: Microsimulation, reformed: Microsimulation
 ) -> dict:
     df = intra_decile_graph_data(baseline, reformed)
-    TEXT_MAP = {
-        "Gain more than 5%": "gain more than 5%",
-        "Gain less than 5%": "gain less than 5%",
-        "No change": "experience no change",
-        "Lose less than 5%": "lose less than 5%",
-        "Lose more than 5%": "lose more than 5%",
-    }
-    df["hover"] = (
-        df.Fraction.apply(lambda x: "{:.0%}".format(x))
-        + " of "
-        + np.where(
-            df.Decile == "All",
-            "all people",
-            "decile " + df.Decile.astype(str),
-        )
-        + " "
-        + df.Outcome.map(TEXT_MAP)
+    df["hover"] = df.apply(
+        lambda x: intra_decile_label(x.fraction, x.decile, x.outcome), axis=1
     )
-
-    def single_intra_decile_graph(df):
-        return px.bar(
-            df,
-            x="Fraction",
-            y="Decile",
-            color="Outcome",
-            custom_data=["hover"],
-            color_discrete_sequence=INTRA_DECILE_COLORS,
-            orientation="h",
-        ).update_traces(hovertemplate="%{customdata[0]}<extra></extra>")
-
-    decile_fig = single_intra_decile_graph(df[df.Decile != "All"])
-    total_fig = single_intra_decile_graph(df[df.Decile == "All"])
+    # Create the decile figure first, then the total to go above it.
+    decile_fig = single_intra_decile_graph(df[df.decile != "All"])
+    total_fig = single_intra_decile_graph(df[df.decile == "All"])
     fig = make_subplots(
         rows=2,
         cols=1,
@@ -216,8 +216,6 @@ def intra_decile_chart(
         y_title="Income decile",
     )
     fig.update_xaxes(showgrid=False)
-    # Unused, delete?
-    f = total_fig.full_figure_for_development(warn=False)
     fig.add_traces(total_fig.data, 1, 1)
     fig.add_traces(decile_fig.data, 2, 1)
     fig.update_layout(
