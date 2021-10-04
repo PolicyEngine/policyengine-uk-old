@@ -173,7 +173,7 @@ def waterfall_chart(
         },
         labels=dict(tax="Taxes", benefit="Benefits", total="Net"),
     )
-    fig.update_traces(hovertemplate="%{customdata[0]}")
+    fig.update_traces(hovertemplate="%{customdata[0]}<extra></extra>")
     add_zero_line(fig)
     fig.update_layout(
         title="Budget breakdown",

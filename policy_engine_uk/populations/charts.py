@@ -72,8 +72,8 @@ def poverty_chart(baseline: Microsimulation, reform: Microsimulation) -> dict:
         xaxis_title=None,
         yaxis=dict(title="Percent change", tickformat="%"),
     )
-    fig.update_traces(marker_color=BLUE, hovertemplate="%{customdata[0]}")
-    fig = add_zero_line(fig)
+    fig.update_traces(marker_color=BLUE, hovertemplate="%{customdata[0]}<extra></extra>")
+    add_zero_line(fig)
     return format_fig(fig)
 
 
@@ -202,7 +202,7 @@ def intra_decile_chart(
             custom_data=["hover"],
             color_discrete_sequence=INTRA_DECILE_COLORS,
             orientation="h",
-        ).update_traces(hovertemplate="%{customdata[0]}")
+        ).update_traces(hovertemplate="%{customdata[0]}<extra></extra>")
 
     decile_fig = single_intra_decile_graph(df[df.Decile != "All"])
     total_fig = single_intra_decile_graph(df[df.Decile == "All"])
