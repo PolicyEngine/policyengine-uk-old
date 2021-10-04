@@ -40,76 +40,125 @@ def format_fig(fig: go.Figure) -> dict:
     return json.loads(fig.to_json())
 
 
-def waterfall(values, labels, gain_label="Revenue", loss_label="Spending"):
-    final_color = DARK_BLUE
-
-    def amount_reform_type(amount_value, reform_value, type_value):
-        return pd.DataFrame(
-            {
-                "Amount": amount_value,
-                "Reform": reform_value,
-                "Type": type_value,
-            }
-        )
-
-    if len(labels) == 0:
-        df = amount_reform_type([], [], [])
-    else:
-        df = amount_reform_type(values, labels, "")
-        if len(df) != 0:
-            order = np.where(
-                df.Amount >= 0, -np.log(df.Amount), 1e2 - np.log(-df.Amount)
-            )
-            df = df.set_index(order).sort_index().reset_index(drop=True)
-            df["Type"] = np.where(df.Amount >= 0, gain_label, loss_label)
-            base = np.array([0] + list(df.Amount.cumsum()[:-1]))
-            final_value = df.Amount.cumsum().values[-1]
-            if final_value >= 0:
-                final_color = DARK_BLUE
-            else:
-                final_color = DARK_GRAY
-            df = pd.concat(
-                [
-                    amount_reform_type(base, df.Reform, ""),
-                    df,
-                    amount_reform_type([final_value], ["Final"], ["Final"]),
-                ]
-            )
+def bar_data(start, amount, label):
+    # Creates 1-2 bars which may include a blank white space or multiple
+    # bars if it crosses the zero axis.
+    end = amount + start
+    res = pd.DataFrame(index=[0, 1], columns=["value", "color"])
+    amount_color = "positive" if amount > 0 else "negative"
+    if start > 0:
+        if end > 0:
+            # Empty white space then a bar from start to end.
+            res.iloc[0] = min(start, end), "blank"
+            res.iloc[1] = abs(start - end), amount_color
         else:
-            df = amount_reform_type([], [], [])
-    reform_sum = (
-        df[df.Type != ""]
-        .groupby("Reform")[["Amount"]]
-        .sum()
-        .rename(columns={"Amount": "total_amount"})
-        .reset_index()
+            # Two bars for positive and negative sections.
+            res.iloc[0] = start, amount_color
+            res.iloc[1] = end, amount_color
+    else:
+        if end < 0:
+            # Empty white space then a bar from start to end.
+            res.iloc[0] = -abs(start - end), amount_color
+            res.iloc[1] = max(start, end), "blank"
+        else:
+            # Two bars for positive and negative sections.
+            res.iloc[1] = end, amount_color
+            res.iloc[0] = start, amount_color
+    # res.value = res.value.astype(int)
+    res["label"] = label
+    res["amount"] = amount
+    return res
+
+
+def waterfall_data(amounts: list, labels: list) -> pd.DataFrame:
+    """Generates data for waterfall charts.
+
+    :param amounts: List of amounts.
+    :type amounts: list
+    :param labels: List of labels corresponding to each amount.
+    :type labels: list
+    :return: DataFrame with two rows for each amount plus the total.
+    :rtype: pd.DataFrame
+    """
+    l = []
+    components = pd.DataFrame(dict(amount=amounts), index=labels)
+    components.loc["total"] = dict(amount=components.amount.sum())
+    components["start"] = [0] + components.amount.cumsum()[:-2].tolist() + [0]
+    # Create two rows per component to include difference from zero.
+    for index, row in components.iterrows():
+        l.append(bar_data(row.start, row.amount, index))
+    return pd.concat(l)
+
+
+def tax_benefit_waterfall_data(baseline, reformed) -> pd.DataFrame:
+    GROUPS = ["benefits", "tax"]
+    MULTIPLIERS = [1, -1]
+    effects = [
+        (reformed.calc(var).sum() - baseline.calc(var).sum()) * multiplier
+        for var, multiplier in zip(GROUPS, MULTIPLIERS)
+    ]
+    return waterfall_data(effects, GROUPS)
+
+
+def hover_label(component, amount):
+    res = component
+    if amount == 0:
+        res += " doesn't change"
+    if amount > 0:
+        res += " rise by " + gbp(amount)
+    if amount < 0:
+        res += " fall by " + gbp(-amount)
+    return res
+
+
+def add_dotted_xaxis(fig: go.Figure) -> None:
+    fig.add_shape(
+        type="line",
+        xref="paper",
+        yref="y",
+        x0=0,
+        y0=0,
+        x1=1,
+        y1=0,
+        line=dict(color="grey", width=1, dash="dash"),
     )
-    df = df.merge(reform_sum, on="Reform")
 
-    def label(reform, amount):
-        res = reform
-        if amount == 0:
-            res += " doesn't change"
-        if amount > 0:
-            res += " rises by " + gbp(amount)
-        if amount < 0:
-            res += " falls by " + gbp(-amount)
-        return res
 
-    df["label"] = df.apply(lambda x: label(x.Reform, x.total_amount), axis=1)
-    print(df)
+def waterfall_chart(baseline, reformed) -> dict:
+    """[summary]
+
+    :param baseline: [description]
+    :type baseline: [type]
+    :param reformed: [description]
+    :type reformed: [type]
+    :return: [description]
+    :rtype: dict
+    """
+    data = tax_benefit_waterfall_data(baseline, reformed)
+    data["hover"] = data.apply(
+        lambda x: hover_label(x.label, x.amount), axis=1
+    )
     fig = px.bar(
-        df.round(),
-        x="Reform",
-        y="Amount",
-        color="Type",
-        custom_data=["label"],
-        barmode="stack",
-        color_discrete_map={
-            gain_label: BLUE,
-            loss_label: GRAY,
-            "": WHITE,
-            "Final": final_color,
+        data,
+        "label",
+        "value",
+        "color",
+        custom_data=["hover"],
+        color_discrete_map=dict(blank=WHITE, negative=GRAY, positive=BLUE),
+        barmode="relative",
+        category_orders={
+            "label": ["tax", "benefits", "total"],
+            "color": ["blank", "negative", "positive"],
         },
+        labels=dict(tax="Taxes", benefit="Benefits", total="Net"),
     )
-    return fig.update_traces(hovertemplate="%{customdata[0]}")
+    fig.update_traces(hovertemplate="%{customdata[0]}")
+    add_dotted_xaxis(fig)
+    fig.update_layout(
+        title="Budget breakdown",
+        yaxis_title="Yearly amount",
+        yaxis_tickprefix="£",
+        showlegend=False,
+        xaxis_title=None,
+    )
+    return format_fig(fig)

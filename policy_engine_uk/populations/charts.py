@@ -108,31 +108,7 @@ def total_income(sim):
 
 
 def population_waterfall_chart(baseline, reformed):
-    GROUPS = ["tax", "benefits"]
-    MULTIPLIERS = [1, -1]
-    effects = [
-        (reformed.calc(var).sum() - baseline.calc(var).sum()) * multiplier
-        for var, multiplier in zip(GROUPS, MULTIPLIERS)
-    ]
-    fig = waterfall(effects, ["Tax", "Benefit"])
-    fig.add_shape(
-        type="line",
-        xref="paper",
-        yref="y",
-        x0=0,
-        y0=0,
-        x1=1,
-        y1=0,
-        line=dict(color="grey", width=1, dash="dash"),
-    )
-    fig.update_layout(
-        title="Budget breakdown",
-        xaxis_title="",
-        yaxis_title="Yearly amount",
-        yaxis_tickprefix="£",
-        legend_title="",
-    )
-    return format_fig(fig)
+    return waterfall_chart(baseline, reformed)
 
 
 NAMES = (
