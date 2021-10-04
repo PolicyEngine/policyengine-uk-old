@@ -147,6 +147,14 @@ const DEFAULT_POLICY = {
 		summary: "Give a basic income of £@/week to working-age adults",
 		type: "weekly",
 	},
+	WA_adult_UBI_age: {
+		title: "Adult UBI age threshold",
+		description: "Age at which a person receives the working-age adult UBI payment.",
+		default: 18,
+		value: 18,
+		max: 80,
+		summary: "Set the working-age UBI age threshold to @",
+	},
 	senior_UBI: {
 		title: "Senior UBI",
 		description: "Flat payment given to each person at or above State Pension age.",
@@ -155,6 +163,14 @@ const DEFAULT_POLICY = {
 		max: 250,
 		summary: "Give a basic income of £@/week to seniors",
 		type: "weekly",
+	},
+	senior_UBI_age: {
+		title: "Senior UBI age threshold",
+		description: "Age at which a person receives the senior adult UBI payment.",
+		default: 65,
+		value: 65,
+		max: 80,
+		summary: "Set the senior UBI age threshold to @",
 	},
 	abolish_savings_allowance: {
 		title: "Personal Savings Allowance",

@@ -124,3 +124,9 @@ IS:
 JSA_income:
   name: JSA (income-based)
   variable: JSA_income
+WA_adult_UBI_age:
+  name: WA Adult UBI age
+  parameter: benefit.UBI.WA_adult_age
+senior_UBI_age:
+  name: Senior UBI age
+  parameter: benefit.UBI.senior_age
