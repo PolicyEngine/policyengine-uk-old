@@ -107,7 +107,9 @@ def total_income(sim):
     return sim.calc("net_income").sum()
 
 
-def population_waterfall_chart(baseline, reformed):
+def population_waterfall_chart(
+    baseline: Microsimulation, reformed: Microsimulation
+) -> dict:
     return waterfall_chart(baseline, reformed)
 
 

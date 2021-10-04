@@ -1,9 +1,10 @@
 import plotly.graph_objects as go
 import plotly.express as px
-import numpy as np
 import pandas as pd
 import json
 from rdbl import gbp
+from openfisca_uk import Microsimulation, IndividualSim
+from typing import Union
 
 
 WHITE = "#FFF"
@@ -40,9 +41,23 @@ def format_fig(fig: go.Figure) -> dict:
     return json.loads(fig.to_json())
 
 
-def bar_data(start, amount, label):
-    # Creates 1-2 bars which may include a blank white space or multiple
-    # bars if it crosses the zero axis.
+def bar_data(start: float, amount: float, label: str) -> pd.DataFrame:
+    """Generates a pair of data points for a waterfall bar.
+
+    :param start: Starting value of bar.
+    :type start: float
+    :param amount: Amount of bar.
+    :type amount: float
+    :return: DataFrame with two rows:
+        - In the case of start and end (start + amount) being on the same side
+        of zero, it will be one for the hidden white bar and one for the
+        true value.
+        - In the case of start and end being on opposite sides of zero, it will
+        be one for the positive value and one for the negative value.
+        Each row contains columns for value and color (which are specific to
+        the row), and label and amount (which are the same for both rows).
+    :rtype: pd.DataFrame
+    """
     end = amount + start
     res = pd.DataFrame(index=[0, 1], columns=["value", "color"])
     amount_color = "positive" if amount > 0 else "negative"
@@ -90,7 +105,10 @@ def waterfall_data(amounts: list, labels: list) -> pd.DataFrame:
     return pd.concat(l)
 
 
-def tax_benefit_waterfall_data(baseline, reformed) -> pd.DataFrame:
+def tax_benefit_waterfall_data(
+    baseline: Union[Microsimulation, IndividualSim],
+    reformed: Union[Microsimulation, IndividualSim],
+) -> pd.DataFrame:
     GROUPS = ["benefits", "tax"]
     MULTIPLIERS = [1, -1]
     effects = [
@@ -100,7 +118,7 @@ def tax_benefit_waterfall_data(baseline, reformed) -> pd.DataFrame:
     return waterfall_data(effects, GROUPS)
 
 
-def hover_label(component, amount):
+def hover_label(component: str, amount: float) -> str:
     res = component
     if amount == 0:
         res += " doesn't change"
@@ -124,14 +142,17 @@ def add_dotted_xaxis(fig: go.Figure) -> None:
     )
 
 
-def waterfall_chart(baseline, reformed) -> dict:
-    """[summary]
+def waterfall_chart(
+    baseline: Union[Microsimulation, IndividualSim],
+    reformed: Union[Microsimulation, IndividualSim],
+) -> dict:
+    """Create a waterfall chart for tax and benefit changes.
 
-    :param baseline: [description]
-    :type baseline: [type]
-    :param reformed: [description]
-    :type reformed: [type]
-    :return: [description]
+    :param baseline: Baseline simulation.
+    :type baseline: Union[Microsimulation, IndividualSim]
+    :param reformed: Reform simulation.
+    :type reformed: Union[Microsimulation, IndividualSim]
+    :return: Waterfall chart as a JSON dict.
     :rtype: dict
     """
     data = tax_benefit_waterfall_data(baseline, reformed)
