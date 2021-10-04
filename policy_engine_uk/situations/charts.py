@@ -101,5 +101,7 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     return format_fig(fig)
 
 
-def household_waterfall_chart(baseline, reformed):
+def household_waterfall_chart(
+    baseline: Microsimulation, reformed: Microsimulation
+) -> dict:
     return waterfall_chart(baseline, reformed)

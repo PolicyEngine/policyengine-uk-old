@@ -7,7 +7,7 @@ from openfisca_uk import Microsimulation
 import pandas as pd
 
 
-def decile_chart(baseline, reformed):
+def decile_chart(baseline: Microsimulation, reformed: Microsimulation) -> dict:
     income = baseline.calc("household_net_income", map_to="person")
     equiv_income = baseline.calc("equiv_household_net_income", map_to="person")
     gain = reformed.calc("household_net_income", map_to="person") - income
@@ -28,21 +28,24 @@ def decile_chart(baseline, reformed):
         )
         .update_traces(marker_color=BLUE)
     )
-    fig = add_zero_line(fig)
+    add_zero_line(fig)
     return format_fig(fig)
 
 
-def poverty_chart(baseline, reform):
-    def pov_chg(criterion):
-        return pct_change(
-            poverty_rate(baseline, criterion), poverty_rate(reform, criterion)
-        )
+def pov_chg(
+    baseline: Microsimulation, reform: Microsimulation, criterion: str
+) -> float:
+    return pct_change(
+        poverty_rate(baseline, criterion), poverty_rate(reform, criterion)
+    )
 
+
+def poverty_chart(baseline: Microsimulation, reform: Microsimulation) -> dict:
     df = pd.DataFrame(
         {
             "group": ["Child", "Working-age", "Senior", "All"],
             "pov_chg": [
-                pov_chg(i)
+                pov_chg(baseline, reform, i)
                 for i in ["is_child", "is_WA_adult", "is_SP_age", "people"]
             ],
         }
@@ -74,13 +77,15 @@ def poverty_chart(baseline, reform):
     return format_fig(fig)
 
 
-def spending(baseline, reformed):
+def spending(baseline: Microsimulation, reformed: Microsimulation) -> float:
     return (
         reformed.calc("net_income").sum() - baseline.calc("net_income").sum()
     )
 
 
-def get_partial_funding(reform, baseline, **kwargs):
+def get_partial_funding(
+    reform: Microsimulation, baseline: Microsimulation, **kwargs
+) -> list:
     expenditure = []
     for i in range(1, len(reform) + 1):
         expenditure += [
@@ -89,21 +94,7 @@ def get_partial_funding(reform, baseline, **kwargs):
     return expenditure
 
 
-def add_zero_line(fig):
-    fig.add_shape(
-        type="line",
-        xref="paper",
-        yref="y",
-        x0=0,
-        y0=0,
-        x1=1,
-        y1=0,
-        line=dict(color="grey", width=1, dash="dash"),
-    )
-    return fig
-
-
-def total_income(sim):
+def total_income(sim: Microsimulation) -> float:
     return sim.calc("net_income").sum()
 
 
@@ -122,7 +113,9 @@ NAMES = (
 )
 
 
-def intra_decile_graph_data(baseline, reformed):
+def intra_decile_graph_data(
+    baseline: Microsimulation, reformed: Microsimulation
+) -> pd.DataFrame:
     l = []
     income = baseline.calc("equiv_household_net_income", map_to="person")
     decile = income.decile_rank()
@@ -177,7 +170,9 @@ INTRA_DECILE_COLORS = (
 )[::-1]
 
 
-def intra_decile_chart(baseline, reformed):
+def intra_decile_chart(
+    baseline: Microsimulation, reformed: Microsimulation
+) -> dict:
     df = intra_decile_graph_data(baseline, reformed)
     TEXT_MAP = {
         "Gain more than 5%": "gain more than 5%",

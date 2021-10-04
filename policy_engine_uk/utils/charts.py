@@ -129,7 +129,7 @@ def hover_label(component: str, amount: float) -> str:
     return res
 
 
-def add_dotted_xaxis(fig: go.Figure) -> None:
+def add_zero_line(fig: go.Figure) -> None:
     fig.add_shape(
         type="line",
         xref="paper",
@@ -174,7 +174,7 @@ def waterfall_chart(
         labels=dict(tax="Taxes", benefit="Benefits", total="Net"),
     )
     fig.update_traces(hovertemplate="%{customdata[0]}")
-    add_dotted_xaxis(fig)
+    add_zero_line(fig)
     fig.update_layout(
         title="Budget breakdown",
         yaxis_title="Yearly amount",
