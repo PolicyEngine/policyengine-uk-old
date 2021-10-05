@@ -140,7 +140,18 @@ def tax_benefit_waterfall_data(
     return res
 
 
-def hover_label(component: str, amount: float, is_pop) -> str:
+def hover_label(component: str, amount: float, is_pop: bool) -> str:
+    """Create a label for an individual point in a waterfall hovercard.
+
+    :param component: Name of the component, e.g. "Tax revenues".
+    :type component: str
+    :param amount: Name of the component, e.g. "Tax revenues".
+    :type amount: float
+    :param is_pop: Whether the component is population- vs. household-level.
+    :type is_pop: bool
+    :return: Label for hovercard.
+    :rtype: str
+    """
     # Net impact bars should match the title.
     res = component
     # Flip the amount for labeling population benefits and household taxes.
@@ -160,7 +171,7 @@ def hover_label(component: str, amount: float, is_pop) -> str:
             return "Reform produces " + abs_amount_display + " net surplus"
         return res + " would rise by " + abs_amount_display
     if amount < 0:
-        if component == "Net impact" and is_pop:
+        if component == "Net impact":  # Population.
             return "Reform produces " + abs_amount_display + " net cost"
         return res + " would fall by " + abs_amount_display
 
@@ -238,6 +249,11 @@ def add_custom_hovercard(fig: go.Figure) -> None:
 
 
 def add_zero_line(fig: go.Figure) -> None:
+    """Add a dotted line across y=0.
+
+    :param fig: Plotly figure.
+    :type fig: go.Figure
+    """
     fig.add_shape(
         type="line",
         xref="paper",
