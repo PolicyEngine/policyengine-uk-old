@@ -50,7 +50,7 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         legend_title=None,
         hovermode="x unified",
     )
-    return format_fig(fig)
+    return formatted_fig_json(fig)
 
 
 def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
@@ -98,7 +98,7 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         legend_title=None,
         hovermode="x unified",
     )
-    return format_fig(fig)
+    return formatted_fig_json(fig)
 
 
 def household_waterfall_chart(

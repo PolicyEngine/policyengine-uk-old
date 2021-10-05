@@ -29,7 +29,7 @@ def decile_chart(baseline: Microsimulation, reformed: Microsimulation) -> dict:
         .update_traces(marker_color=BLUE)
     )
     add_zero_line(fig)
-    return format_fig(fig)
+    return formatted_fig_json(fig)
 
 
 def pov_chg(
@@ -76,7 +76,7 @@ def poverty_chart(baseline: Microsimulation, reform: Microsimulation) -> dict:
         marker_color=BLUE, hovertemplate="%{customdata[0]}<extra></extra>"
     )
     add_zero_line(fig)
-    return format_fig(fig)
+    return formatted_fig_json(fig)
 
 
 def spending(baseline: Microsimulation, reformed: Microsimulation) -> float:
@@ -227,4 +227,4 @@ def intra_decile_chart(
     fig.update_xaxes(tickformat="%")
     for i in range(5):
         fig.data[i].showlegend = False
-    return format_fig(fig)
+    return formatted_fig_json(fig)

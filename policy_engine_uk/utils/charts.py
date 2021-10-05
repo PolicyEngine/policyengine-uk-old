@@ -17,7 +17,7 @@ LIGHT_GREEN = "#C5E1A5"
 DARK_GREEN = "#558B2F"
 
 
-def format_fig(fig: go.Figure) -> dict:
+def formatted_fig_json(fig: go.Figure) -> dict:
     """Formats figure with styling and returns as JSON.
 
     :param fig: Plotly figure.
@@ -181,7 +181,7 @@ def waterfall_chart(
         showlegend=False,
         xaxis_title=None,
     )
-    return format_fig(fig)
+    return formatted_fig_json(fig)
 
 
 def ordinal(n: int) -> str:
