@@ -316,11 +316,11 @@ const DEFAULT_POLICY = {
 	},
 	CB_additional: {
 		title: "Child Benefit",
-		description: "Change the Child Benefit for additional children to £@/week",
+		description: "Child Benefit amount for each additional child",
 		default: 14,
 		value: 14,
 		max: 50,
-		summary: "Child Benefit (additional)",
+		summary: "Change the Child Benefit for additional children to £@/week",
 		type: "weekly"
 	},
 };
