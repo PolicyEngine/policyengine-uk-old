@@ -140,17 +140,29 @@ def tax_benefit_waterfall_data(
     return res
 
 
-def hover_label(component: str, amount: float) -> str:
-    res = component
-    print(component)
-    print(amount)
-    print(gbp(amount))
+def hover_label(component: str, amount: float, is_pop) -> str:
+    # Net impact bars should match the title.
+    if component == "Net impact" and not is_pop:
+        res = "Your annual net income would"
+    else:
+        res = component
+    # Round population estimates, not individual.
+    abs_amount = round(abs(amount))
+    abs_amount_display = gbp(abs_amount) if is_pop else f"£{abs_amount:,}"
+    # Branch logic, starting with no change.
+    # More special handling of the net impact to match the title.
     if amount == 0:
+        if component == "Net impact" and not is_pop:
+            return res + " not change"
         return res + " doesn't change"
     if amount > 0:
-        return res + " rise by " + gbp(amount)
+        if component == "Net impact" and is_pop:
+            return "Reform produces net surplus of " + abs_amount_display
+        return res + " rise by " + abs_amount_display
     if amount < 0:
-        return res + " fall by " + gbp(-amount)
+        if component == "Net impact" and is_pop:
+            return "Reform produces net deficit of " + abs_amount_display
+        return res + " fall by " + abs_amount_display
 
 
 def waterfall_chart(
@@ -169,7 +181,7 @@ def waterfall_chart(
     is_pop = isinstance(baseline, Microsimulation)
     data = tax_benefit_waterfall_data(baseline, reformed)
     data["hover"] = data.apply(
-        lambda x: hover_label(x.label, x.amount), axis=1
+        lambda x: hover_label(x.label, x.amount, is_pop), axis=1
     )
     fig = px.bar(
         data,
