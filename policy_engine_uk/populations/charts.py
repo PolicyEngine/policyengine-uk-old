@@ -127,37 +127,6 @@ def spending(baseline: Microsimulation, reformed: Microsimulation) -> float:
     )
 
 
-def get_partial_funding(
-    reform: Microsimulation, baseline: Microsimulation, **kwargs
-) -> list:
-    """Spending for each cumulative set of provisions in a reform.
-
-    :param reform: Reform simulation.
-    :type reform: Microsimulation
-    :param baseline: Baseline simulation.
-    :type baseline: Microsimulation
-    :return: List of cumulative spending for each reform provision.
-    :rtype: list
-    """
-    expenditure = []
-    for i in range(1, len(reform) + 1):
-        expenditure += [
-            spending(baseline, Microsimulation(reform[:i], **kwargs))
-        ]
-    return expenditure
-
-
-def total_income(sim: Microsimulation) -> float:
-    """[summary]
-
-    :param sim: [description]
-    :type sim: Microsimulation
-    :return: [description]
-    :rtype: float
-    """
-    return sim.calc("net_income").sum()
-
-
 def population_waterfall_chart(
     baseline: Microsimulation, reformed: Microsimulation
 ) -> dict:
