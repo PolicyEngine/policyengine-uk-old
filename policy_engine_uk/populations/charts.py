@@ -43,7 +43,7 @@ def decile_chart(baseline: Microsimulation, reformed: Microsimulation) -> dict:
 
 
 def pov_chg(
-    baseline: Microsimulation, reform: Microsimulation, criterion: str
+    baseline: Microsimulation, reformed: Microsimulation, criterion: str
 ) -> float:
     """Calculate change in poverty rates.
 
@@ -57,17 +57,17 @@ def pov_chg(
     :rtype: float
     """
     return pct_change(
-        poverty_rate(baseline, criterion), poverty_rate(reform, criterion)
+        poverty_rate(baseline, criterion), poverty_rate(reformed, criterion)
     )
 
 
-def poverty_chart(baseline: Microsimulation, reform: Microsimulation) -> dict:
+def poverty_chart(baseline: Microsimulation, reformed: Microsimulation) -> dict:
     """Chart of poverty impact by age group and overall.
 
     :param baseline: Baseline microsimulation.
     :type baseline: Microsimulation
-    :param reform: Reform microsimulation.
-    :type reform: Microsimulation
+    :param reformed: Reform microsimulation.
+    :type reformed: Microsimulation
     :return: JSON representation of Plotly chart with poverty impact for:
         - Children (under 18)
         - Working age adults (18 to State Pension age)
@@ -79,7 +79,7 @@ def poverty_chart(baseline: Microsimulation, reform: Microsimulation) -> dict:
         {
             "group": ["Child", "Working-age", "Senior", "All"],
             "pov_chg": [
-                pov_chg(baseline, reform, i)
+                pov_chg(baseline, reformed, i)
                 for i in ["is_child", "is_WA_adult", "is_SP_age", "people"]
             ],
         }
