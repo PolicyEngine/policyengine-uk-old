@@ -164,14 +164,6 @@ const DEFAULT_POLICY = {
 		summary: "Give a basic income of £@/week to seniors",
 		type: "weekly",
 	},
-	senior_UBI_age: {
-		title: "Senior UBI age threshold",
-		description: "Age at which a person receives the senior adult UBI payment.",
-		default: 65,
-		value: 65,
-		max: 80,
-		summary: "Set the senior UBI age threshold to @",
-	},
 	abolish_savings_allowance: {
 		title: "Personal Savings Allowance",
 		description: "The Personal Savings Allowance is the amount of taxable savings interest income disregarded for Income Tax purposes. It has different values at different Income Tax bands - this switch abolishes all of them.",

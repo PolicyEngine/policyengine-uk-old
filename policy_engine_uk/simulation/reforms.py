@@ -70,7 +70,6 @@ def add_empty_UBI():
                     "child": {"values": {"0000-01-01": 0.00}},
                     "WA_adult_age": {"values": {"0000-01-01": 18}},
                     "WA_adult": {"values": {"0000-01-01": 0.00}},
-                    "senior_age": {"values": {"0000-01-01": 65}},
                     "senior": {"values": {"0000-01-01": 0.00}},
                 }
             ),
@@ -88,11 +87,10 @@ def add_empty_UBI():
             age = person("age", period)
             is_child = age < UBI_params.WA_adult_age
             is_WA_adult = ~is_child & (age < UBI_params.senior_age)
-            is_senior = age >= UBI_params.senior_age
             basic_income = (
                 is_child * UBI_params.child
                 + is_WA_adult * UBI_params.WA_adult
-                + is_senior * UBI_params.senior
+                + person("is_SP_age", period) * UBI_params.senior
             )
             return basic_income
 
