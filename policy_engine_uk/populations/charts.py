@@ -1,6 +1,7 @@
 from policy_engine_uk.populations.metrics import poverty_rate, pct_change
 from policy_engine_uk.utils.charts import *
 import plotly.express as px
+import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 from openfisca_uk import Microsimulation
@@ -172,7 +173,7 @@ INTRA_DECILE_COLORS = (
 )[::-1]
 
 
-def intra_decile_label(fraction, decile, outcome):
+def intra_decile_label(fraction: float, decile: str, outcome: str) -> str:
     res = "{:.0%}".format(fraction) + " of "  # x% of
     if decile == "All":
         res += "all people "
@@ -184,7 +185,7 @@ def intra_decile_label(fraction, decile, outcome):
         return res + outcome.lower()
 
 
-def single_intra_decile_graph(df):
+def single_intra_decile_graph(df: pd.DataFrame) -> go.Figure:
     fig = px.bar(
         df,
         x="fraction",
@@ -217,14 +218,13 @@ def intra_decile_chart(
         x_title="Population share",
         y_title="Income decile",
     )
-    fig.update_xaxes(showgrid=False)
+    fig.update_xaxes(showgrid=False, tickformat="%")
     fig.add_traces(total_fig.data, 1, 1)
     fig.add_traces(decile_fig.data, 2, 1)
     fig.update_layout(
         barmode="stack",
         title="Distribution of gains and losses",
     )
-    fig.update_xaxes(tickformat="%")
     for i in range(5):
         fig.data[i].showlegend = False
     return formatted_fig_json(fig)
