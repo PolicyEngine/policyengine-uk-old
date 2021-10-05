@@ -152,6 +152,9 @@ def hover_label(component: str, amount: float, is_pop: bool) -> str:
     :return: Label for hovercard.
     :rtype: str
     """
+    # Reset household net income label to match the headline.
+    if component == "Your net income":
+        component = "Your annual net income"
     # Net impact bars should match the title.
     res = component
     # Flip the amount for labeling population benefits and household taxes.
