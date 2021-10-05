@@ -26,7 +26,7 @@ from policy_engine_uk.situations.charts import (
     budget_chart,
 )
 
-VERSION = "0.1.8"
+VERSION = "0.1.9"
 USE_CACHE = True
 logging.getLogger("werkzeug").disabled = True
 

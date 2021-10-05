@@ -1,11 +1,11 @@
 from openfisca_uk import IndividualSim
-from policy_engine_uk.utils.charts import *
+from policy_engine_uk.utils import charts
 import plotly.express as px
 import pandas as pd
 
 COLOR_MAP = {
-    "Baseline": GRAY,
-    "Reform": BLUE,
+    "Baseline": charts.GRAY,
+    "Reform": charts.BLUE,
 }
 
 LABELS = dict(
@@ -50,7 +50,7 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         legend_title=None,
         hovermode="x unified",
     )
-    return format_fig(fig)
+    return charts.formatted_fig_json(fig)
 
 
 def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
@@ -98,34 +98,10 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         legend_title=None,
         hovermode="x unified",
     )
-    return format_fig(fig)
+    return charts.formatted_fig_json(fig)
 
 
-def household_waterfall_chart(baseline, reformed):
-    GROUPS = ["benefits", "tax"]
-    MULTIPLIERS = [1, -1]
-    effects = [
-        (reformed.calc(var).sum() - baseline.calc(var).sum()) * multiplier
-        for var, multiplier in zip(GROUPS, MULTIPLIERS)
-    ]
-    fig = waterfall(
-        effects, ["Benefit", "Tax"], gain_label="Gain", loss_label="Loss"
-    )
-    fig.add_shape(
-        type="line",
-        xref="paper",
-        yref="y",
-        x0=0,
-        y0=0,
-        x1=1,
-        y1=0,
-        line=dict(color="grey", width=1, dash="dash"),
-    )
-    fig.update_layout(
-        title="Budget breakdown",
-        xaxis_title=None,
-        yaxis_title="Yearly amount",
-        yaxis_tickprefix="£",
-        legend_title=None,
-    )
-    return format_fig(fig)
+def household_waterfall_chart(
+    baseline: IndividualSim, reformed: IndividualSim
+) -> dict:
+    return charts.waterfall_chart(baseline, reformed)
