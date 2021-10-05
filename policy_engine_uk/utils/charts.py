@@ -104,41 +104,53 @@ def waterfall_data(amounts: list, labels: list) -> pd.DataFrame:
     return pd.concat(l)
 
 
+POP_LABELS = dict(
+    tax="Tax revenues", benefits="Benefit outlays", total="Net impact"
+)
+HH_LABELS = dict(
+    tax="Your taxes", benefits="Your benefits", total="Net impact"
+)
+
+
 def tax_benefit_waterfall_data(
     baseline: Union[Microsimulation, IndividualSim],
     reformed: Union[Microsimulation, IndividualSim],
 ) -> pd.DataFrame:
-    GROUPS = ["benefits", "tax"]
-    MULTIPLIERS = [1, -1]
+    """Generates data for tax benefit waterfall charts.
+
+    :param baseline: Baseline microsimulation.
+    :type baseline: Union[Microsimulation, IndividualSim]
+    :param reformed: Reformed microsimulation.
+    :type reformed: Union[Microsimulation, IndividualSim]
+    :return: DataFrame with two rows for each component plus the total.
+    :rtype: pd.DataFrame
+    """
+    GROUPS = ["tax", "benefits"]
+    is_pop = isinstance(baseline, Microsimulation)
+    multipliers = [1, -1] if is_pop else [-1, 1]
     effects = [
         (reformed.calc(var).sum() - baseline.calc(var).sum()) * multiplier
-        for var, multiplier in zip(GROUPS, MULTIPLIERS)
+        for var, multiplier in zip(GROUPS, multipliers)
     ]
-    return waterfall_data(effects, GROUPS)
+    res = waterfall_data(effects, GROUPS)
+    if is_pop:
+        res.label = res.label.map(POP_LABELS)
+    else:
+        res.label = res.label.map(HH_LABELS)
+    return res
 
 
 def hover_label(component: str, amount: float) -> str:
     res = component
+    print(component)
+    print(amount)
+    print(gbp(amount))
     if amount == 0:
-        res += " doesn't change"
+        return res + " doesn't change"
     if amount > 0:
-        res += " rise by " + gbp(amount)
+        return res + " rise by " + gbp(amount)
     if amount < 0:
-        res += " fall by " + gbp(-amount)
-    return res
-
-
-def add_zero_line(fig: go.Figure) -> None:
-    fig.add_shape(
-        type="line",
-        xref="paper",
-        yref="y",
-        x0=0,
-        y0=0,
-        x1=1,
-        y1=0,
-        line=dict(color="grey", width=1, dash="dash"),
-    )
+        return res + " fall by " + gbp(-amount)
 
 
 def waterfall_chart(
@@ -154,6 +166,7 @@ def waterfall_chart(
     :return: Waterfall chart as a JSON dict.
     :rtype: dict
     """
+    is_pop = isinstance(baseline, Microsimulation)
     data = tax_benefit_waterfall_data(baseline, reformed)
     data["hover"] = data.apply(
         lambda x: hover_label(x.label, x.amount), axis=1
@@ -167,10 +180,11 @@ def waterfall_chart(
         color_discrete_map=dict(blank=WHITE, negative=GRAY, positive=BLUE),
         barmode="relative",
         category_orders={
-            "label": ["tax", "benefits", "total"],
+            "label": list(POP_LABELS.values())
+            if is_pop
+            else list(HH_LABELS.values()),
             "color": ["blank", "negative", "positive"],
         },
-        labels=dict(tax="Taxes", benefit="Benefits", total="Net"),
     )
     add_custom_hovercard(fig)
     add_zero_line(fig)
@@ -185,7 +199,7 @@ def waterfall_chart(
 
 
 def ordinal(n: int) -> str:
-    """ Create an ordinal number (1st, 2nd, etc.) from an integer.
+    """Create an ordinal number (1st, 2nd, etc.) from an integer.
 
     Source: https://stackoverflow.com/a/20007730/1840471
 
@@ -194,7 +208,11 @@ def ordinal(n: int) -> str:
     :return: Ordinal number (1st, 2nd, etc.).
     :rtype: str
     """
-    return "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
+    return "%d%s" % (
+        n,
+        "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10 :: 4],
+    )
+
 
 def add_custom_hovercard(fig: go.Figure) -> None:
     """Add a custom hovercard to the figure based on the first element of
@@ -205,3 +223,16 @@ def add_custom_hovercard(fig: go.Figure) -> None:
     """
     # Per https://stackoverflow.com/a/69430974/1840471.
     fig.update_traces(hovertemplate="%{customdata[0]}<extra></extra>")
+
+
+def add_zero_line(fig: go.Figure) -> None:
+    fig.add_shape(
+        type="line",
+        xref="paper",
+        yref="y",
+        x0=0,
+        y0=0,
+        x1=1,
+        y1=0,
+        line=dict(color="grey", width=1, dash="dash"),
+    )
