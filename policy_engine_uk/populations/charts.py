@@ -61,7 +61,9 @@ def pov_chg(
     )
 
 
-def poverty_chart(baseline: Microsimulation, reformed: Microsimulation) -> dict:
+def poverty_chart(
+    baseline: Microsimulation, reformed: Microsimulation
+) -> dict:
     """Chart of poverty impact by age group and overall.
 
     :param baseline: Baseline microsimulation.
