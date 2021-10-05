@@ -108,7 +108,7 @@ POP_LABELS = dict(
     tax="Tax revenues", benefits="Benefit outlays", total="Net impact"
 )
 HH_LABELS = dict(
-    tax="Your taxes", benefits="Your benefits", total="Net impact"
+    tax="Your taxes", benefits="Your benefits", total="Your net income"
 )
 
 
@@ -142,27 +142,27 @@ def tax_benefit_waterfall_data(
 
 def hover_label(component: str, amount: float, is_pop) -> str:
     # Net impact bars should match the title.
-    if component == "Net impact" and not is_pop:
-        res = "Your annual net income would"
-    else:
-        res = component
+    res = component
+    # Flip the amount for labeling population benefits and household taxes.
+    if component in ["Benefit outlays", "Your taxes"]:
+        amount *= -1
     # Round population estimates, not individual.
     abs_amount = round(abs(amount))
     abs_amount_display = gbp(abs_amount) if is_pop else f"£{abs_amount:,}"
     # Branch logic, starting with no change.
     # More special handling of the net impact to match the title.
     if amount == 0:
-        if component == "Net impact" and not is_pop:
-            return res + " not change"
-        return res + " doesn't change"
+        if component == "Net impact":
+            return "Reform has no budgetary impact"
+        return res + " would not change"
     if amount > 0:
-        if component == "Net impact" and is_pop:
-            return "Reform produces net surplus of " + abs_amount_display
-        return res + " rise by " + abs_amount_display
+        if component == "Net impact":  # Population.
+            return "Reform produces " + abs_amount_display + " net surplus"
+        return res + " would rise by " + abs_amount_display
     if amount < 0:
         if component == "Net impact" and is_pop:
-            return "Reform produces net deficit of " + abs_amount_display
-        return res + " fall by " + abs_amount_display
+            return "Reform produces " + abs_amount_display + " net cost"
+        return res + " would fall by " + abs_amount_display
 
 
 def waterfall_chart(
