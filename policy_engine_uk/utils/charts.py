@@ -77,8 +77,8 @@ def bar_data(start: float, amount: float, label: str) -> pd.DataFrame:
             res.iloc[1] = max(start, end), "blank"
         else:
             # Two bars for positive and negative sections.
-            res.iloc[1] = end, amount_color
             res.iloc[0] = start, amount_color
+            res.iloc[1] = end, amount_color
     res["label"] = label
     res["amount"] = amount
     return res
