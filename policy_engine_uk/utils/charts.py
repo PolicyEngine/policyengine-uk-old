@@ -79,7 +79,6 @@ def bar_data(start: float, amount: float, label: str) -> pd.DataFrame:
             # Two bars for positive and negative sections.
             res.iloc[1] = end, amount_color
             res.iloc[0] = start, amount_color
-    # res.value = res.value.astype(int)
     res["label"] = label
     res["amount"] = amount
     return res
@@ -173,7 +172,7 @@ def waterfall_chart(
         },
         labels=dict(tax="Taxes", benefit="Benefits", total="Net"),
     )
-    fig.update_traces(hovertemplate="%{customdata[0]}<extra></extra>")
+    add_custom_hovercard(fig)
     add_zero_line(fig)
     fig.update_layout(
         title="Budget breakdown",
@@ -196,3 +195,13 @@ def ordinal(n: int) -> str:
     :rtype: str
     """
     return "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
+
+def add_custom_hovercard(fig: go.Figure) -> None:
+    """Add a custom hovercard to the figure based on the first element of
+    customdata, without the title to the right.
+
+    :param fig: Plotly figure.
+    :type fig: go.Figure
+    """
+    # Per https://stackoverflow.com/a/69430974/1840471.
+    fig.update_traces(hovertemplate="%{customdata[0]}<extra></extra>")

@@ -185,7 +185,7 @@ def intra_decile_label(fraction, decile, outcome):
 
 
 def single_intra_decile_graph(df):
-    return px.bar(
+    fig = px.bar(
         df,
         x="fraction",
         y="decile",
@@ -193,7 +193,9 @@ def single_intra_decile_graph(df):
         custom_data=["hover"],
         color_discrete_sequence=INTRA_DECILE_COLORS,
         orientation="h",
-    ).update_traces(hovertemplate="%{customdata[0]}<extra></extra>")
+    )
+    add_custom_hovercard(fig)
+    return fig
 
 
 def intra_decile_chart(
