@@ -1,11 +1,11 @@
 from openfisca_uk import IndividualSim
-from policy_engine_uk.utils.charts import *
+from policy_engine_uk.utils import charts
 import plotly.express as px
 import pandas as pd
 
 COLOR_MAP = {
-    "Baseline": GRAY,
-    "Reform": BLUE,
+    "Baseline": charts.GRAY,
+    "Reform": charts.BLUE,
 }
 
 LABELS = dict(
@@ -50,7 +50,7 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         legend_title=None,
         hovermode="x unified",
     )
-    return formatted_fig_json(fig)
+    return charts.formatted_fig_json(fig)
 
 
 def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
@@ -98,10 +98,10 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
         legend_title=None,
         hovermode="x unified",
     )
-    return formatted_fig_json(fig)
+    return charts.formatted_fig_json(fig)
 
 
 def household_waterfall_chart(
-    baseline: Microsimulation, reformed: Microsimulation
+    baseline: IndividualSim, reformed: IndividualSim
 ) -> dict:
-    return waterfall_chart(baseline, reformed)
+    return charts.waterfall_chart(baseline, reformed)

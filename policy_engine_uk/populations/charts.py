@@ -1,5 +1,5 @@
 from policy_engine_uk.populations.metrics import poverty_rate, pct_change
-from policy_engine_uk.utils.charts import *
+from policy_engine_uk.utils import charts
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -27,10 +27,10 @@ def decile_chart(baseline: Microsimulation, reformed: Microsimulation) -> dict:
             showlegend=False,
             xaxis_tickvals=list(range(1, 11)),
         )
-        .update_traces(marker_color=BLUE)
+        .update_traces(marker_color=charts.BLUE)
     )
-    add_zero_line(fig)
-    return formatted_fig_json(fig)
+    charts.add_zero_line(fig)
+    return charts.formatted_fig_json(fig)
 
 
 def pov_chg(
@@ -73,11 +73,10 @@ def poverty_chart(baseline: Microsimulation, reform: Microsimulation) -> dict:
         xaxis_title=None,
         yaxis=dict(title="Percent change", tickformat="%"),
     )
-    fig.update_traces(
-        marker_color=BLUE, hovertemplate="%{customdata[0]}<extra></extra>"
-    )
-    add_zero_line(fig)
-    return formatted_fig_json(fig)
+    fig.update_traces(marker_color=charts.BLUE)
+    charts.add_custom_hovercard(fig)
+    charts.add_zero_line(fig)
+    return charts.formatted_fig_json(fig)
 
 
 def spending(baseline: Microsimulation, reformed: Microsimulation) -> float:
@@ -104,7 +103,7 @@ def total_income(sim: Microsimulation) -> float:
 def population_waterfall_chart(
     baseline: Microsimulation, reformed: Microsimulation
 ) -> dict:
-    return waterfall_chart(baseline, reformed)
+    return charts.waterfall_chart(baseline, reformed)
 
 
 NAMES = (
@@ -165,11 +164,11 @@ def intra_decile_graph_data(
 
 
 INTRA_DECILE_COLORS = (
-    DARK_GRAY,
-    GRAY,
-    LIGHT_GRAY,
-    LIGHT_GREEN,
-    DARK_GREEN,
+    charts.DARK_GRAY,
+    charts.GRAY,
+    charts.LIGHT_GRAY,
+    charts.LIGHT_GREEN,
+    charts.DARK_GREEN,
 )[::-1]
 
 
@@ -178,7 +177,7 @@ def intra_decile_label(fraction: float, decile: str, outcome: str) -> str:
     if decile == "All":
         res += "all people "
     else:
-        res += "people in the " + ordinal(int(decile)) + " decile "
+        res += "people in the " + charts.ordinal(int(decile)) + " decile "
     if outcome == "No change":
         return res + "experience no change"
     else:
@@ -195,7 +194,7 @@ def single_intra_decile_graph(df: pd.DataFrame) -> go.Figure:
         color_discrete_sequence=INTRA_DECILE_COLORS,
         orientation="h",
     )
-    add_custom_hovercard(fig)
+    charts.add_custom_hovercard(fig)
     return fig
 
 
@@ -227,4 +226,4 @@ def intra_decile_chart(
     )
     for i in range(5):
         fig.data[i].showlegend = False
-    return formatted_fig_json(fig)
+    return charts.formatted_fig_json(fig)
