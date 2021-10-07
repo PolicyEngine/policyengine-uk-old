@@ -1,9 +1,8 @@
-
 @app.route("/api/ubi")
 def ubi():
     start_time = time()
     app.logger.info("UBI size request received")
-    
+
     request_id = "ubi-" + dict_to_string(params) + "-" + VERSION
     blob = bucket.blob(request_id + ".json")
     if blob.exists() and USE_CACHE:
@@ -71,7 +70,7 @@ def situation_reform():
         result = json.loads(blob.download_as_string())
         return result
     app.logger.info("Creating situation")
-    
+
     if USE_CACHE:
         blob.upload_from_string(json.dumps(result))
     gc.collect()
