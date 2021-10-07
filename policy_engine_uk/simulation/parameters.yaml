@@ -2,26 +2,32 @@ child_UBI:
   name: Child UBI
   multiplier: 52
   parameter: benefit.UBI.child
+  default: 0
 adult_UBI:
   name: WA adult UBI
   multiplier: 52
   parameter: benefit.UBI.WA_adult
+  default: 0
 senior_UBI:
   name: Senior UBI
   multiplier: 52
   parameter: benefit.UBI.senior
+  default: 0
 basic_rate:
   name: Basic rate
   multiplier: 1.e-2
   parameter: tax.income_tax.rates.uk[0].rate
+  default: 20
 higher_rate:
   name: Higher rate
   multiplier: 1.e-2
   parameter: tax.income_tax.rates.uk[1].rate
+  default: 40
 add_rate:
   name: Additional rate
   multiplier: 1.e-2
   parameter: tax.income_tax.rates.uk[2].rate
+  default: 45
 basic_threshold:
   name: Basic threshold
   parameter: tax.income_tax.rates.uk[0].threshold
