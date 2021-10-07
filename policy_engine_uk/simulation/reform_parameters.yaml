@@ -1,0 +1,46 @@
+LVT:
+  rate:
+    values:
+      2021-01-01: 0.0
+    metadata:
+      policyengine:
+        title: Land Value Tax
+        description: A yearly flat tax on land values.
+        min: 0
+        max: 1
+        type: rate
+        summary: Impose an LVT of @
+UBI:
+  child:
+    values: 
+      2021-01-01: 0.00
+    metadata:
+      policyengine:
+        title: Child UBI
+        description: Flat payment given to each person 17 years of age or younger.
+        min: 0
+        max: 1
+        type: rate
+        summary: Give a basic income of @ to children
+  adult:
+    values: 
+      2021-01-01: 0.00
+    metadata:
+      policyengine:
+        title: Working-age adult UBI
+        description: Flat payment given to each person older than 17 and younger than State Pension age.
+        min: 0
+        max: 1
+        type: rate
+        summary: Give a basic income of @ to children
+  child:
+    values: 
+      2021-01-01: 0.00
+    metadata:
+      policyengine:
+        title: Child UBI
+        description: Flat payment given to each person 17 years of age or younger.
+        min: 0
+        max: 1
+        type: rate
+        summary: Give a basic income of @ to children
