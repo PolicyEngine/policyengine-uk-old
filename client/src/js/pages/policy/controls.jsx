@@ -150,7 +150,6 @@ export class UBIParameterGroup extends React.Component {
 				<Parameter name="adult_UBI" disabled={this.state.addUBI} onChange={this.props.onChange} param={this.props.policy["adult_UBI"]} />
 				<Parameter name="senior_UBI" disabled={this.state.addUBI} onChange={this.props.onChange} param={this.props.policy["senior_UBI"]} />
 				<Parameter name="WA_adult_UBI_age" disabled={this.state.addUBI} onChange={this.props.onChange} param={this.props.policy["WA_adult_UBI_age"]} />
-				<Parameter name="senior_UBI_age" disabled={this.state.addUBI} onChange={this.props.onChange} param={this.props.policy["senior_UBI_age"]} />
 				<Divider>AutoUBI</Divider>
 				<p>{message}</p>
 				<Switch onChange={this.updateUBI}/>
@@ -217,7 +216,6 @@ function PolicyControls(props) {
 			"child_UBI",
 			"adult_UBI",
 			"senior_UBI",
-			"surplus_UBI",
 		],
 		legacy_benefits: [
 			"abolish_CTC",
