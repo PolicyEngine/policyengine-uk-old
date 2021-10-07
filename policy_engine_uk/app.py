@@ -22,6 +22,10 @@ from policy_engine_uk.situations.charts import (
 from policyengine_core import PolicyEngine
 
 from openfisca_core.parameters import ParameterNode
+import datetime
+
+CURRENT_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
+
 
 class PolicyEngineUK(PolicyEngine):
     static_folder: str = "static"
@@ -86,8 +90,15 @@ class PolicyEngineUK(PolicyEngine):
                         if hasattr(bracket, attribute):
                             print(parameter.name, attribute, getattr(bracket, attribute))
                             parameters += [getattr(bracket, attribute)]
-        policyengine_parameters = list(filter(lambda param: hasattr(param, "metadata") and hasattr(param.metadata, "in_policyengine"), parameters))
-        return dict(parameters=policyengine_parameters)
+        parameters = list(filter(lambda param: hasattr(param, "metadata") and "in_policyengine" in param.metadata, parameters))
+        parameters = [dict(
+            title=p.metadata["short_name"],
+            description=p.metadata["description"],
+            default=p(CURRENT_DATE),
+            value=p(CURRENT_DATE),
+            summary=p.metadata["summary"],
+            type=p.metadata["type"]
+        ) for p in parameters]
+        return dict(parameters=parameters)
         
-
 app = PolicyEngineUK().app
