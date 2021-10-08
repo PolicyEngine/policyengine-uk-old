@@ -62,10 +62,14 @@ def add_empty_UBI():
 
         def formula(person, period, parameters):
             UBI_params = parameters(period).benefit.UBI
+            age = person("age", period)
+            is_child = age < UBI_params.WA_adult_age
+            is_SP_age = person("is_SP_age", period)
+            is_WA_adult = ~is_child & ~is_SP_age
             basic_income = (
-                person("is_child", period) * UBI_params.child
-                + person("is_WA_adult", period) * UBI_params.WA_adult
-                + person("is_SP_age", period) * UBI_params.senior
+                is_child * UBI_params.child
+                + is_WA_adult * UBI_params.WA_adult
+                + is_SP_age * UBI_params.senior
             )
             return basic_income
 
