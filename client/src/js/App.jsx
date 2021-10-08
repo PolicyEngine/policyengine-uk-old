@@ -30,8 +30,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/antd.css";
 
 
-function getPolicyFromURL() {
-	let plan = DEFAULT_POLICY;
+function getPolicyFromURL(policy) {
+	let plan = policy || DEFAULT_POLICY;
 	const { searchParams } = new URL(document.location);
 	for (const key of searchParams.keys()) {
 		plan[key].value = +searchParams.get(key);
@@ -44,7 +44,28 @@ function getPolicyFromURL() {
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {policy: getPolicyFromURL(), situation: DEFAULT_SITUATION, situationEntered: false, invalid: false};
+		this.state = {policy: DEFAULT_POLICY, situation: DEFAULT_SITUATION, situationEntered: false, invalid: false};
+		this.updatePolicy = this.updatePolicy.bind(this);
+	}
+
+	updatePolicy(name, value) {
+		let policy = this.state.policy;
+		let invalid = false;
+		policy[name].value = value;
+
+		// Validation
+
+		if(policy.higher_threshold.value === policy.add_threshold.value) {
+			policy.add_threshold.error = "Higher and additional rates must be different.";
+			invalid = true;
+		} else {
+			policy.add_threshold.error = null;
+		}
+		this.setState({policy: policy, invalid: invalid});
+	}
+
+	componentDidMount() {
+		fetch("http://localhost:5000/api/parameters").then(res => res.json()).then(data => {this.setState({policy: data});});
 	}
 
 	render() {
@@ -54,7 +75,7 @@ class App extends React.Component {
 				<Switch>
 					<Route path="/" exact>
 						<Header step={0} situationEntered={this.state.situationEntered}/>
-						<Policy policy={this.state.policy} onSubmit={(policy, invalid) => {this.setState({policy: policy, invalid: invalid});}}/>
+						<Policy policy={this.state.policy} updatePolicy={this.updatePolicy} onSubmit={(policy, invalid) => {this.setState({policy: policy, invalid: invalid});}}/>
 					</Route>
 					<Route path="/population-results">
 						<Header step={1} situationEntered={this.state.situationEntered}/>

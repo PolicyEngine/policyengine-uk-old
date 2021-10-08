@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { SimulateButton } from "../policy/overview";
 import { SharePolicyLinks } from "../policy/overview";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { getFormatter } from "../policy/controls";
 
 const { Step } = Steps;
 
@@ -24,7 +25,7 @@ function PolicySituationOverview(props) {
 	}
 	let plan = Object.keys(props.policy).map((key, i) => (
 		props.policy[key].value !== props.policy[key].default
-			? <Step key={key} status="finish" title={props.policy[key].title} description={props.policy[key].summary.replace("@", props.policy[key].value)} />
+			? <Step key={key} status="finish" title={props.policy[key].title} description={props.policy[key].summary.replace("@", getFormatter(props.policy[key])(props.policy[key].value))} />
 			: null
 	));
 	let isEmpty = plan.every(element => element === null);

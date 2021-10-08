@@ -2,6 +2,7 @@ import { Steps, Divider, Empty, Button, message } from "antd";
 import { Link } from "react-router-dom";
 import { LinkOutlined, TwitterOutlined, FacebookOutlined } from "@ant-design/icons";
 import { TwitterShareButton, FacebookShareButton, EmailShareButton } from "react-share";
+import { getFormatter } from "./controls";
 
 const { Step } = Steps;
 
@@ -30,10 +31,10 @@ export function SimulateButton(props) {
 }
 
 function PolicyOverview(props) {
-	console.log(props.invalid);
+	console.log(props.policy);
 	let plan = Object.keys(props.policy).map((key, i) => (
 		props.policy[key].value !== props.policy[key].default
-			? <Step key={key} status="finish" title={props.policy[key].title} description={props.policy[key].summary.replace("@", props.policy[key].value)} />
+			? <Step key={key} status="finish" title={props.policy[key].title} description={props.policy[key].summary.replace("@", getFormatter(props.policy[key])(props.policy[key].value))} />
 			: null
 	));
 	let isEmpty = plan.every(element => element === null);

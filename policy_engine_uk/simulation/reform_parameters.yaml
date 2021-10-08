@@ -1,46 +1,191 @@
-LVT:
-  rate:
-    values:
-      2021-01-01: 0.0
-    metadata:
-      policyengine:
-        title: Land Value Tax
-        description: A yearly flat tax on land values.
-        min: 0
-        max: 1
-        type: rate
-        summary: Impose an LVT of @
-UBI:
-  child:
-    values: 
-      2021-01-01: 0.00
-    metadata:
-      policyengine:
-        title: Child UBI
-        description: Flat payment given to each person 17 years of age or younger.
-        min: 0
-        max: 1
-        type: rate
-        summary: Give a basic income of @ to children
-  adult:
-    values: 
-      2021-01-01: 0.00
-    metadata:
-      policyengine:
-        title: Working-age adult UBI
-        description: Flat payment given to each person older than 17 and younger than State Pension age.
-        min: 0
-        max: 1
-        type: rate
-        summary: Give a basic income of @ to children
-  child:
-    values: 
-      2021-01-01: 0.00
-    metadata:
-      policyengine:
-        title: Child UBI
-        description: Flat payment given to each person 17 years of age or younger.
-        min: 0
-        max: 1
-        type: rate
-        summary: Give a basic income of @ to children
+reforms:
+  LVT:
+    rate:
+      values:
+        2021-01-01: 0.00
+      metadata:
+        policyengine:
+          title: Land Value Tax
+          short_name: LVT
+          description: A yearly flat tax on land values.
+          max: 1
+          type: rate
+          summary: Impose an LVT of @
+  UBI:
+    adult:
+      values: 
+        2021-01-01: 0.00
+      metadata:
+        policyengine:
+          title: Working-age adult UBI
+          short_name: adult_UBI
+          description: Flat payment given to each person older than 17 and younger than State Pension age.
+          max: 250
+          type: weekly
+          summary: Give a basic income of @ to working-age adults
+    child:
+      values: 
+        2021-01-01: 0.00
+      metadata:
+        policyengine:
+          title: Child UBI
+          short_name: child_UBI
+          description: Flat payment given to each person 17 years of age or younger.
+          max: 1
+          type: weekly
+          summary: Give a basic income of @ to children
+    senior:
+      values: 
+        2021-01-01: 0.00
+      metadata:
+        policyengine:
+          title: Senior UBI
+          short_name: senior_UBI
+          description: Flat payment given to each person at or above State Pension age.
+          max: 250
+          type: weekly
+          summary: Give a basic income of @ to seniors
+  abolition:
+    abolish_savings_allowance:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: Savings Allowance
+          short_name: abolish_savings_allowance
+          variable: savings_allowance
+          description: Abolish the Savings Allowance.
+          type: abolish
+          summary: Abolish the Savings Allowance
+    abolish_dividend_allowance:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: Dividend Allowance
+          short_name: abolish_dividend_allowance
+          variable: dividend_allowance
+          description: Abolish the Dividend Allowance.
+          type: abolish
+          summary: Abolish the Dividend Allowance
+    abolish_income_tax:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: Income Tax
+          short_name: abolish_income_tax
+          variable: income_tax
+          description: Abolish Income Tax entirely.
+          type: abolish
+          summary: Abolish Income Tax
+    abolish_NI:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: National Insurance
+          short_name: abolish_NI
+          variable: national_insurance
+          description: Abolish National Insurance entirely.
+          type: abolish
+          summary: Abolish National Insurance
+    abolish_UC:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: Universal Credit
+          short_name: abolish_UC
+          variable: universal_credit
+          description: Abolish Universal Credit.
+          type: abolish
+          summary: Abolish Universal Credit
+    abolish_CB:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: Child Benefit
+          short_name: abolish_CB
+          variable: child_benefit
+          description: Abolish the Child Benefit.
+          type: abolish
+          summary: Abolish the Child Benefit
+    abolish_HB:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: Housing Benefit
+          short_name: abolish_HB
+          variable: housing_benefit
+          description: Abolish Housing Benefit.
+          type: abolish
+          summary: Abolish Housing Benefit
+    abolish_CTC:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: Child Tax Credit
+          short_name: abolish_CTC
+          variable: child_tax_credit
+          description: Abolish the Child Tax Credit. This does not trigger migration to Universal Credit.
+          type: abolish
+          summary: Abolish the Child Tax Credit
+    abolish_WTC:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: Working Tax Credit
+          short_name: abolish_WTC
+          variable: working_tax_credit
+          description: Abolish Working Tax Credit.This does not trigger migration to Universal Credit.
+          type: abolish
+          summary: Abolish Working Tax Credit
+    abolish_SP:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: State Pension
+          short_name: abolish_SP
+          variable: state_pension
+          description: Abolish the State Pension.
+          type: abolish
+          summary: Abolish the State Pension
+    abolish_PC:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: Pension Credit
+          short_name: abolish_PC
+          variable: pension_credit
+          description: Abolish Pension Credit.
+          type: abolish
+          summary: Abolish Pension Credit
+    abolish_IS:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: Income Support
+          short_name: abolish_IS
+          variable: income_support
+          description: Abolish Income Support.
+          type: abolish
+          summary: Abolish Income Support
+    abolish_JSA_income:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: JSA (income-based)
+          short_name: abolish_JSA_income
+          variable: JSA_income
+          description: Abolish income-based JSA.
+          type: abolish
+          summary: Abolish income-based JSA

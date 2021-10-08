@@ -7,29 +7,45 @@ import {
 	InputNumber, Divider, Switch, Slider, Select, Alert, Spin
 } from "antd";
 
+export function getFormatter(param) {
+	if (param.type === "rate") {
+		return (value) => `${Math.round(value * 100, 2)}%`;
+	} else if (param.type === "weekly") {
+		return (value) => `£${value}/week`;
+	} else if (param.type === "yearly") {
+		return (value) => `£${value}/year`;
+	} else if (param.type === "monthly") {
+		return (value) => `£${value}/month`;
+	} else if (param.type === "gbp") {
+		return (value) => `£${value}`;
+	} else {
+		return value => value;
+	}
+}
+
+export function getParser(param) {
+	if (param.type === "rate") {
+		return (value) => +(value.toString().replace("%", "") / 100);
+	} else if (param.type === "weekly") {
+		return (value) => +(value.toString().replace("£", "").replace("/week", ""));
+	} else if (param.type === "yearly") {
+		return (value) => +(value.toString().replace("£", "").replace("/year", ""));
+	} else if (param.type === "monthly") {
+		return (value) => +(value.toString().replace("£", "").replace("/month", ""));
+	} else if (param.type === "gbp") {
+		return (value) => +(value.toString().replace("£", ""));
+	} else {
+		return value => value;
+	}
+}
+
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const { Option } = Select;
 
 function Parameter(props) {
-	let formatter = null;
-	let parser = null;
-	if (props.param.type === "rate") {
-		formatter = (value) => `${value}%`;
-		parser = (value) => +value.replace("%", "");
-	} else if (props.param.type === "weekly") {
-		formatter = (value) => `£${value}/week`;
-		parser = (value) => +value.replace("£", "").replace("/week", "");
-	} else if (props.param.type === "yearly") {
-		formatter = (value) => `£${value}/year`;
-		parser = (value) => +value.replace("£", "").replace("/year", "");
-	} else if (props.param.type === "monthly") {
-		formatter = (value) => `£${value}/month`;
-		parser = (value) => +value.replace("£", "").replace("/month", "");
-	} else if (props.param.type === "gbp") {
-		formatter = (value) => `£${value}`;
-		parser = (value) => +value.replace("£", "");
-	}
+	let formatter = getFormatter(props.param);
+	let parser = getParser(props.param);	
 	let component;
 	if(props.param.type == "bool") {
 		component = (
@@ -63,11 +79,12 @@ function Parameter(props) {
 			<>
 				<Slider
 					value={props.param.value}
-					min={props.param.min || 0}
-					max={props.param.max || 100}
+					min={props.param.min}
+					max={props.param.max}
 					onChange={(value) => {
 						props.onChange(props.name, value);
 					}}
+					step={0.01}
 					tooltipVisible={false}
 					disabled={props.disabled}
 				/>
@@ -78,7 +95,7 @@ function Parameter(props) {
 					formatter={formatter}
 					parser={parser}
 					onChange={(value) => {
-						props.onChange(props.name, value);
+						props.onChange(props.name, parser(value));
 					}}
 					style={{ width: 175 }}
 					disabled={props.disabled}

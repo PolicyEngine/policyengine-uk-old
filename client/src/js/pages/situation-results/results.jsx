@@ -23,7 +23,6 @@ function Explainer(props) {
 
 
 function ChangedHeadlineFigure(props) {
-	console.log(props);
 	const data = props.results[props.name];
 	const variable = VARIABLES[props.name];
 	const formatNumber = num => (props.gbp ? "£" : "") + num.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});

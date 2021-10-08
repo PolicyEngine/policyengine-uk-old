@@ -6,7 +6,7 @@ from openfisca_uk_data.datasets.frs.frs_was_imputation import (
     FRS_WAS_Imputation,
 )
 from policy_engine_uk.simulation.situations import create_situation
-from policy_engine_uk.simulation.reforms import create_reform, add_LVT
+from policy_engine_uk.simulation.reforms import POLICYENGINE_PARAMETERS, create_reform, add_LVT
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
 from policy_engine_uk.populations.metrics import headline_metrics
 from policy_engine_uk.populations.charts import (
@@ -99,42 +99,7 @@ class PolicyEngineUK(PolicyEngine):
         return {"UBI": float(UBI_amount)}
 
     def parameters(self, params: dict = {}) -> dict:
-        baseline_parameters: ParameterNode = (
-            self.baseline.simulation.tax_benefit_system.parameters
-        )
-        parameters = []
-        for parameter in baseline_parameters.get_descendants():
-            if isinstance(parameter, Parameter):
-                parameters += [parameter]
-            elif isinstance(parameter, ParameterScale):
-                for bracket in parameter.brackets:
-                    for attribute in ("rate", "amount", "threshold"):
-                        if hasattr(bracket, attribute):
-                            print(
-                                parameter.name,
-                                attribute,
-                                getattr(bracket, attribute),
-                            )
-                            parameters += [getattr(bracket, attribute)]
-        parameters = list(
-            filter(
-                lambda param: hasattr(param, "metadata")
-                and "in_policyengine" in param.metadata,
-                parameters,
-            )
-        )
-        parameters = [
-            dict(
-                title=p.metadata["short_name"],
-                description=p.metadata["description"],
-                default=p(CURRENT_DATE),
-                value=p(CURRENT_DATE),
-                summary=p.metadata["summary"],
-                type=p.metadata["type"],
-            )
-            for p in parameters
-        ]
-        return dict(parameters=parameters)
+        return POLICYENGINE_PARAMETERS
 
 
 app = PolicyEngineUK().app
