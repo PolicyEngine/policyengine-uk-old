@@ -4,7 +4,11 @@ Functions to convert JSON web app parameters into OpenFisca reform objects.
 
 from openfisca_core import periods
 from openfisca_core.model_api import *
-from openfisca_core.parameters import load_parameter_file, Parameter, ParameterScale
+from openfisca_core.parameters import (
+    load_parameter_file,
+    Parameter,
+    ParameterScale,
+)
 from openfisca_uk import BASELINE_VARIABLES, CountryTaxBenefitSystem
 from openfisca_uk import reforms as reform_tools
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
@@ -15,6 +19,7 @@ import yaml
 import datetime
 
 CURRENT_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
+
 
 def add_LVT() -> Reform:
     class land_value(Variable):
@@ -53,7 +58,6 @@ def add_LVT() -> Reform:
 
 
 def add_empty_UBI():
-
     class UBI(Variable):
         entity = Person
         definition_period = YEAR
@@ -87,6 +91,7 @@ def add_empty_UBI():
 
     return add_UBI
 
+
 def add_parameter_file():
     def modify_parameters(parameters: ParameterNode):
         file_path = Path(__file__).parent / "reform_parameters.yaml"
@@ -97,8 +102,9 @@ def add_parameter_file():
     class reform(Reform):
         def apply(self):
             self.modify_parameters(modify_parameters)
-    
+
     return reform
+
 
 def get_PE_parameters():
     parameters = []
@@ -141,6 +147,7 @@ def get_PE_parameters():
                 param[key] = value
         parameter_metadata[param["short_name"]] = param
     return parameter_metadata
+
 
 def create_reform(parameters: dict, return_names=False):
     params = {}
@@ -190,5 +197,7 @@ def create_reform(parameters: dict, return_names=False):
         return reform_tuple, names
 
 
-BASELINE_PARAMETERS = add_parameter_file()(CountryTaxBenefitSystem()).parameters
+BASELINE_PARAMETERS = add_parameter_file()(
+    CountryTaxBenefitSystem()
+).parameters
 POLICYENGINE_PARAMETERS = get_PE_parameters()

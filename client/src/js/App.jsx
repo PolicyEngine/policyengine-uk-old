@@ -65,7 +65,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		fetch("http://localhost:5000/api/parameters").then(res => res.json()).then(data => {this.setState({policy: data});});
+		fetch("https://uk.policyengine.org/api/parameters").then(res => res.json()).then(data => {this.setState({policy: data});});
 	}
 
 	render() {

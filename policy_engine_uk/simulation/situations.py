@@ -50,8 +50,13 @@ def create_situation(params: dict):
                 else:
                     household[variable] = value
         members_of_families = sum(map(list, family_members.values()), [])
-        is_adult = lambda p_id: people[p_id]["age"] >= 18
-        is_child = lambda p_id: not is_adult(p_id)
+
+        def is_adult(p_id):
+            return people[p_id]["age"] >= 18
+
+        def is_child(p_id):
+            return not is_adult(p_id)
+
         for person in people:
             if "age" not in people[person]:
                 people[person]["age"] = 18
