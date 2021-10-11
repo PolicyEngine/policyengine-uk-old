@@ -5,3 +5,6 @@ PolicyEngine_UK.egg-info/SOURCES.txt
 PolicyEngine_UK.egg-info/dependency_links.txt
 PolicyEngine_UK.egg-info/requires.txt
 PolicyEngine_UK.egg-info/top_level.txt
+policy_engine_uk/__init__.py
+policy_engine_uk/app.py
+policy_engine_uk/reset_cache.py

@@ -6,6 +6,7 @@ import "./policyengine.css";
 import PARAMETER_MENU from "./controls";
 import POLICY from "./parameters";
 import { ADULT, CHILD, SITUATION } from "./household";
+import { FAQ } from "./faq";
 import { Divider, Button, message, Alert, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
@@ -44,6 +45,17 @@ class App extends React.Component {
 								setPage={page => {this.setState({page: page});}}
 							/>
 						</Route>
+						<Route path="/situation">
+							<Household 
+								policy={this.state.policy}
+								household={this.state.household}
+								selected="head"
+								defaultAdult={ADULT}
+								defaultChild={CHILD}
+								setHousehold={household => {this.setState({household: household, householdEntered: true});}}
+								setPage={page => {this.setState({page: page});}}
+							/>
+						</Route>
 						<Route path="/population-impact">
 							<PopulationResults 
 								country={"UK"}
@@ -59,6 +71,7 @@ class App extends React.Component {
 							/>
 						</Route>
 						<Route path="/faq">
+							<FAQ />
 						</Route>
 					</Switch>
 				</Responsive>
