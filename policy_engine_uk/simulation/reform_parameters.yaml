@@ -11,6 +11,8 @@ reforms:
           max: 1
           type: rate
           summary: Impose an LVT of @
+        tests:
+          - decreases_net_income: true
   UBI:
     adult:
       values: 
@@ -23,6 +25,8 @@ reforms:
           max: 250
           type: weekly
           summary: Give a basic income of @ to working-age adults
+        tests:
+          - increases_net_income: true
     child:
       values: 
         2021-01-01: 0.00
@@ -34,6 +38,8 @@ reforms:
           max: 1
           type: weekly
           summary: Give a basic income of @ to children
+        tests:
+          - increases_net_income: true
     senior:
       values: 
         2021-01-01: 0.00
@@ -45,6 +51,18 @@ reforms:
           max: 250
           type: weekly
           summary: Give a basic income of @ to seniors
+        tests:
+          - increases_net_income: true
+    WA_adult_age:
+      values: 
+        2021-01-01: 18
+      metadata:
+        policyengine:
+          title: Adult UBI age threshold
+          short_name: WA_adult_age
+          description: Age at which a person receives the working-age adult UBI payment.
+          max: 65
+          summary: Set the working-age UBI age threshold to @
   abolition:
     abolish_savings_allowance:
       values:
@@ -57,6 +75,8 @@ reforms:
           description: Abolish the Savings Allowance.
           type: abolish
           summary: Abolish the Savings Allowance
+        tests:
+          - decreases_net_income: true
     abolish_dividend_allowance:
       values:
         2021-01-01: false
@@ -68,6 +88,8 @@ reforms:
           description: Abolish the Dividend Allowance.
           type: abolish
           summary: Abolish the Dividend Allowance
+        tests:
+          - decreases_net_income: true
     abolish_income_tax:
       values:
         2021-01-01: false
@@ -79,6 +101,8 @@ reforms:
           description: Abolish Income Tax entirely.
           type: abolish
           summary: Abolish Income Tax
+        tests:
+          - increases_net_income: true
     abolish_NI:
       values:
         2021-01-01: false
@@ -90,6 +114,8 @@ reforms:
           description: Abolish National Insurance entirely.
           type: abolish
           summary: Abolish National Insurance
+        tests:
+          - increases_net_income: true
     abolish_UC:
       values:
         2021-01-01: false
@@ -101,6 +127,8 @@ reforms:
           description: Abolish Universal Credit.
           type: abolish
           summary: Abolish Universal Credit
+        tests:
+          - decreases_net_income: true
     abolish_CB:
       values:
         2021-01-01: false
@@ -112,6 +140,8 @@ reforms:
           description: Abolish the Child Benefit.
           type: abolish
           summary: Abolish the Child Benefit
+        tests:
+          - decreases_net_income: true
     abolish_HB:
       values:
         2021-01-01: false
@@ -123,6 +153,8 @@ reforms:
           description: Abolish Housing Benefit.
           type: abolish
           summary: Abolish Housing Benefit
+        tests:
+          - decreases_net_income: true
     abolish_CTC:
       values:
         2021-01-01: false
@@ -134,6 +166,8 @@ reforms:
           description: Abolish the Child Tax Credit. This does not trigger migration to Universal Credit.
           type: abolish
           summary: Abolish the Child Tax Credit
+        tests:
+          - decreases_net_income: true
     abolish_WTC:
       values:
         2021-01-01: false
@@ -145,6 +179,8 @@ reforms:
           description: Abolish Working Tax Credit.This does not trigger migration to Universal Credit.
           type: abolish
           summary: Abolish Working Tax Credit
+        tests:
+          - decreases_net_income: true
     abolish_SP:
       values:
         2021-01-01: false
@@ -156,6 +192,8 @@ reforms:
           description: Abolish the State Pension.
           type: abolish
           summary: Abolish the State Pension
+        tests:
+          - decreases_net_income: true
     abolish_PC:
       values:
         2021-01-01: false
@@ -167,6 +205,8 @@ reforms:
           description: Abolish Pension Credit.
           type: abolish
           summary: Abolish Pension Credit
+        tests:
+          - decreases_net_income: true
     abolish_IS:
       values:
         2021-01-01: false
@@ -178,6 +218,8 @@ reforms:
           description: Abolish Income Support.
           type: abolish
           summary: Abolish Income Support
+        tests:
+          - decreases_net_income: true
     abolish_JSA_income:
       values:
         2021-01-01: false
@@ -189,3 +231,5 @@ reforms:
           description: Abolish income-based JSA.
           type: abolish
           summary: Abolish income-based JSA
+        tests:
+          - decreases_net_income: true

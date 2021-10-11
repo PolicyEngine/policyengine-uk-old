@@ -9,7 +9,7 @@ from policy_engine_uk.simulation.situations import create_situation
 from policy_engine_uk.simulation.reforms import (
     POLICYENGINE_PARAMETERS,
     create_reform,
-    add_LVT,
+    DEFAULT_REFORM,
 )
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
 from policy_engine_uk.populations.metrics import headline_metrics
@@ -27,7 +27,6 @@ from policy_engine_uk.situations.charts import (
 )
 from policyengine_core import PolicyEngine
 
-from openfisca_core.parameters import ParameterNode
 import datetime
 
 CURRENT_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -39,7 +38,7 @@ class PolicyEngineUK(PolicyEngine):
     cache_bucket_name: str = None  # "uk-policy-engine.appspot.com"
     Microsimulation: type = Microsimulation
     IndividualSim: type = IndividualSim
-    default_reform: type = use_current_parameters()
+    default_reform: type = DEFAULT_REFORM
     default_dataset: type = FRS_WAS_Imputation
     client_endpoints: Tuple[str] = (
         "/",
@@ -73,8 +72,8 @@ class PolicyEngineUK(PolicyEngine):
     def household_reform(self, params: dict = {}) -> dict:
         situation = create_situation(params)
         reform = create_reform(params)
-        baseline_config = use_current_parameters(), add_LVT()
-        reform_config = use_current_parameters(), reform
+        baseline_config = self.default_reform
+        reform_config = self.default_reform, reform
         baseline = situation(IndividualSim(baseline_config, year=2021))
         reformed = situation(IndividualSim(reform_config, year=2021))
         headlines = headline_figures(baseline, reformed)
