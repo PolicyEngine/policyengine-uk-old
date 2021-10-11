@@ -54,7 +54,7 @@ class PolicyEngineUK(PolicyEngine):
         "parameters",
     )
 
-    def population_reform(self, params: dict = {}) -> dict:
+    def population_reform(self, params: dict = None) -> dict:
         reform = create_reform(params)
         reformed = Microsimulation(
             (self.default_reform, reform), dataset=self.default_dataset
@@ -89,7 +89,7 @@ class PolicyEngineUK(PolicyEngine):
             mtr_chart=mtr,
         )
 
-    def ubi(self, params: dict = {}) -> dict:
+    def ubi(self, params: dict = None) -> dict:
         reform = create_reform(params)
         reformed = Microsimulation(
             (self.default_reform, reform), dataset=self.default_dataset
@@ -101,7 +101,7 @@ class PolicyEngineUK(PolicyEngine):
         UBI_amount = max(0, revenue / self.baseline.calc("people").sum())
         return {"UBI": float(UBI_amount)}
 
-    def parameters(self, params: dict = {}) -> dict:
+    def parameters(self, params: dict = None) -> dict:
         return POLICYENGINE_PARAMETERS
 
 
