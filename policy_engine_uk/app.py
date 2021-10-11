@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Tuple
 from openfisca_core.parameters.parameter import Parameter
 from openfisca_core.parameters.parameter_scale import ParameterScale
@@ -33,7 +34,7 @@ CURRENT_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 
 
 class PolicyEngineUK(PolicyEngine):
-    static_folder: str = "static"
+    static_folder = Path(__file__).parent / "static"
     version: str = "0.1.11"
     cache_bucket_name: str = None  # "uk-policy-engine.appspot.com"
     Microsimulation: type = Microsimulation
