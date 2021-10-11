@@ -3,7 +3,7 @@ from pathlib import Path
 
 setup(
     name="PolicyEngine-UK",
-    version="0.1.10",
+    version="0.1.11",
     author="PolicyEngine",
     license="http://www.fsf.org/licensing/licenses/agpl-3.0.html",
     url="https://github.com/ubicenter/policyengine-uk",
@@ -17,6 +17,7 @@ setup(
         "kaleido",
         "google-cloud-storage>=1.42.0",
         "gunicorn",
+        "PolicyEngine-Core",
     ],
     packages=find_packages(),
 )
