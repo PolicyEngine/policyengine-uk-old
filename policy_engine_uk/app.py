@@ -54,7 +54,7 @@ class PolicyEngineUK(PolicyEngine):
         "parameters",
     )
 
-    def population_reform(self, params: dict = {}) -> dict:
+    def population_reform(self, params: dict = None) -> dict:
         reform = create_reform(params)
         reformed = Microsimulation(
             (self.default_reform, reform), dataset=self.default_dataset
@@ -69,7 +69,7 @@ class PolicyEngineUK(PolicyEngine):
             intra_decile_chart=intra_decile_chart(self.baseline, reformed),
         )
 
-    def household_reform(self, params: dict = {}) -> dict:
+    def household_reform(self, params: dict = None) -> dict:
         situation = create_situation(params)
         reform = create_reform(params)
         baseline_config = self.default_reform
@@ -89,7 +89,7 @@ class PolicyEngineUK(PolicyEngine):
             mtr_chart=mtr,
         )
 
-    def ubi(self, params: dict = {}) -> dict:
+    def ubi(self, params: dict = None) -> dict:
         reform = create_reform(params)
         reformed = Microsimulation(
             (self.default_reform, reform), dataset=self.default_dataset

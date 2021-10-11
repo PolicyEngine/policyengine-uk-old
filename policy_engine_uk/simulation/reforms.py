@@ -137,7 +137,7 @@ def get_PE_parameters():
         )
         default_values = dict(
             min=0,
-            max=0,
+            max=1,
             variable=None,
             type=None,
         )
