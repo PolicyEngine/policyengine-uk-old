@@ -45,6 +45,7 @@ class PolicyEngineUK(PolicyEngine):
         "/",
         "/population-impact",
         "/household",
+        "/situation",
         "/household-impact",
         "/faq",
     )
