@@ -1,16 +1,17 @@
-import json
-from flask import Flask, request, make_response, send_from_directory
-from flask_cors import CORS
-import logging
-from time import time
+from typing import Tuple
+from openfisca_core.parameters.parameter import Parameter
+from openfisca_core.parameters.parameter_scale import ParameterScale
 from openfisca_uk import Microsimulation, IndividualSim
-from google.cloud import storage
-import gc
-
+from openfisca_uk_data.datasets.frs.frs_was_imputation import (
+    FRS_WAS_Imputation,
+)
 from policy_engine_uk.simulation.situations import create_situation
-from policy_engine_uk.simulation.reforms import create_reform, add_LVT
+from policy_engine_uk.simulation.reforms import (
+    POLICYENGINE_PARAMETERS,
+    create_reform,
+    DEFAULT_REFORM,
+)
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
-
 from policy_engine_uk.populations.metrics import headline_metrics
 from policy_engine_uk.populations.charts import (
     decile_chart,
@@ -18,182 +19,90 @@ from policy_engine_uk.populations.charts import (
     poverty_chart,
     population_waterfall_chart,
 )
-
 from policy_engine_uk.situations.metrics import headline_figures
 from policy_engine_uk.situations.charts import (
     household_waterfall_chart,
     mtr_chart,
     budget_chart,
 )
+from policyengine_core import PolicyEngine
 
-VERSION = "0.1.9"
-USE_CACHE = True
-logging.getLogger("werkzeug").disabled = True
+import datetime
 
-client = storage.Client()
-bucket = client.get_bucket("uk-policy-engine.appspot.com")
-
-baseline = Microsimulation(use_current_parameters())
-baseline_microsim = baseline
-
-app = Flask(__name__, static_url_path="")
-logging.getLogger("werkzeug").disabled = True
-CORS(app)
+CURRENT_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 
 
-def static_site():
-    return send_from_directory("static", "index.html")
-
-
-STATIC_SITE_ROUTES = (
-    "/",
-    "/faq",
-    "/situation",
-    "/population-results",
-    "/situation-results",
-)
-
-for route in STATIC_SITE_ROUTES:
-    static_site = app.route(route)(static_site)
-
-
-@app.route("/api/ubi")
-def ubi():
-    start_time = time()
-    app.logger.info("UBI size request received")
-    params = {**request.args, **(request.json or {})}
-    request_id = "ubi-" + dict_to_string(params) + "-" + VERSION
-    blob = bucket.blob(request_id + ".json")
-    if blob.exists() and USE_CACHE:
-        app.logger.info("Returning cached response")
-        result = json.loads(blob.download_as_string())
-        return result
-    reform = create_reform(params)
-    reformed = Microsimulation(reform)
-    revenue = (
-        baseline.calc("net_income").sum() - reformed.calc("net_income").sum()
+class PolicyEngineUK(PolicyEngine):
+    static_folder: str = "static"
+    version: str = "0.1.10"
+    cache_bucket_name: str = None  # "uk-policy-engine.appspot.com"
+    Microsimulation: type = Microsimulation
+    IndividualSim: type = IndividualSim
+    default_reform: type = DEFAULT_REFORM
+    default_dataset: type = FRS_WAS_Imputation
+    client_endpoints: Tuple[str] = (
+        "/",
+        "/population-impact",
+        "/household",
+        "/household-impact",
+        "/faq",
     )
-    UBI_amount = max(0, revenue / baseline.calc("people").sum())
-    result = {"UBI": float(UBI_amount)}
-    if USE_CACHE:
-        blob.upload_from_string(json.dumps(result))
-    gc.collect()
-    duration = time() - start_time
-    app.logger.info(f"UBI size calculation completed ({round(duration, 2)}s)")
-    return result
-
-
-@app.route("/api/population-reform")
-def population_reform():
-    start_time = time()
-    app.logger.info("Population reform request received")
-    params = {**request.args, **(request.json or {})}
-    request_id = "population-" + dict_to_string(params) + "-" + VERSION
-    blob = bucket.blob(request_id + ".json")
-    if blob.exists() and USE_CACHE:
-        app.logger.info("Returning cached response")
-        result = json.loads(blob.download_as_string())
-        return result
-    reform = create_reform(params)
-    reformed = Microsimulation(reform)
-    result = dict(
-        **headline_metrics(baseline, reformed),
-        decile_chart=decile_chart(baseline, reformed),
-        poverty_chart=poverty_chart(baseline, reformed),
-        waterfall_chart=population_waterfall_chart(baseline, reformed),
-        intra_decile_chart=intra_decile_chart(baseline, reformed),
+    api_endpoints: Tuple[str] = (
+        "population_reform",
+        "household_reform",
+        "ubi",
+        "parameters",
     )
-    del reformed
-    del reform
-    if USE_CACHE:
-        blob.upload_from_string(json.dumps(result))
-    gc.collect()
-    duration = time() - start_time
-    app.logger.info(f"Population reform completed ({round(duration, 2)}s)")
-    return result
 
-
-def dict_to_string(d):
-    return "_".join(["_".join((x, y)) for x, y in d.items()])
-
-
-@app.route("/api/situation-reform", methods=["GET", "POST"])
-def situation_reform():
-    start_time = time()
-    app.logger.info("Situation reform request received")
-    params = {**request.args, **(request.json or {})}
-    request_id = "situation-" + dict_to_string(params) + "-" + VERSION
-    blob = bucket.blob(request_id + ".json")
-    if blob.exists() and USE_CACHE:
-        app.logger.info("Returning cached response")
-        result = json.loads(blob.download_as_string())
-        return result
-    app.logger.info("Creating situation")
-    situation = create_situation(params)
-    app.logger.info("Creating reform")
-    reform = create_reform(params)
-    baseline_config = use_current_parameters(), add_LVT()
-    reform_config = use_current_parameters(), reform
-    app.logger.info("Creating baseline individualsim")
-    baseline = situation(IndividualSim(baseline_config, year=2021))
-    app.logger.info("Creating reform individualsim")
-    reformed = situation(IndividualSim(reform_config, year=2021))
-    app.logger.info("Headline figures")
-    headlines = headline_figures(baseline, reformed)
-    app.logger.info("waterfall")
-    waterfall = household_waterfall_chart(baseline, reformed)
-    app.logger.info("Varying baseline")
-    baseline.vary("employment_income", step=100)
-    app.logger.info("Varying reform")
-    reformed.vary("employment_income", step=100)
-    app.logger.info("Budget")
-    budget = budget_chart(baseline, reformed)
-    app.logger.info("mtr chart")
-    mtr = mtr_chart(baseline, reformed)
-    del situation
-    del reform
-    del baseline
-    del reformed
-    result = dict(
-        **headlines,
-        waterfall_chart=waterfall,
-        budget_chart=budget,
-        mtr_chart=mtr,
-    )
-    if USE_CACHE:
-        blob.upload_from_string(json.dumps(result))
-    gc.collect()
-    duration = time() - start_time
-    app.logger.info(f"Situation reform completed ({round(duration, 2)}s)")
-    return result
-
-
-@app.after_request
-def after_request_func(response):
-    origin = request.headers.get("Origin")
-    if request.method == "OPTIONS":
-        response = make_response()
-        response.headers.add("Access-Control-Allow-Credentials", "true")
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type")
-        response.headers.add("Access-Control-Allow-Headers", "x-csrf-token")
-        response.headers.add(
-            "Access-Control-Allow-Methods",
-            "GET, POST, OPTIONS, PUT, PATCH, DELETE",
+    def population_reform(self, params: dict = None) -> dict:
+        reform = create_reform(params)
+        reformed = Microsimulation(
+            (self.default_reform, reform), dataset=self.default_dataset
         )
-        if origin:
-            response.headers.add("Access-Control-Allow-Origin", origin)
-    else:
-        response.headers.add("Access-Control-Allow-Credentials", "true")
-        if origin:
-            response.headers.add("Access-Control-Allow-Origin", origin)
-        response.headers[
-            "Cache-Control"
-        ] = "no-cache, no-store, must-revalidate, public, max-age=0"
-        response.headers["Pragma"] = "no-cache"
-        response.headers["Expires"] = "0"
+        return dict(
+            **headline_metrics(self.baseline, reformed),
+            decile_chart=decile_chart(self.baseline, reformed),
+            poverty_chart=poverty_chart(self.baseline, reformed),
+            waterfall_chart=population_waterfall_chart(
+                self.baseline, reformed
+            ),
+            intra_decile_chart=intra_decile_chart(self.baseline, reformed),
+        )
 
-    return response
+    def household_reform(self, params: dict = {}) -> dict:
+        situation = create_situation(params)
+        reform = create_reform(params)
+        baseline_config = self.default_reform
+        reform_config = self.default_reform, reform
+        baseline = situation(IndividualSim(baseline_config, year=2021))
+        reformed = situation(IndividualSim(reform_config, year=2021))
+        headlines = headline_figures(baseline, reformed)
+        waterfall = household_waterfall_chart(baseline, reformed)
+        baseline.vary("employment_income", step=100)
+        reformed.vary("employment_income", step=100)
+        budget = budget_chart(baseline, reformed)
+        mtr = mtr_chart(baseline, reformed)
+        return dict(
+            **headlines,
+            waterfall_chart=waterfall,
+            budget_chart=budget,
+            mtr_chart=mtr,
+        )
+
+    def ubi(self, params: dict = None) -> dict:
+        reform = create_reform(params)
+        reformed = Microsimulation(
+            (self.default_reform, reform), dataset=self.default_dataset
+        )
+        revenue = (
+            self.baseline.calc("net_income").sum()
+            - reformed.calc("net_income").sum()
+        )
+        UBI_amount = max(0, revenue / self.baseline.calc("people").sum())
+        return {"UBI": float(UBI_amount)}
+
+    def parameters(self, params: dict = None) -> dict:
+        return POLICYENGINE_PARAMETERS
 
 
-if __name__ == "__main__":
-    app.run()
+app = PolicyEngineUK().app

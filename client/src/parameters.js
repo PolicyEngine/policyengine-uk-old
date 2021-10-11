@@ -1,4 +1,4 @@
-const DEFAULT_POLICY = {
+const POLICY = {
 	basic_rate: {
 		title: "Basic rate",
 		description: "The basic rate is the first of three tax brackets on all income, after allowances are deducted.",
@@ -146,14 +146,6 @@ const DEFAULT_POLICY = {
 		max: 250,
 		summary: "Give a basic income of £@/week to working-age adults",
 		type: "weekly",
-	},
-	WA_adult_UBI_age: {
-		title: "Adult UBI age threshold",
-		description: "Age at which a person receives the working-age adult UBI payment.",
-		default: 18,
-		value: 18,
-		max: 80,
-		summary: "Set the working-age UBI age threshold to @",
 	},
 	senior_UBI: {
 		title: "Senior UBI",
@@ -319,18 +311,18 @@ const DEFAULT_POLICY = {
 		default: 21.15,
 		value: 21.15,
 		max: 50,
-		summary: "Change the Child Benefit for eldest/only children to £@/week",
+		summary: "Set the Child Benefit (eldest) to £@/week",
 		type: "weekly"
 	},
 	CB_additional: {
 		title: "Child Benefit",
-		description: "Child Benefit amount for each additional child",
+		description: "Child Benefit amount for additional children",
 		default: 14,
 		value: 14,
 		max: 50,
-		summary: "Change the Child Benefit for additional children to £@/week",
+		summary: "Set the Child Benefit (additional) to £@/week",
 		type: "weekly"
 	},
 };
 
-export default DEFAULT_POLICY;
+export default POLICY;

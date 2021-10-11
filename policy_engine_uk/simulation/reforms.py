@@ -4,13 +4,21 @@ Functions to convert JSON web app parameters into OpenFisca reform objects.
 
 from openfisca_core import periods
 from openfisca_core.model_api import *
-from openfisca_uk import BASELINE_VARIABLES
+from openfisca_core.parameters import (
+    load_parameter_file,
+    Parameter,
+    ParameterScale,
+)
+from openfisca_uk import BASELINE_VARIABLES, CountryTaxBenefitSystem
 from openfisca_uk import reforms as reform_tools
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
 from openfisca_uk.entities import *
 from openfisca_uk.tools.general import *
 from policy_engine_uk import REPO
 import yaml
+import datetime
+
+CURRENT_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 
 
 def add_LVT() -> Reform:
@@ -27,7 +35,7 @@ def add_LVT() -> Reform:
         value_type = float
 
         def formula(household, period, parameters):
-            rate = parameters(period).tax.land_value.rate
+            rate = parameters(period).reforms.LVT.rate
             return rate * household("land_value", period)
 
     class tax(BASELINE_VARIABLES.tax):
@@ -40,42 +48,16 @@ def add_LVT() -> Reform:
             )
             return original_tax + LVT_charge
 
-    def add_lvt_param(parameters: ParameterNode):
-        parameters.tax.add_child(
-            "land_value",
-            ParameterNode(
-                data={
-                    "rate": {"values": {"0000-01-01": 0.00}},
-                }
-            ),
-        )
-        return parameters
-
     class lvt_param_reform(Reform):
         def apply(self):
             self.update_variable(land_value)
             self.update_variable(LVT)
             self.update_variable(tax)
-            self.modify_parameters(add_lvt_param)
 
     return lvt_param_reform
 
 
 def add_empty_UBI():
-    def add_age_params(parameters: ParameterNode):
-        parameters.benefit.add_child(
-            "UBI",
-            ParameterNode(
-                data={
-                    "child": {"values": {"0000-01-01": 0.00}},
-                    "WA_adult_age": {"values": {"0000-01-01": 18}},
-                    "WA_adult": {"values": {"0000-01-01": 0.00}},
-                    "senior": {"values": {"0000-01-01": 0.00}},
-                }
-            ),
-        )
-        return parameters
-
     class UBI(Variable):
         entity = Person
         definition_period = YEAR
@@ -83,14 +65,14 @@ def add_empty_UBI():
         value_type = float
 
         def formula(person, period, parameters):
-            UBI_params = parameters(period).benefit.UBI
+            UBI_params = parameters(period).reforms.UBI
             age = person("age", period)
             is_child = age < UBI_params.WA_adult_age
             is_SP_age = person("is_SP_age", period)
             is_WA_adult = ~is_child & ~is_SP_age
             basic_income = (
                 is_child * UBI_params.child
-                + is_WA_adult * UBI_params.WA_adult
+                + is_WA_adult * UBI_params.adult
                 + is_SP_age * UBI_params.senior
             )
             return basic_income
@@ -104,15 +86,68 @@ def add_empty_UBI():
 
     class add_UBI(Reform):
         def apply(self):
-            self.modify_parameters(add_age_params)
             self.add_variable(UBI)
             self.update_variable(benefits)
 
     return add_UBI
 
 
-with open(REPO / "simulation" / "parameters.yaml") as f:
-    PARAMETER_METADATA = yaml.load(f)
+def add_parameter_file():
+    def modify_parameters(parameters: ParameterNode):
+        file_path = Path(__file__).parent / "reform_parameters.yaml"
+        reform_parameters_subtree = load_parameter_file(file_path)
+        parameters.add_child("reforms", reform_parameters_subtree.reforms)
+        return parameters
+
+    class reform(Reform):
+        def apply(self):
+            self.modify_parameters(modify_parameters)
+
+    return reform
+
+
+def get_PE_parameters():
+    parameters = []
+    for parameter in BASELINE_PARAMETERS.get_descendants():
+        if isinstance(parameter, Parameter):
+            parameters += [parameter]
+        elif isinstance(parameter, ParameterScale):
+            for bracket in parameter.brackets:
+                for attribute in ("rate", "amount", "threshold"):
+                    if hasattr(bracket, attribute):
+                        parameters += [getattr(bracket, attribute)]
+    parameters = list(
+        filter(
+            lambda param: hasattr(param, "metadata")
+            and "policyengine" in param.metadata,
+            parameters,
+        )
+    )
+    parameter_metadata = {}
+    for p in parameters:
+        meta = p.metadata["policyengine"]
+        param = dict(
+            parameter=p.name,
+            title=meta["title"],
+            short_name=meta["short_name"],
+            description=meta["description"],
+            default=p(CURRENT_DATE),
+            value=p(CURRENT_DATE),
+            summary=meta["summary"],
+        )
+        default_values = dict(
+            min=0,
+            max=1,
+            variable=None,
+            type=None,
+        )
+        for key, value in default_values.items():
+            if key in meta:
+                param[key] = meta[key]
+            else:
+                param[key] = value
+        parameter_metadata[param["short_name"]] = param
+    return parameter_metadata
 
 
 def create_reform(parameters: dict, return_names=False):
@@ -129,40 +164,30 @@ def create_reform(parameters: dict, return_names=False):
     names = []
 
     for param, value in params.items():
-        if "abolish" in param:
-            param_name = param[8:]
-        else:
-            param_name = param
-        metadata = PARAMETER_METADATA[param_name]
-        names += [metadata["name"]]
-        if "multiplier" not in metadata:
-            metadata["multiplier"] = 1
+        metadata = POLICYENGINE_PARAMETERS[param]
+        names += [metadata["title"]]
         if "abolish" in param:
             reforms += [reform_tools.structural.abolish(metadata["variable"])]
         else:
             reforms += [
                 reform_tools.parametric.set_parameter(
-                    metadata["parameter"], value * metadata["multiplier"]
+                    metadata["parameter"], value
                 )
             ]
-
-    first_reform, later_reforms = (), ()
-    if len(reforms) > 0:
-        first_reform = reforms[0]
-    if len(reforms) > 1:
-        later_reforms = reforms[1:]
-    reform_tuple = tuple(
-        (
-            (
-                use_current_parameters(),
-                add_empty_UBI(),
-                add_LVT(),
-                first_reform,
-            ),
-            *later_reforms,
-        )
-    )
     if not return_names:
-        return reform_tuple
+        return tuple(reforms)
     else:
-        return reform_tuple, names
+        return tuple(reforms), names
+
+
+DEFAULT_REFORM = (
+    use_current_parameters(),
+    add_parameter_file(),
+    add_empty_UBI(),
+    add_LVT(),
+)
+
+BASELINE_PARAMETERS = add_parameter_file()(
+    CountryTaxBenefitSystem()
+).parameters
+POLICYENGINE_PARAMETERS = get_PE_parameters()

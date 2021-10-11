@@ -5,6 +5,7 @@ install: openfisca_uk openfisca_uk_data
 	pip install -e .
 	cd client; npm install
 format:
+	autopep8 -r --in-place .
 	black . -l 79
 debug-client:
 	cd client; npm start

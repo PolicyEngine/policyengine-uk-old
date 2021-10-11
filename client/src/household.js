@@ -1,4 +1,4 @@
-export const DEFAULT_HOUSEHOLD = {
+export const HOUSEHOLD = {
 	region: {
 		title: "Region",
 		description: "The region of the UK that this household resides in.",
@@ -29,7 +29,7 @@ export const DEFAULT_HOUSEHOLD = {
 	}
 };
 
-export const DEFAULT_FAMILY = {
+export const FAMILY = {
 	claims_legacy_benefits: {
 		title: "Legacy benefits claimant",
 		description: "Whether this family would claim legacy benefits (not UC)",
@@ -81,7 +81,7 @@ export const DEFAULT_FAMILY = {
 	}
 };
 
-export const DEFAULT_ADULT = {
+export const ADULT = {
 	age: {
 		title: "Age",
 		description: "The age of the person",
@@ -132,7 +132,7 @@ export const DEFAULT_ADULT = {
 	},
 };
 
-export const DEFAULT_CHILD = {
+export const CHILD = {
 	age: {
 		title: "Age",
 		description: "The age of the person",
@@ -151,16 +151,14 @@ export const DEFAULT_CHILD = {
 	},
 };
 
-const DEFAULT_SITUATION = {
-	household: JSON.parse(JSON.stringify(DEFAULT_HOUSEHOLD)),
+export const SITUATION = {
+	household: JSON.parse(JSON.stringify(HOUSEHOLD)),
 	families: {
 		"family_1": {
-			...JSON.parse(JSON.stringify(DEFAULT_FAMILY)),
+			...JSON.parse(JSON.stringify(FAMILY)),
 		}
 	},
 	people: {
-		"head": JSON.parse(JSON.stringify(DEFAULT_ADULT))
+		"head": JSON.parse(JSON.stringify(ADULT))
 	}
 };
-
-export default DEFAULT_SITUATION;
