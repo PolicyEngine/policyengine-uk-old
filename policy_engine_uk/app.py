@@ -34,7 +34,7 @@ CURRENT_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 
 class PolicyEngineUK(PolicyEngine):
     static_folder: str = "static"
-    version: str = "0.1.10"
+    version: str = "0.1.11"
     cache_bucket_name: str = None  # "uk-policy-engine.appspot.com"
     Microsimulation: type = Microsimulation
     IndividualSim: type = IndividualSim
@@ -69,7 +69,7 @@ class PolicyEngineUK(PolicyEngine):
             intra_decile_chart=intra_decile_chart(self.baseline, reformed),
         )
 
-    def household_reform(self, params: dict = {}) -> dict:
+    def household_reform(self, params: dict = None) -> dict:
         situation = create_situation(params)
         reform = create_reform(params)
         baseline_config = self.default_reform
