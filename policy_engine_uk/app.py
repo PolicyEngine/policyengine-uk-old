@@ -35,7 +35,7 @@ CURRENT_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 
 class PolicyEngineUK(PolicyEngine):
     static_folder = Path(__file__).parent / "static"
-    version: str = "0.1.12"
+    version: str = "0.1.13"
     cache_bucket_name: str = "uk-policy-engine.appspot.com"
     Microsimulation: type = Microsimulation
     IndividualSim: type = IndividualSim
