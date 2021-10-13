@@ -17,7 +17,7 @@ setup(
         "kaleido",
         "google-cloud-storage>=1.42.0",
         "gunicorn",
-        "PolicyEngine-Core>0.1.5",
+        "PolicyEngine-Core>=0.1.5",
     ],
     packages=find_packages(),
 )
