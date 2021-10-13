@@ -67,14 +67,14 @@ def add_empty_UBI():
         def formula(person, period, parameters):
             UBI_params = parameters(period).reforms.UBI
             age = person("age", period)
-            is_child = age < UBI_params.WA_adult_age
+            is_child = age < UBI_params.WA_adult_UBI_age
             is_SP_age = person("is_SP_age", period)
             is_WA_adult = ~is_child & ~is_SP_age
             basic_income = (
                 is_child * UBI_params.child
                 + is_WA_adult * UBI_params.adult
                 + is_SP_age * UBI_params.senior
-            )
+            ) * 52
             return basic_income
 
     class benefits(BASELINE_VARIABLES.benefits):

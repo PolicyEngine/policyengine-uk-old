@@ -32,9 +32,6 @@ const PARAMETER_MENU = {
 				"abolish_NI"
 			]
 		},
-		"Land value tax": [
-			"LVT"
-		]
 	},
 	"Benefit": {
 		"Child Benefit": [
@@ -55,17 +52,28 @@ const PARAMETER_MENU = {
 		],
 		"Universal Credit": [
 			"abolish_UC",
+			"abolish_UC_standard",
 			"UC_single_young",
 			"UC_single_old",
 			"UC_couple_young",
 			"UC_couple_old",
+			"abolish_UC_child",
+			"abolish_UC_disability",
+			"abolish_UC_carer",
+			"abolish_UC_housing_costs",
 			"UC_reduction_rate",
-		],
-		"UBI": [
+		]
+	},
+	"UBI Center": {
+		"Universal Basic Income": [
 			"child_UBI",
 			"adult_UBI",
 			"senior_UBI",
+			"WA_adult_UBI_age",
 			"autoUBI",
+		],
+		"Land Value Tax": [
+			"LVT"
 		],
 	}
 };
