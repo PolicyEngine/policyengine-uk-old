@@ -35,8 +35,8 @@ CURRENT_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 
 class PolicyEngineUK(PolicyEngine):
     static_folder = Path(__file__).parent / "static"
-    version: str = "0.1.11"
-    cache_bucket_name: str = None  # "uk-policy-engine.appspot.com"
+    version: str = "0.1.12"
+    cache_bucket_name: str = "uk-policy-engine.appspot.com"
     Microsimulation: type = Microsimulation
     IndividualSim: type = IndividualSim
     default_reform: type = DEFAULT_REFORM
@@ -44,9 +44,11 @@ class PolicyEngineUK(PolicyEngine):
     client_endpoints: Tuple[str] = (
         "/",
         "/population-impact",
+        "/population-results",
         "/household",
         "/situation",
         "/household-impact",
+        "/situation-results",
         "/faq",
     )
     api_endpoints: Tuple[str] = (

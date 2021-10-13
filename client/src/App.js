@@ -7,14 +7,42 @@ import PARAMETER_MENU from "./controls";
 import POLICY from "./parameters";
 import { ADULT, CHILD, SITUATION } from "./household";
 import { FAQ } from "./faq";
-import { Divider, Button, message, Alert, Spin } from "antd";
+import { Divider, Button, message, Alert, Spin, Image } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
+
+const ORGANISATIONS = {
+	"UBI Center": {
+		"logo": <Image src="/logos/ubicenter.png" preview={false} height={30} width={30}/>,
+	}
+};
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {policy: getPolicyFromURL(POLICY), household: SITUATION, householdEntered: false, page: ""};
+		this.setPolicy = this.setPolicy.bind(this);
+		this.validatePolicy = this.validatePolicy.bind(this);
+		this.state = {policy: {}, household: SITUATION, householdEntered: false, page: "", validator: this.validatePolicy};
+	}
+
+	validatePolicy(policy) {
+		if(policy.higher_threshold.value == policy.add_threshold.value) {
+			policy.higher_threshold.error = "The higher rate threshold must be different than the additional rate threshold.";
+			policy.add_threshold.error = "The additional rate threshold must be different than the higher rate threshold.";
+			return {policy: policy, invalid: true};
+		}
+		return {policy: policy, invalid: false};
+	}
+
+	componentDidMount() {
+		fetch("http://192.168.1.12:5000/api/parameters").then(res => res.json()).then(data => {this.setState({policy: getPolicyFromURL(data)});});
+	}
+
+	setPolicy(name, value) {
+		let oldPolicy = this.state.policy;
+		oldPolicy[name].value = Math.round(value * 100, 2) / 100;
+		const { policy, invalid } = (this.state.validator || (policy => {return {policy: policy, invalid: false};}))(oldPolicy);
+		this.setState({policy: policy, invalid: invalid});
 	}
 	
 	render() {
@@ -28,24 +56,15 @@ class App extends React.Component {
 								policy={this.state.policy}
 								menuStructure={PARAMETER_MENU}
 								selected={"/Tax/Income Tax/Labour income"}
-								open={["/Tax", "/Tax/Income Tax", "/Benefit"]}
-								setPolicy={policy => {this.setState({policy: policy});}}
+								open={["/Tax", "/Tax/Income Tax", "/Benefit", "/UBI Center"]}
+								setPolicy={this.setPolicy}
 								overrides={{autoUBI: <AutoUBI />}}
 								setPage={page => {this.setState({page: page});}}
+								organisations={ORGANISATIONS}
+								invalid={this.state.invalid}
 							/>
 						</Route>
 						<Route path="/household">
-							<Household 
-								policy={this.state.policy}
-								household={this.state.household}
-								selected="head"
-								defaultAdult={ADULT}
-								defaultChild={CHILD}
-								setHousehold={household => {this.setState({household: household, householdEntered: true});}}
-								setPage={page => {this.setState({page: page});}}
-							/>
-						</Route>
-						<Route path="/situation">
 							<Household 
 								policy={this.state.policy}
 								household={this.state.household}
@@ -61,6 +80,7 @@ class App extends React.Component {
 								country={"UK"}
 								policy={this.state.policy}
 								setPage={page => {this.setState({page: page});}}
+								api_url="http://192.168.1.12:5000"
 							/>
 						</Route>
 						<Route path="/household-impact">
@@ -68,10 +88,41 @@ class App extends React.Component {
 								policy={this.state.policy}
 								household={this.state.household}
 								setPage={page => {this.setState({page: page});}}
+								api_url="http://192.168.1.12:5000"
 							/>
 						</Route>
 						<Route path="/faq">
 							<FAQ />
+						</Route>
+
+						{/* Backwards compatibility*/}
+
+						<Route path="/situation">
+							<Household 
+								policy={this.state.policy}
+								household={this.state.household}
+								selected="head"
+								defaultAdult={ADULT}
+								defaultChild={CHILD}
+								setHousehold={household => {this.setState({household: household, householdEntered: true});}}
+								setPage={page => {this.setState({page: page});}}
+							/>
+						</Route>
+						<Route path="/household-results">
+							<HouseholdImpact
+								policy={this.state.policy}
+								household={this.state.household}
+								setPage={page => {this.setState({page: page});}}
+								api_url="http://192.168.1.12:5000"
+							/>
+						</Route>
+						<Route path="/population-results">
+							<PopulationResults 
+								country={"UK"}
+								policy={this.state.policy}
+								setPage={page => {this.setState({page: page});}}
+								api_url="http://192.168.1.12:5000"
+							/>
 						</Route>
 					</Switch>
 				</Responsive>
@@ -97,7 +148,7 @@ class AutoUBI extends React.Component {
 				submission["policy_" + key] = this.props.policy[key].value;
 			}
 		}
-		let url = new URL("https://uk.policyengine.org/api/ubi");
+		let url = new URL("http://192.168.1.12:5000/api/ubi");
 		url.search = new URLSearchParams(submission).toString();
 		this.setState({waiting: true}, () => {
 			fetch(url)

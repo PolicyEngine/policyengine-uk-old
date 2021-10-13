@@ -35,7 +35,7 @@ reforms:
           title: Child UBI
           short_name: child_UBI
           description: Flat payment given to each person 17 years of age or younger.
-          max: 1
+          max: 250
           type: weekly
           summary: Give a basic income of @ to children
         tests:
@@ -53,13 +53,13 @@ reforms:
           summary: Give a basic income of @ to seniors
         tests:
           - increases_net_income: true
-    WA_adult_age:
+    WA_adult_UBI_age:
       values: 
         2021-01-01: 18
       metadata:
         policyengine:
           title: Adult UBI age threshold
-          short_name: WA_adult_age
+          short_name: WA_adult_UBI_age
           description: Age at which a person receives the working-age adult UBI payment.
           max: 65
           summary: Set the working-age UBI age threshold to @
@@ -231,5 +231,57 @@ reforms:
           description: Abolish income-based JSA.
           type: abolish
           summary: Abolish income-based JSA
+        tests:
+          - decreases_net_income: true
+    abolish_UC_standard_allowance:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: UC Standard Allowance
+          short_name: abolish_UC_standard
+          variable: UC_standard_allowance
+          description: Abolish the Standard Allowance component of Universal Credit
+          type: abolish
+          summary: Abolish the UC Standard Allowance
+        tests:
+          - decreases_net_income: true
+    abolish_UC_child_element:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: UC child element
+          short_name: abolish_UC_child
+          variable: UC_child_element
+          description: Abolish the child element of Universal Credit
+          type: abolish
+          summary: Abolish the UC child element
+        tests:
+          - decreases_net_income: true
+    abolish_UC_disability_element:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: UC disability element
+          short_name: abolish_UC_disability
+          variable: UC_disability_element
+          description: Abolish the disability element of Universal Credit
+          type: abolish
+          summary: Abolish the UC disability element
+        tests:
+          - decreases_net_income: true
+    abolish_UC_carer_element:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: UC carer element
+          short_name: abolish_UC_carer
+          variable: UC_carer_element
+          description: Abolish the carer element of Universal Credit
+          type: abolish
+          summary: Abolish the UC carer element
         tests:
           - decreases_net_income: true
