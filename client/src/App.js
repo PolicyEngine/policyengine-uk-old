@@ -35,7 +35,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		fetch("http://192.168.1.12:5000/api/parameters").then(res => res.json()).then(data => {this.setState({policy: getPolicyFromURL(data)});});
+		fetch("https://uk.policyengine.org/api/parameters").then(res => res.json()).then(data => {this.setState({policy: getPolicyFromURL(data)});});
 	}
 
 	setPolicy(name, value) {
@@ -80,7 +80,7 @@ class App extends React.Component {
 								country={"UK"}
 								policy={this.state.policy}
 								setPage={page => {this.setState({page: page});}}
-								api_url="http://192.168.1.12:5000"
+								api_url="https://uk.policyengine.org"
 							/>
 						</Route>
 						<Route path="/household-impact">
@@ -88,7 +88,7 @@ class App extends React.Component {
 								policy={this.state.policy}
 								household={this.state.household}
 								setPage={page => {this.setState({page: page});}}
-								api_url="http://192.168.1.12:5000"
+								api_url="https://uk.policyengine.org"
 							/>
 						</Route>
 						<Route path="/faq">
@@ -113,7 +113,7 @@ class App extends React.Component {
 								policy={this.state.policy}
 								household={this.state.household}
 								setPage={page => {this.setState({page: page});}}
-								api_url="http://192.168.1.12:5000"
+								api_url="https://uk.policyengine.org"
 							/>
 						</Route>
 						<Route path="/population-results">
@@ -121,7 +121,7 @@ class App extends React.Component {
 								country={"UK"}
 								policy={this.state.policy}
 								setPage={page => {this.setState({page: page});}}
-								api_url="http://192.168.1.12:5000"
+								api_url="https://uk.policyengine.org"
 							/>
 						</Route>
 					</Switch>
