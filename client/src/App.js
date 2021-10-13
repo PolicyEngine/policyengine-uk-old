@@ -148,7 +148,7 @@ class AutoUBI extends React.Component {
 				submission["policy_" + key] = this.props.policy[key].value;
 			}
 		}
-		let url = new URL("http://192.168.1.12:5000/api/ubi");
+		let url = new URL("https://uk.policyengine.org/api/ubi");
 		url.search = new URLSearchParams(submission).toString();
 		this.setState({waiting: true}, () => {
 			fetch(url)

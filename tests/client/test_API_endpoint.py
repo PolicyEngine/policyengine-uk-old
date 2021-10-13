@@ -20,3 +20,4 @@ def in_text_files(folder: Path, text: str):
 
 def test_localhost_included():
     assert not in_text_files(REPO / "client" / "src", "localhost")
+    assert not in_text_files(REPO / "client" / "src", "192.168")
