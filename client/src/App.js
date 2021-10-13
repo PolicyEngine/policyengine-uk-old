@@ -40,7 +40,7 @@ class App extends React.Component {
 
 	setPolicy(name, value) {
 		let oldPolicy = this.state.policy;
-		oldPolicy[name].value = Math.round(value * 100, 2) / 100;
+		oldPolicy[name].value = value;
 		const { policy, invalid } = (this.state.validator || (policy => {return {policy: policy, invalid: false};}))(oldPolicy);
 		this.setState({policy: policy, invalid: invalid});
 	}
