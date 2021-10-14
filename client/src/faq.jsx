@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown";
 import { Row, Col } from "react-bootstrap";
 import { Typography, Divider } from "antd";
 import React from "react";
+import rehypeRaw from "rehype-raw";
 
 function Header(props) {
 	return <><h1>{props.children}</h1></>;
@@ -31,7 +32,7 @@ export class FAQ extends React.Component {
 			<Col md={2}>
 			</Col>
 			<Col>
-				<ReactMarkdown components={components}>{this.state.text}</ReactMarkdown>
+				<ReactMarkdown rehypePlugins={[rehypeRaw]} components={components}>{this.state.text}</ReactMarkdown>
 			</Col>
 			<Col md={2}>
 			</Col>
