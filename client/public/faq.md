@@ -10,7 +10,12 @@ With PolicyEngine, anyone can design a reform to the UK tax and benefit system, 
 
 ### How do I use PolicyEngine?
 
-See our [demo video](https://youtu.be/P7ELqxEHRhE) for a tour of the interface.
+See our demo video below for a tour of the interface. 
+<div class="row">
+    <div class="col d-flex justify-content-center" style="margin-top: 10px; margin-bottom: 20px;">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/nTIzJ-mzkno" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</div>
 
 
 ### Who created PolicyEngine?
