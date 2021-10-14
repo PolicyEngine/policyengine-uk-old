@@ -21,7 +21,10 @@ import datetime
 CURRENT_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 
 
-def add_LVT() -> Reform:
+def add_structural_reforms() -> Reform:
+
+    # Land value tax reform
+
     class land_value(Variable):
         entity = Household
         label = "Land value"
@@ -48,16 +51,8 @@ def add_LVT() -> Reform:
             )
             return original_tax + LVT_charge
 
-    class lvt_param_reform(Reform):
-        def apply(self):
-            self.update_variable(land_value)
-            self.update_variable(LVT)
-            self.update_variable(tax)
+    # UBI reform
 
-    return lvt_param_reform
-
-
-def add_empty_UBI():
     class UBI(Variable):
         entity = Person
         definition_period = YEAR
@@ -84,12 +79,26 @@ def add_empty_UBI():
             )
             return original_benefits + person("UBI", period)
 
-    class add_UBI(Reform):
+    # Liberal Democrat parameters
+
+    class personal_allowance(BASELINE_VARIABLES.personal_allowance):
+        def formula(person, period, parameters):
+            original_PA = BASELINE_VARIABLES.personal_allowance.formula(
+                person, period, parameters
+            )
+            ubi_amount = person("UBI", period)
+            return where(ubi_amount > 0, 0, original_PA)
+
+    class structural_reform(Reform):
         def apply(self):
+            self.update_variable(land_value)
+            self.update_variable(LVT)
+            self.update_variable(tax)
             self.add_variable(UBI)
             self.update_variable(benefits)
+            self.update_variable(personal_allowance)
 
-    return add_UBI
+    return structural_reform
 
 
 def add_parameter_file():
@@ -183,8 +192,7 @@ def create_reform(parameters: dict, return_names=False):
 DEFAULT_REFORM = (
     use_current_parameters(),
     add_parameter_file(),
-    add_empty_UBI(),
-    add_LVT(),
+    add_structural_reforms(),
 )
 
 BASELINE_PARAMETERS = add_parameter_file()(

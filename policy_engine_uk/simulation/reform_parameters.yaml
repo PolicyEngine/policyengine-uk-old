@@ -285,3 +285,14 @@ reforms:
           summary: Abolish the UC carer element
         tests:
           - decreases_net_income: true
+  libdem:
+    abolish_UBI_PA:
+      values:
+        2021-01-01: false
+      metadata:
+        policyengine:
+          title: Partially repeal the Personal Allowance
+          short_name: abolish_UBI_PA
+          description: Reduce to zero the Personal Allowance for people receiving UBI.
+          type: bool
+          summary: Remove for UBI recipients

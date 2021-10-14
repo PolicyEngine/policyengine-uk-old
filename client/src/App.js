@@ -14,6 +14,9 @@ import { LoadingOutlined } from "@ant-design/icons";
 const ORGANISATIONS = {
 	"UBI Center": {
 		"logo": <Image src="/logos/ubicenter.png" preview={false} height={30} width={30}/>,
+	},
+	"Liberal Democrats": {
+		"logo": <Image src="/logos/libdem.png" preview={false} height={30} width={30}/>,
 	}
 };
 
@@ -35,7 +38,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		fetch("https://uk.policyengine.org/api/parameters").then(res => res.json()).then(data => {this.setState({policy: getPolicyFromURL(data)});});
+		fetch("http://localhost:5000/api/parameters").then(res => res.json()).then(data => {this.setState({policy: getPolicyFromURL(data)});});
 	}
 
 	setPolicy(name, value) {
@@ -56,7 +59,7 @@ class App extends React.Component {
 								policy={this.state.policy}
 								menuStructure={PARAMETER_MENU}
 								selected={"/Tax/Income Tax/Labour income"}
-								open={["/Tax", "/Tax/Income Tax", "/Benefit", "/UBI Center"]}
+								open={["/Tax", "/Tax/Income Tax", "/Benefit", "/UBI Center", "/Liberal Democrats"]}
 								setPolicy={this.setPolicy}
 								overrides={{autoUBI: <AutoUBI />}}
 								setPage={page => {this.setState({page: page});}}
@@ -80,7 +83,7 @@ class App extends React.Component {
 								country={"UK"}
 								policy={this.state.policy}
 								setPage={page => {this.setState({page: page});}}
-								api_url="https://uk.policyengine.org"
+								api_url="http://localhost:5000"
 							/>
 						</Route>
 						<Route path="/household-impact">
@@ -88,7 +91,7 @@ class App extends React.Component {
 								policy={this.state.policy}
 								household={this.state.household}
 								setPage={page => {this.setState({page: page});}}
-								api_url="https://uk.policyengine.org"
+								api_url="http://localhost:5000"
 							/>
 						</Route>
 						<Route path="/faq">

@@ -75,6 +75,11 @@ const PARAMETER_MENU = {
 		"Land Value Tax": [
 			"LVT"
 		],
+	},
+	"Liberal Democrats": {
+		"Policy Paper": [
+			"abolish_UBI_PA"
+		]
 	}
 };
 

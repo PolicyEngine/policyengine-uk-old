@@ -3,9 +3,9 @@ Functions to convert URL query parameters into OpenFisca situation initialiser f
 """
 
 from openfisca_uk import BASELINE_VARIABLES, CountryTaxBenefitSystem
-from policy_engine_uk.simulation.reforms import add_LVT
+from policy_engine_uk.simulation.reforms import add_structural_reforms
 
-variables = add_LVT()(CountryTaxBenefitSystem()).variables
+variables = add_structural_reforms()(CountryTaxBenefitSystem()).variables
 
 
 def create_situation(params: dict):
