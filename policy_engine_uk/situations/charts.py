@@ -29,8 +29,7 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     variable_values = {}
     for explaining_variable in (
         "total_income",
-        "income_tax",
-        "national_insurance",
+        "tax",
         "benefits",
     ):
         variable_values[explaining_variable + "_baseline"] = baseline.calc(
@@ -56,10 +55,8 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
             x.Reform,
             x.total_income_baseline,
             x.total_income_reform,
-            x.income_tax_baseline,
-            x.income_tax_reform,
-            x.national_insurance_baseline,
-            x.national_insurance_reform,
+            x.tax_baseline,
+            x.tax_reform,
             x.benefits_baseline,
             x.benefits_reform,
         ),
@@ -96,58 +93,54 @@ def describe_change(
         return f"falls from {formatter(x)} to {formatter(y)} (-{formatter(x - y)})"
 
 
+def gbp(x):
+    return f"£{round(x):,}"
+
+
 def budget_hover_label(
     earnings: float,
     baseline_budget: float,
     reform_budget: float,
     total_income_baseline: float,
     total_income_reform: float,
-    income_tax_baseline: float,
-    income_tax_reform,
-    ni_baseline,
-    ni_reform,
+    tax_baseline: float,
+    tax_reform,
     benefits_baseline,
     benefits_reform,
 ) -> str:
     def f(x):
-        return gbp(x, exact_upper_bound=1e5)
+        return gbp(round(x))
 
     earnings_str = f(earnings)
     budget_change = describe_change(baseline_budget, reform_budget, f)
     total_income_change = describe_change(
         total_income_baseline, total_income_reform, f
     )
-    it_change = describe_change(income_tax_baseline, income_tax_reform, f)
-    ni_change = describe_change(ni_baseline, ni_reform, f)
+    tax_change = describe_change(tax_baseline, tax_reform, f)
     benefits_change = describe_change(benefits_baseline, benefits_reform, f)
-    return f"At {earnings_str}, your net income {budget_change}. This is because: <br>Total income {total_income_change}<br>Income Tax {it_change}<br>NI {ni_change}<br>Benefits {benefits_change}"
+    return f"<b>At {earnings_str}:<br>Your net income {budget_change} </b><br><br>Total income {total_income_change}<br>Tax {tax_change}<br>Benefits {benefits_change}"
 
 
 def mtr_hover_label(
     earnings: float,
     baseline_mtr: float,
     reform_mtr: float,
-    income_tax_baseline: float,
-    income_tax_reform,
-    ni_baseline,
-    ni_reform,
+    tax_baseline,
+    tax_reform,
     benefits_baseline,
     benefits_reform,
 ) -> str:
-    earnings_str = gbp(earnings, exact_upper_bound=1e5)
+    earnings_str = gbp(round(earnings))
 
     def pct_formatter(x):
         return str(round(x * 100)) + "%"
 
     mtr_change = describe_change(baseline_mtr, reform_mtr, pct_formatter)
-    it_change = describe_change(
-        income_tax_baseline, income_tax_reform, pct_formatter
-    )
-    ni_change = describe_change(ni_baseline, ni_reform, pct_formatter)
+    tax_change = describe_change(tax_baseline, tax_reform, pct_formatter)
     benefits_change = describe_change(
         benefits_baseline, benefits_reform, pct_formatter
     )
-    return f"At {earnings_str}, your MTR {mtr_change}. This is because: <br>Income Tax MTR {it_change}<br>NI MTR {ni_change}<br>Benefits MTR {benefits_change}"
+    return f"<b>At {earnings_str}:<br>Your MTR {mtr_change}</b><br><br>Tax MTR {tax_change}<br>Benefits MTR {benefits_change}"
 
 
 def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
@@ -173,11 +166,10 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
     variable_mtrs = {}
     for explaining_variable, inverted in zip(
         (
-            "income_tax",
-            "national_insurance",
+            "tax",
             "benefits",
         ),
-        (False, False, True),
+        (False, True),
     ):
         baseline_values = baseline.calc(explaining_variable).sum(axis=0)
         reform_values = reformed.calc(explaining_variable).sum(axis=0)
@@ -202,10 +194,8 @@ def mtr_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
             x.employment_income,
             x.Baseline,
             x.Reform,
-            x.income_tax_baseline,
-            x.income_tax_reform,
-            x.national_insurance_baseline,
-            x.national_insurance_reform,
+            x.tax_baseline,
+            x.tax_reform,
             x.benefits_baseline,
             x.benefits_reform,
         ),
