@@ -48,7 +48,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<PolicyEngine>
-				<Header country="UK" beta policy={this.state.policy} household={this.state.householdEntered}/>
+				<Header country="UK" policy={this.state.policy} household={this.state.householdEntered}/>
 				<Responsive>
 					<Switch>
 						<Route path="/" exact>
