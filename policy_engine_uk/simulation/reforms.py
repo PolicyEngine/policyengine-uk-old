@@ -14,6 +14,7 @@ from openfisca_uk import reforms as reform_tools
 from openfisca_uk.reforms.presets.current_date import use_current_parameters
 from openfisca_uk.entities import *
 from openfisca_uk.tools.general import *
+from openfisca_uk.tools.simulation import Microsimulation
 from policy_engine_uk import REPO
 import yaml
 import datetime
@@ -187,7 +188,7 @@ DEFAULT_REFORM = (
     add_LVT(),
 )
 
-BASELINE_PARAMETERS = add_parameter_file()(
-    CountryTaxBenefitSystem()
-).parameters
+system = Microsimulation(DEFAULT_REFORM).simulation.tax_benefit_system
+BASELINE_PARAMETERS = system.parameters
+PE_VARIABLES = [{type(variable).__name__: type(variable) for variable in system.variables.values()}]
 POLICYENGINE_PARAMETERS = get_PE_parameters()

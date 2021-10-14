@@ -6,6 +6,7 @@ from openfisca_uk import Microsimulation, IndividualSim
 from openfisca_uk_data.datasets.frs.frs_was_imputation import (
     FRS_WAS_Imputation,
 )
+import yaml
 from policy_engine_uk.simulation.situations import create_situation
 from policy_engine_uk.simulation.reforms import (
     POLICYENGINE_PARAMETERS,
@@ -20,7 +21,7 @@ from policy_engine_uk.populations.charts import (
     poverty_chart,
     population_waterfall_chart,
 )
-from policy_engine_uk.situations.metrics import headline_figures
+from policy_engine_uk.situations.metrics import get_trees, headline_figures
 from policy_engine_uk.situations.charts import (
     household_waterfall_chart,
     mtr_chart,
@@ -82,6 +83,9 @@ class PolicyEngineUK(PolicyEngine):
         reformed = situation(IndividualSim(reform_config, year=2021))
         headlines = headline_figures(baseline, reformed)
         waterfall = household_waterfall_chart(baseline, reformed)
+        computation_tree = get_trees(baseline, reformed)
+        with open("result.yaml", "w+") as f:
+            yaml.safe_dump(computation_tree, f)
         baseline.vary("employment_income", step=100)
         reformed.vary("employment_income", step=100)
         budget = budget_chart(baseline, reformed)
@@ -91,6 +95,7 @@ class PolicyEngineUK(PolicyEngine):
             waterfall_chart=waterfall,
             budget_chart=budget,
             mtr_chart=mtr,
+            computation_tree=computation_tree
         )
 
     def ubi(self, params: dict = None) -> dict:
