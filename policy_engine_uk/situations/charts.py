@@ -83,15 +83,19 @@ def budget_chart(baseline: IndividualSim, reformed: IndividualSim) -> str:
 
 
 def describe_change(
-    x: float, y: float, formatter: Callable = lambda x: x, change_formatter = lambda x: x, plural: bool = False
+    x: float,
+    y: float,
+    formatter: Callable = lambda x: x,
+    change_formatter=lambda x: x,
+    plural: bool = False,
 ) -> str:
     s = "" if plural else "s"
     if y > x:
-        return f"rise{s} from {formatter(x)} to {formatter(y)} (+{formatter(y - x)})"
+        return f"rise{s} from {formatter(x)} to {formatter(y)} (+{change_formatter(y - x)})"
     elif y == x:
-        return f"remain{s} at {change_formatter(x)}"
+        return f"remain{s} at {formatter(x)}"
     else:
-        return f"fall{s} from {formatter(x)} to {formatter(y)} (-{formatter(x - y)})"
+        return f"fall{s} from {formatter(x)} to {formatter(y)} (-{change_formatter(x - y)})"
 
 
 def budget_hover_label(
@@ -105,15 +109,22 @@ def budget_hover_label(
     benefits_baseline,
     benefits_reform,
 ) -> str:
-    formatter = lambda x: f"£{round(x):,}"
+    def formatter(x):
+        return f"£{round(x):,}"
 
     earnings_str = formatter(earnings)
-    budget_change = describe_change(baseline_budget, reform_budget, formatter)
-    total_income_change = describe_change(
-        total_income_baseline, total_income_reform, formatter
+    budget_change = describe_change(
+        baseline_budget, reform_budget, formatter, formatter
     )
-    tax_change = describe_change(tax_baseline, tax_reform, formatter)
-    benefits_change = describe_change(benefits_baseline, benefits_reform, formatter, plural=True)
+    total_income_change = describe_change(
+        total_income_baseline, total_income_reform, formatter, formatter
+    )
+    tax_change = describe_change(
+        tax_baseline, tax_reform, formatter, formatter
+    )
+    benefits_change = describe_change(
+        benefits_baseline, benefits_reform, formatter, formatter, plural=True
+    )
     return f"<b>At {earnings_str} employment income:<br>Your net income {budget_change} </b><br><br>Total income {total_income_change}<br>Tax {tax_change}<br>Benefits {benefits_change}"
 
 
@@ -126,7 +137,7 @@ def mtr_hover_label(
     benefits_baseline,
     benefits_reform,
 ) -> str:
-    earnings_str = gbp(round(earnings))
+    earnings_str = f"£{round(earnings):,}"
 
     def pct_formatter(x):
         return str(round(x * 100)) + "%"
@@ -134,8 +145,12 @@ def mtr_hover_label(
     def pp_formatter(x):
         return str(round(x * 100)) + "pp"
 
-    mtr_change = describe_change(baseline_mtr, reform_mtr, pct_formatter, pp_formatter)
-    tax_change = describe_change(tax_baseline, tax_reform, pct_formatter, pp_formatter)
+    mtr_change = describe_change(
+        baseline_mtr, reform_mtr, pct_formatter, pp_formatter
+    )
+    tax_change = describe_change(
+        tax_baseline, tax_reform, pct_formatter, pp_formatter
+    )
     benefits_change = describe_change(
         benefits_baseline, benefits_reform, pct_formatter, pp_formatter, True
     )
