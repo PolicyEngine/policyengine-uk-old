@@ -1,6 +1,6 @@
 {
-    "short_name": "Policy Engine",
-    "name": "UK Policy Engine",
+    "short_name": "PolicyEngine",
+    "name": "PolicyEngine UK",
     "icons": [
       {
         "src": "favicon.ico",
@@ -20,7 +20,7 @@
     ],
     "start_url": ".",
     "display": "standalone",
-    "theme_color": "#FFF",
-    "background_color": "#FFF"
+    "theme_color": "#002766",
+    "background_color": "#002766"
   }
   
