@@ -7,8 +7,8 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
       - uses: psf/black@stable
         with:
           options: ". -l 79 --check"
@@ -17,11 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v6
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v3
         with:
           project_id: uk-policy-engine
           service_account_key: ${{ secrets.GCP_SA_KEY }}
