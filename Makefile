@@ -16,6 +16,7 @@ openfisca_uk:
 	git clone https://github.com/PolicyEngine/openfisca-uk --depth 1 --branch v0.4.0
 	sed -i 's/microdf @ git+https:\/\/github.com\/PSLmodels\/microdf/microdf-python==0.4.4/' openfisca-uk/setup.py
 	sed -i 's/autopep8 >=1.5/autopep8==1.3.5/' openfisca-uk/setup.py
+	sed -i 's/OpenFisca-Core>=35.4.1/OpenFisca-Core==35.4.1/' openfisca-uk/setup.py
 	cd openfisca-uk; make install
 	cp -r openfisca-uk/openfisca_uk openfisca_uk
 	rm -rf openfisca-uk
@@ -25,6 +26,7 @@ openfisca_uk_data:
 	pip install 'h5py<3.9'
 	pip install 'google-cloud-storage<3'
 	cd openfisca-uk-data; pip install -e .
+	pip install 'OpenFisca-Core==35.4.1'
 	if [ "$${POLICYENGINE_SKIP_EXTERNAL_DATA:-}" != "1" ]; then openfisca-uk-data frs_was_imp download 2019; fi
 	cp -r openfisca-uk-data/openfisca_uk_data/ openfisca_uk_data
 	rm -rf openfisca-uk-data
