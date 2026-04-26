@@ -1,15 +1,23 @@
+import os
 from typing import Callable, List, Tuple
+
+import pytest
 from openfisca_core.parameters.parameter import Parameter
 from openfisca_core.parameters.parameter_scale import ParameterScale
 from openfisca_uk_data import FRS
 from openfisca_uk_data.datasets.frs.frs_was_imputation import (
     FRS_WAS_Imputation,
 )
-import pytest
 from openfisca_uk import Microsimulation
 from openfisca_uk.reforms.tools.parametric import set_parameter
 
 from policy_engine_uk.simulation.reforms import DEFAULT_REFORM
+
+if os.getenv("POLICYENGINE_SKIP_EXTERNAL_DATA") == "1":
+    pytest.skip(
+        "External FRS/WAS microdata is unavailable in CI.",
+        allow_module_level=True,
+    )
 
 
 def collect_tests(sim: Microsimulation) -> List[Tuple[Parameter, dict]]:

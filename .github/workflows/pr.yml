@@ -17,6 +17,8 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-22.04
+    env:
+      POLICYENGINE_SKIP_EXTERNAL_DATA: "1"
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6

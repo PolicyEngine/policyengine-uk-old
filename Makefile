@@ -25,7 +25,7 @@ openfisca_uk_data:
 	pip install 'h5py<3.9'
 	pip install 'google-cloud-storage<3'
 	cd openfisca-uk-data; pip install -e .
-	openfisca-uk-data frs_was_imp download 2019
+	if [ "$${POLICYENGINE_SKIP_EXTERNAL_DATA:-}" != "1" ]; then openfisca-uk-data frs_was_imp download 2019; fi
 	cp -r openfisca-uk-data/openfisca_uk_data/ openfisca_uk_data
 	rm -rf openfisca-uk-data
 deploy: openfisca_uk_data openfisca_uk test
