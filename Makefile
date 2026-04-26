@@ -15,6 +15,7 @@ openfisca_uk:
 	pip install git+https://github.com/PSLmodels/synthimpute
 	git clone https://github.com/PolicyEngine/openfisca-uk --depth 1 --branch v0.4.0
 	sed -i 's/microdf @ git+https:\/\/github.com\/PSLmodels\/microdf/microdf-python @ git+https:\/\/github.com\/PSLmodels\/microdf/' openfisca-uk/setup.py
+	sed -i 's/autopep8>=1.5/autopep8==1.5.2/' openfisca-uk/setup.py
 	cd openfisca-uk; make install
 	cp -r openfisca-uk/openfisca_uk openfisca_uk
 	rm -rf openfisca-uk
