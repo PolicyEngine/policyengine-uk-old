@@ -9,6 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
       - uses: psf/black@stable
         with:
           options: ". -l 79 --check"
@@ -20,12 +22,16 @@ jobs:
         uses: actions/checkout@v6
       - name: Setup Python
         uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
         with:
           project_id: uk-policy-engine
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
       - name: Install dependencies
         run: make install
       - name: Run the main tests
