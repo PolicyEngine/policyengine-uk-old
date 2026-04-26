@@ -6,7 +6,6 @@ from rdbl import gbp
 from openfisca_uk import Microsimulation, IndividualSim
 from typing import Union
 
-
 WHITE = "#FFF"
 BLUE = "#1976D2"  # Blue 700.
 DARK_BLUE = "#0F4AA1"  # Blue 900.
@@ -206,9 +205,11 @@ def waterfall_chart(
         color_discrete_map=dict(blank=WHITE, negative=GRAY, positive=BLUE),
         barmode="relative",
         category_orders={
-            "label": list(POP_LABELS.values())
-            if is_pop
-            else list(HH_LABELS.values()),
+            "label": (
+                list(POP_LABELS.values())
+                if is_pop
+                else list(HH_LABELS.values())
+            ),
             "color": ["blank", "negative", "positive"],
         },
     )
