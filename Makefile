@@ -20,7 +20,8 @@ openfisca_uk:
 	cp -r openfisca-uk/openfisca_uk openfisca_uk
 	rm -rf openfisca-uk
 openfisca_uk_data:
-	git clone https://github.com/ubicenter/openfisca-uk-data --depth 1
+	git clone https://github.com/ubicenter/openfisca-uk-data
+	git -C openfisca-uk-data checkout b4fbfb9100cf1fe6f212c7b72662e035a7c113cc
 	pip install 'h5py<3.9'
 	pip install 'google-cloud-storage<3'
 	cd openfisca-uk-data; pip install -e .
