@@ -22,6 +22,7 @@ openfisca_uk:
 openfisca_uk_data:
 	git clone https://github.com/ubicenter/openfisca-uk-data --depth 1
 	pip install 'h5py<3.9'
+	pip install 'google-cloud-storage<3'
 	cd openfisca-uk-data; pip install -e .
 	openfisca-uk-data frs_was_imp download 2019
 	cp -r openfisca-uk-data/openfisca_uk_data/ openfisca_uk_data
