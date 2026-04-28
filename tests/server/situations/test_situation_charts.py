@@ -7,6 +7,8 @@ from policy_engine_uk.situations.charts import (
 import pytest
 import itertools
 
+TEST_YEAR = 2021
+
 
 def single_adult(sim):
     sim.add_person(age=18, name="p")
@@ -29,6 +31,13 @@ reform_examples = (
     raise_basic_rate,
 )
 
+
+def individual_sim(reform=()):
+    if reform == ():
+        return IndividualSim(year=TEST_YEAR)
+    return IndividualSim(reform, year=TEST_YEAR)
+
+
 # Test charts for each possible (reform, situation) pair
 
 
@@ -36,8 +45,8 @@ reform_examples = (
     "situation,reform", itertools.product(situation_examples, reform_examples)
 )
 def test_household_waterfall_chart(situation, reform):
-    baseline = situation(IndividualSim())
-    reformed = situation(IndividualSim(reform))
+    baseline = situation(individual_sim())
+    reformed = situation(individual_sim(reform))
     baseline.vary("employment_income")
     reformed.vary("employment_income")
     household_waterfall_chart(baseline, reformed)
@@ -47,8 +56,8 @@ def test_household_waterfall_chart(situation, reform):
     "situation,reform", itertools.product(situation_examples, reform_examples)
 )
 def test_budget_chart(situation, reform):
-    baseline = situation(IndividualSim())
-    reformed = situation(IndividualSim(reform))
+    baseline = situation(individual_sim())
+    reformed = situation(individual_sim(reform))
     baseline.vary("employment_income")
     reformed.vary("employment_income")
     budget_chart(baseline, reformed)
@@ -58,8 +67,8 @@ def test_budget_chart(situation, reform):
     "situation,reform", itertools.product(situation_examples, reform_examples)
 )
 def test_mtr_chart(situation, reform):
-    baseline = situation(IndividualSim())
-    reformed = situation(IndividualSim(reform))
+    baseline = situation(individual_sim())
+    reformed = situation(individual_sim(reform))
     baseline.vary("employment_income")
     reformed.vary("employment_income")
     mtr_chart(baseline, reformed)

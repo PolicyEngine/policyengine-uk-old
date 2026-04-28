@@ -1,8 +1,17 @@
+import os
+
+import pytest
+
+if os.getenv("POLICYENGINE_SKIP_EXTERNAL_DATA") == "1":
+    pytest.skip(
+        "External FRS/WAS microdata is unavailable in CI.",
+        allow_module_level=True,
+    )
+
 from openfisca_core.reforms import reform
 from policy_engine_uk.populations.metrics import headline_metrics
 from openfisca_uk import Microsimulation, reforms
 from openfisca_uk_data import FRS_WAS_Imputation, FRS
-import pytest
 
 baseline = Microsimulation()
 
